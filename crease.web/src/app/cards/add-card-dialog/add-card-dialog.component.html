@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Add New Card</h2>
+<mat-dialog-content [formGroup]="cardForm">
+    <mat-form-field>
+        <mat-label>Card</mat-label>
+        <mat-select name="baseCard" formControlName="baseCard" required>
+            <mat-option *ngFor="let baseCard of baseCards" [value]="baseCard">
+                {{baseCard.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Approved Date</mat-label>
+        <input matInput [matDatepicker]="picker" name="transactionDate" formControlName="startDate" required>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-flat-button type="submit" color="primary" [disabled]="cardForm.invalid" (click)="addCard()">Add</button>
+    <button mat-flat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

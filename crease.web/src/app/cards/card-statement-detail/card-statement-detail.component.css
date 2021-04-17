@@ -1,0 +1,19 @@
+.header {
+    padding-top: 20px;
+}
+
+table {
+    width: 100%;
+}
+
+tr.mat-footer-row {
+    font-weight: bold;
+}
+
+.transactions-actions-group {
+    padding: 16px 0;
+}
+
+.invalid-card-statement {
+    padding-top: 24px;
+}
