@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>Add Transaction</h2>
-<mat-dialog-content [formGroup]="transactionForm">
+<mat-dialog-content [formGroup]="transactionForm" class="global-dialog">
     <mat-form-field>
         <mat-label>Transaction Date</mat-label>
         <input matInput [matDatepicker]="picker" name="transactionDate" formControlName="transactionDate"
@@ -13,7 +13,7 @@
     </mat-form-field>
     <mat-form-field>
         <mat-label>Amount</mat-label>
-        <input matInput placeholder="Amount" type="number" name="amount" formControlName="amount" required>
+        <input matInput placeholder="Amount" type="number" min="0.00" step="0.01" name="amount" placeholder="0.00" formControlName="amount" required>
     </mat-form-field>
     <div>
         <p>Transaction Type</p>

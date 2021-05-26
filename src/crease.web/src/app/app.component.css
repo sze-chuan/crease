@@ -3,3 +3,8 @@
     flex-direction: column;
     height: 100%;
 }
+
+.global-dialog {
+    display: flex;
+    flex-direction: column;
+}

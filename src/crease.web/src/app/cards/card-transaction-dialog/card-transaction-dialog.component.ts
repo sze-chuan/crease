@@ -18,7 +18,7 @@ export class CardTransactionDialogComponent {
     this.cardTransaction = data;
 
     this.transactionForm = new FormGroup({
-      transactionDate: new FormControl(),
+      transactionDate: new FormControl(new Date()),
       vendor: new FormControl(),
       amount: new FormControl(),
       type: new FormControl()

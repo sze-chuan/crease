@@ -18,8 +18,8 @@
                 </div>
             </mat-toolbar>
             <div class="content-container">
-                <div *ngIf="cards?.length === 0">
-                    <h3>No cards has been added.</h3>
+                <div *ngIf="!selectedCard">
+                    <h3 *ngIf="cards!.length == 0">No cards has been added.</h3>
                     <button mat-flat-button color="primary" (click)="openAddNewCardDialog()">Add New Card</button>
                 </div>
                 <router-outlet></router-outlet>
