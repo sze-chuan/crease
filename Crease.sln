@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crease.Api", "src\Crease.Api\Crease.Api.csproj", "{568FDC1C-07BF-456E-B751-54D0B6325437}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0CC4A41A-E91D-48DF-A492-A0D17ECD8784}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crease.Api.Infrastructure", "src\Crease.Api.Infrastructure\Crease.Api.Infrastructure.csproj", "{EA3D9E42-34CF-4153-8981-E65C620646CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{568FDC1C-07BF-456E-B751-54D0B6325437}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{568FDC1C-07BF-456E-B751-54D0B6325437}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{568FDC1C-07BF-456E-B751-54D0B6325437}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{568FDC1C-07BF-456E-B751-54D0B6325437}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3D9E42-34CF-4153-8981-E65C620646CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3D9E42-34CF-4153-8981-E65C620646CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3D9E42-34CF-4153-8981-E65C620646CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3D9E42-34CF-4153-8981-E65C620646CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{568FDC1C-07BF-456E-B751-54D0B6325437} = {0CC4A41A-E91D-48DF-A492-A0D17ECD8784}
+		{EA3D9E42-34CF-4153-8981-E65C620646CA} = {0CC4A41A-E91D-48DF-A492-A0D17ECD8784}
+	EndGlobalSection
+EndGlobal
