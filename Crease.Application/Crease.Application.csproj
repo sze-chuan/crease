@@ -4,4 +4,19 @@
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+      <PackageReference Include="FluentValidation" Version="10.3.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.3.0" />
+      <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Cards" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Crease.Domain\Crease.Domain.csproj" />
+    </ItemGroup>
+
 </Project>
