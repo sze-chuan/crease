@@ -1,14 +1,14 @@
 ﻿using Crease.Application.Common.Interfaces;
-using Crease.Main.Infrastructure.Identity;
-using Crease.Main.Infrastructure.Persistence;
-using Crease.Main.Infrastructure.Services;
+using Crease.Infrastructure.Identity;
+using Crease.Infrastructure.Persistence;
+using Crease.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Crease.Main.Infrastructure
+namespace Crease.Infrastructure
 {
     public static class DependencyInjection
     {

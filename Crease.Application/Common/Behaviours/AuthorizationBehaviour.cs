@@ -43,24 +43,26 @@ namespace Crease.Application.Common.Behaviours
 
             if (authorizeAttributesWithRoles.Any())
             {
+                var authorized = false;
+
                 foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
                 {
-                    var authorized = false;
                     foreach (var role in roles)
                     {
                         var isInRole = await _identityService.IsInRoleAsync(_currentUserService.UserId, role.Trim());
-                        if (isInRole)
+                        if (!isInRole)
                         {
-                            authorized = true;
-                            break;
+                            continue;
                         }
+                        authorized = true;
+                        break;
                     }
+                }
 
-                    // Must be a member of at least one role in roles
-                    if (!authorized)
-                    {
-                        throw new ForbiddenAccessException();
-                    }
+                // Must be a member of at least one role in roles
+                if (!authorized)
+                {
+                    throw new ForbiddenAccessException();
                 }
             }
 

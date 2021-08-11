@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Crease.Main.Infrastructure.Identity
+namespace Crease.Infrastructure.Identity
 {
     public class ApplicationUser : IdentityUser
     {

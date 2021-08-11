@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Crease.Main.WebUI.Controllers
+namespace Crease.WebUI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]

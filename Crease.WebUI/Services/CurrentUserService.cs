@@ -2,7 +2,7 @@
 using Crease.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Http;
 
-namespace Crease.Main.WebUI.Services
+namespace Crease.WebUI.Services
 {
     public class CurrentUserService : ICurrentUserService
     {
@@ -13,6 +13,6 @@ namespace Crease.Main.WebUI.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public string UserId => _httpContextAccessor.HttpContext?.User?.FindFirstValue(ClaimTypes.NameIdentifier);
+        public string UserId => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
     }
 }

@@ -1,18 +1,20 @@
+using System.Linq;
 using Crease.Application;
 using Crease.Application.Common.Interfaces;
-using Crease.Main.Infrastructure;
-using Crease.Main.WebUI.Filters;
-using Crease.Main.WebUI.Services;
+using Crease.Infrastructure;
+using Crease.WebUI.Filters;
+using Crease.WebUI.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
-namespace Crease.Main.WebUI
+namespace Crease.WebUI
 {
     public class Startup
     {
@@ -43,6 +45,20 @@ namespace Crease.Main.WebUI
             
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+            
+            services.AddOpenApiDocument(configure =>
+            {
+                configure.Title = "Crease API";
+                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
+                {
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+
+                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +81,12 @@ namespace Crease.Main.WebUI
             {
                 app.UseSpaStaticFiles();
             }
+            
+            app.UseSwaggerUi3(settings =>
+            {
+                settings.Path = "/api";
+                settings.DocumentPath = "/api/specification.json";
+            });
 
             app.UseRouting();
             
@@ -76,6 +98,7 @@ namespace Crease.Main.WebUI
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+                endpoints.MapRazorPages();
             });
 
             app.UseSpa(spa =>
@@ -87,7 +110,8 @@ namespace Crease.Main.WebUI
 
                 if (env.IsDevelopment())
                 {
-                    spa.UseAngularCliServer(npmScript: "start");
+                    //spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseProxyToSpaDevelopmentServer(Configuration["SpaBaseUrl"] ?? "http://localhost:4200");
                 }
             });
         }

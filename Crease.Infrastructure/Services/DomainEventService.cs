@@ -6,7 +6,7 @@ using Crease.Domain.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Crease.Main.Infrastructure.Services
+namespace Crease.Infrastructure.Services
 {
     public class DomainEventService : IDomainEventService
     {

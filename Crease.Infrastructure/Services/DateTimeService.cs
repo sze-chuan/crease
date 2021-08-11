@@ -1,7 +1,7 @@
 ﻿using System;
 using Crease.Application.Common.Interfaces;
 
-namespace Crease.Main.Infrastructure.Services
+namespace Crease.Infrastructure.Services
 {
     public class DateTimeService : IDateTime
     {

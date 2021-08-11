@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crease.Main.Infrastructure.Identity
+namespace Crease.Infrastructure.Identity
 {
     public class IdentityService : IIdentityService
     {

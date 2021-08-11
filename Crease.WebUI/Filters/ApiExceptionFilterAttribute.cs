@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Crease.Main.WebUI.Filters
+namespace Crease.WebUI.Filters
 {
     public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
     {

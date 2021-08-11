@@ -4,13 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Crease.Application.Common.Interfaces;
 using Crease.Domain.Common;
-using Crease.Main.Infrastructure.Identity;
+using Crease.Domain.Entities;
+using Crease.Infrastructure.Identity;
 using IdentityServer4.EntityFramework.Options;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
-namespace Crease.Main.Infrastructure.Persistence
+namespace Crease.Infrastructure.Persistence
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
     {
@@ -29,6 +30,8 @@ namespace Crease.Main.Infrastructure.Persistence
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
+        
+        public DbSet<Card> Cards { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {

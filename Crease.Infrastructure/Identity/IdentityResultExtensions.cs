@@ -2,7 +2,7 @@
 using Crease.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Crease.Main.Infrastructure.Identity
+namespace Crease.Infrastructure.Identity
 {
     public static class IdentityResultExtensions
     {
