@@ -1,10 +1,10 @@
-using Crease.Domain.Enums;
+using Crease.Domain.ValueObjects;
 
 namespace Crease.Domain.Entities
 {
     public class BankCard
     {
-        public int BankCardId { get; set; }
+        public int Id { get; set; }
 
         public Bank Bank { get; set; }
         
