@@ -3,11 +3,11 @@ import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AddCardDialogComponent } from '../add-card-dialog/add-card-dialog.component';
+import { BankCardsClient, BankCardDto } from '../../web-api-client';
 
 import { filter, switchMap } from 'rxjs/operators';
 
 import { CardsService } from '../cards.service';
-import { BaseCard } from '../models/baseCard';
 import { Card } from '../models/card';
 
 @Component({
@@ -18,7 +18,7 @@ import { Card } from '../models/card';
 export class CardViewerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   cards: Card[];
-  baseCards: BaseCard[];
+  bankCards: BankCardDto[];
   selectedCard?: Card;
   routerObserver!: any;
 
@@ -26,14 +26,15 @@ export class CardViewerComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private cardService: CardsService) {
+    private cardService: CardsService,
+    private bankCardsClient: BankCardsClient) {
     this.cards = [];
-    this.baseCards = [];
+    this.bankCards = [];
   }
 
   ngOnInit(): void {
-    this.cardService.getBaseCards().subscribe((data: BaseCard[]) => {
-      this.baseCards = data;
+    this.bankCardsClient.get().subscribe((data: BankCardDto[]) => {
+      this.bankCards = data;
     });
 
     this.cardService.getCards().subscribe((data: Card[]) => this.cards = data);
@@ -65,7 +66,7 @@ export class CardViewerComponent implements OnInit, OnDestroy {
   openAddNewCardDialog(): void {
     const dialogRef = this.dialog.open(AddCardDialogComponent, {
       data: {
-        baseCards: this.baseCards
+        bankCards: this.bankCards
       }
     });
 

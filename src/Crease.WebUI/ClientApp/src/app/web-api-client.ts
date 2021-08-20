@@ -15,7 +15,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 export interface IBankCardsClient {
-    get(): Observable<BankCardsVm>;
+    get(): Observable<BankCardDto[]>;
 }
 
 @Injectable({
@@ -31,7 +31,7 @@ export class BankCardsClient implements IBankCardsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(): Observable<BankCardsVm> {
+    get(): Observable<BankCardDto[]> {
         let url_ = this.baseUrl + "/api/BankCards";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -50,14 +50,14 @@ export class BankCardsClient implements IBankCardsClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<BankCardsVm>><any>_observableThrow(e);
+                    return <Observable<BankCardDto[]>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<BankCardsVm>><any>_observableThrow(response_);
+                return <Observable<BankCardDto[]>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<BankCardsVm> {
+    protected processGet(response: HttpResponseBase): Observable<BankCardDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -68,7 +68,14 @@ export class BankCardsClient implements IBankCardsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = BankCardsVm.fromJS(resultData200);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(BankCardDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -76,7 +83,7 @@ export class BankCardsClient implements IBankCardsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<BankCardsVm>(<any>null);
+        return _observableOf<BankCardDto[]>(<any>null);
     }
 }
 
@@ -144,50 +151,6 @@ export class CardsClient implements ICardsClient {
         }
         return _observableOf<CardsVm>(<any>null);
     }
-}
-
-export class BankCardsVm implements IBankCardsVm {
-    bankCards?: BankCardDto[] | undefined;
-
-    constructor(data?: IBankCardsVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["bankCards"])) {
-                this.bankCards = [] as any;
-                for (let item of _data["bankCards"])
-                    this.bankCards!.push(BankCardDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): BankCardsVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new BankCardsVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.bankCards)) {
-            data["bankCards"] = [];
-            for (let item of this.bankCards)
-                data["bankCards"].push(item.toJSON());
-        }
-        return data; 
-    }
-}
-
-export interface IBankCardsVm {
-    bankCards?: BankCardDto[] | undefined;
 }
 
 export class BankCardDto implements IBankCardDto {

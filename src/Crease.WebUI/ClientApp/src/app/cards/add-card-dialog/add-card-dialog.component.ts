@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { BaseCard } from '../models/baseCard';
+import { BankCardDto } from 'src/app/web-api-client';
 import { Card } from '../models/card';
 
 @Component({
@@ -11,16 +11,16 @@ import { Card } from '../models/card';
 })
 export class AddCardDialogComponent {
   cardForm: FormGroup;
-  baseCards: BaseCard[];
+  bankCards: BankCardDto[];
   card: Card | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<AddCardDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: any) {
-    this.baseCards = data?.baseCards;
+    this.bankCards = data?.bankCards;
 
     this.cardForm = new FormGroup({
-      baseCard: new FormControl(),
+      bankCard: new FormControl(),
       startDate: new FormControl()
     });
   }

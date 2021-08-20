@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -8,11 +9,11 @@ using MediatR;
 
 namespace Crease.Application.BankCards.Queries
 {
-    public class GetBankCardsQuery : IRequest<BankCardsVm>
+    public class GetBankCardsQuery : IRequest<IEnumerable<BankCardDto>>
     {
     }
 
-    public class GetBankCardsQueryHandler : IRequestHandler<GetBankCardsQuery, BankCardsVm>
+    public class GetBankCardsQueryHandler : IRequestHandler<GetBankCardsQuery, IEnumerable<BankCardDto>>
     {
         private readonly IBankCardsService _bankCardsService;
         private readonly IMapper _mapper;
@@ -23,12 +24,9 @@ namespace Crease.Application.BankCards.Queries
             _mapper = mapper;
         }
 
-        public async Task<BankCardsVm> Handle(GetBankCardsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<BankCardDto>> Handle(GetBankCardsQuery request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() => new BankCardsVm
-                {
-                    BankCards = _mapper.Map<IList<BankCard>, IList<BankCardDto>>(_bankCardsService.GetBankCards())
-                },
+            return await Task.Run(() => _mapper.Map<IList<BankCard>, IList<BankCardDto>>(_bankCardsService.GetBankCards()),
                 cancellationToken);
         }
     }

@@ -18,7 +18,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BankCardsVm"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BankCardDto"
+                  }
                 }
               }
             }
@@ -49,19 +52,6 @@
   },
   "components": {
     "schemas": {
-      "BankCardsVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "bankCards": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/BankCardDto"
-            }
-          }
-        }
-      },
       "BankCardDto": {
         "type": "object",
         "additionalProperties": false,
