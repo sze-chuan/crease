@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Crease.Application.Cards.Commands;
+using Crease.Application.Cards.Queries.GetCard;
 using Crease.Application.Cards.Queries.GetCards;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crease.WebUI.Controllers
@@ -7,9 +11,25 @@ namespace Crease.WebUI.Controllers
     public class CardsController : ApiControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<CardsVm>> Get()
+        [ProducesResponseType(typeof(IEnumerable<CardDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<CardDto>>> Get()
         {
-            return await Mediator.Send(new GetCardsQuery());
+            return Ok(await Mediator.Send(new GetCardsQuery()));
+        }
+
+        [HttpGet("{cardId}")]
+        [ProducesResponseType(typeof(CardDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult<CardDto>> Get(int cardId)
+        {
+            return Ok(await Mediator.Send(new GetCardQuery(cardId)));
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult<int>> Create(CreateCardCommand command)
+        {
+            return Ok(await Mediator.Send(command));
         }
     }
 }

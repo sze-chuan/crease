@@ -36,10 +36,6 @@ export class CardsService {
         ];
     }
 
-    getBaseCards(): Observable<BaseCard[]> {
-        return of(this.baseCards);
-    }
-
     getCards(): Observable<Card[]> {
         return of(this.cards);
     }

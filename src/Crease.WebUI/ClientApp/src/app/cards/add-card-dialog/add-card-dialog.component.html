@@ -3,10 +3,18 @@
     <mat-form-field>
         <mat-label>Card</mat-label>
         <mat-select name="bankCard" formControlName="bankCard" required>
-            <mat-option *ngFor="let bankCard of bankCards" [value]="bankCard">
+            <mat-option *ngFor="let bankCard of bankCards" [value]="bankCard.id">
                 {{bankCard.name}}
             </mat-option>
         </mat-select>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Card Name</mat-label>
+        <input matInput placeholder="Card Name" type="text" name="name" formControlName="name" required>
+    </mat-form-field>
+    <mat-form-field>
+        <mat-label>Card Number</mat-label>
+        <input matInput placeholder="Last 4 digits" type="text" name="cardNumber" formControlName="cardNumber" required>
     </mat-form-field>
     <mat-form-field>
         <mat-label>Approved Date</mat-label>

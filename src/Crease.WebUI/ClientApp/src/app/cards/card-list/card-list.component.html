@@ -2,8 +2,8 @@
     <a
         mat-list-item
         *ngFor="let card of cards"
-        [routerLink]="card.id.toString()"
+        [routerLink]="card.id?.toString()"
         (click)="onSelectCard(card)">
-        {{card.baseCard.name}}
+        {{card.name}}
     </a>
 </mat-nav-list>

@@ -3,12 +3,9 @@ import { Router, ActivatedRoute, Params, NavigationEnd } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSidenav } from '@angular/material/sidenav';
 import { AddCardDialogComponent } from '../add-card-dialog/add-card-dialog.component';
-import { BankCardsClient, BankCardDto } from '../../web-api-client';
+import { BankCardsClient, BankCardDto, CardsClient, CardDto, CreateCardCommand } from '../../web-api-client';
 
 import { filter, switchMap } from 'rxjs/operators';
-
-import { CardsService } from '../cards.service';
-import { Card } from '../models/card';
 
 @Component({
   selector: 'card-viewer',
@@ -17,17 +14,17 @@ import { Card } from '../models/card';
 })
 export class CardViewerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  cards: Card[];
+  cards: CardDto[];
   bankCards: BankCardDto[];
-  selectedCard?: Card;
+  selectedCard?: CardDto;
   routerObserver!: any;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private cardService: CardsService,
-    private bankCardsClient: BankCardsClient) {
+    private bankCardsClient: BankCardsClient,
+    private cardsClient: CardsClient) {
     this.cards = [];
     this.bankCards = [];
   }
@@ -37,16 +34,16 @@ export class CardViewerComponent implements OnInit, OnDestroy {
       this.bankCards = data;
     });
 
-    this.cardService.getCards().subscribe((data: Card[]) => this.cards = data);
+    this.cardsClient.getAll().subscribe((data: CardDto[]) => this.cards = data);
 
     this.routerObserver = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd && event.url === '/cards'))
-      .subscribe(event => this.reset());
+      .subscribe(() => this.reset());
 
     if (this.route.children.length > 0) {
       this.route.firstChild?.params
-      .pipe(switchMap((params: Params) => this.cardService.getCard(Number(params.id))))
-      .subscribe((data: Card | undefined) => this.selectedCard = data);
+        .pipe(switchMap((params: Params) => this.cardsClient.get(Number(params.id))))
+        .subscribe((data: CardDto | undefined) => this.selectedCard = data);
     }
   }
 
@@ -58,7 +55,7 @@ export class CardViewerComponent implements OnInit, OnDestroy {
     this.selectedCard = undefined;
   }
 
-  onSelectCard(event: Card): void {
+  onSelectCard(event: CardDto): void {
     this.selectedCard = Object.assign({}, this.selectedCard, event);
     this.sidenav.close();
   }
@@ -70,12 +67,17 @@ export class CardViewerComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialogRef.afterClosed().subscribe(card => {
+    dialogRef.afterClosed().subscribe((card: CardDto) => {
       if (!card) {
         return;
       }
 
-      this.cards = [...this.cards, card];
+      this.cardsClient.create(CreateCardCommand.fromJS({ ...card }))
+        .subscribe(result => {
+          card.id = result;
+          this.cards = [...this.cards, card];
+        },
+          error => console.error(error));
 
       if (!this.selectedCard) {
         this.selectedCard = card;

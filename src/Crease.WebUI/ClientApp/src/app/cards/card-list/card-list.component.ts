@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
-
-import { Card } from '../models/card';
+import { CardDto } from 'src/app/web-api-client';
 
 @Component({
   selector: 'card-list',
@@ -9,16 +8,16 @@ import { Card } from '../models/card';
 })
 export class CardListComponent {
   @Input()
-  cards: Card[];
+  cards: CardDto[];
 
   @Output()
-  selectCard: EventEmitter<Card> = new EventEmitter<Card>();
+  selectCard: EventEmitter<CardDto> = new EventEmitter<CardDto>();
 
   constructor() {
     this.cards = [];
   }
 
-  onSelectCard(card: Card): void {
+  onSelectCard(card: CardDto): void {
     this.selectCard.emit(card);
   }
 }

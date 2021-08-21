@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Cards\Commands" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Crease.Domain\Crease.Domain.csproj" />
     </ItemGroup>
 

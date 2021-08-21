@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -9,11 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Crease.Application.Cards.Queries.GetCards
 {
-    public class GetCardsQuery : IRequest<CardsVm>
+    public class GetCardsQuery : IRequest<IEnumerable<CardDto>>
     {
     }
 
-    public class GetCardsQueryHandler : IRequestHandler<GetCardsQuery, CardsVm>
+    public class GetCardsQueryHandler : IRequestHandler<GetCardsQuery, IEnumerable<CardDto>>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -24,16 +25,13 @@ namespace Crease.Application.Cards.Queries.GetCards
             _mapper = mapper;
         }
 
-        public async Task<CardsVm> Handle(GetCardsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CardDto>> Handle(GetCardsQuery request, CancellationToken cancellationToken)
         {
-            return new CardsVm
-            {
-                Cards = await _context.Cards
-                    .AsNoTracking()
-                    .ProjectTo<CardDto>(_mapper.ConfigurationProvider)
-                    .OrderBy(t => t.Name)
-                    .ToListAsync(cancellationToken)
-            };
+            return await _context.Cards
+                .AsNoTracking()
+                .ProjectTo<CardDto>(_mapper.ConfigurationProvider)
+                .OrderBy(t => t.Name)
+                .ToListAsync(cancellationToken);
         }
     }
 }

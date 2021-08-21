@@ -21,6 +21,8 @@ export class AddCardDialogComponent {
 
     this.cardForm = new FormGroup({
       bankCard: new FormControl(),
+      name: new FormControl(),
+      cardNumber: new FormControl(),
       startDate: new FormControl()
     });
   }
