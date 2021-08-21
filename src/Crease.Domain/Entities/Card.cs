@@ -1,11 +1,10 @@
 ﻿using System;
+using Crease.Domain.Common;
 
 namespace Crease.Domain.Entities
 {
-    public class Card
+    public class Card : Entity
     {
-        public int Id { get; set; }
-        
         public int BankCardId { get; set; }
 
         public string Name { get; set; }
