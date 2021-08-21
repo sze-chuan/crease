@@ -8,18 +8,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
-  declarations: [
-    HeaderComponent
-  ],
+  declarations: [HeaderComponent],
   imports: [
     BrowserModule,
     MatButtonModule,
     MatToolbarModule,
     FontAwesomeModule,
-    RouterModule
+    RouterModule,
   ],
   providers: [],
   exports: [HeaderComponent],
-  bootstrap: [HeaderComponent]
+  bootstrap: [HeaderComponent],
 })
 export class HeaderModule {}

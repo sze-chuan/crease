@@ -32,10 +32,8 @@ const routes: Routes = [
   {
     path: 'cards',
     component: CardViewerComponent,
-    children: [
-      { path: ':id', component: CardStatementDetailComponent}
-    ]
-  }
+    children: [{ path: ':id', component: CardStatementDetailComponent }],
+  },
 ];
 
 @NgModule({
@@ -45,7 +43,7 @@ const routes: Routes = [
     AddCardDialogComponent,
     CardTransactionDialogComponent,
     CardStatementDetailComponent,
-    DateFilterComponent
+    DateFilterComponent,
   ],
   imports: [
     HttpClientModule,
@@ -66,10 +64,10 @@ const routes: Routes = [
     MatButtonToggleModule,
     MatToolbarModule,
     MatIconModule,
-    MatSidenavModule
+    MatSidenavModule,
   ],
   providers: [CardsService],
   exports: [CardViewerComponent, CardListComponent],
-  bootstrap: [CardViewerComponent]
+  bootstrap: [CardViewerComponent],
 })
 export class CardsModule {}

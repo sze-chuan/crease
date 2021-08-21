@@ -7,7 +7,7 @@ import { Card } from '../models/card';
 @Component({
   selector: 'add-card-dialog',
   templateUrl: './add-card-dialog.component.html',
-  styleUrls: ['./add-card-dialog.component.css']
+  styleUrls: ['./add-card-dialog.component.css'],
 })
 export class AddCardDialogComponent {
   cardForm: FormGroup;
@@ -16,14 +16,15 @@ export class AddCardDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<AddCardDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: any) {
+    @Inject(MAT_DIALOG_DATA) data: any
+  ) {
     this.bankCards = data?.bankCards;
 
     this.cardForm = new FormGroup({
       bankCard: new FormControl(),
       name: new FormControl(),
       cardNumber: new FormControl(),
-      startDate: new FormControl()
+      startDate: new FormControl(),
     });
   }
 

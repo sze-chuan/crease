@@ -1,7 +1,7 @@
 export interface CardTransaction {
-    id: number;
-    vendor: string;
-    transactionDate: Date;
-    amount: number;
-    type?: string;
+  id: number;
+  vendor: string;
+  transactionDate: Date;
+  amount: number;
+  type?: string;
 }

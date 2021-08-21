@@ -1,10 +1,10 @@
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CardDto } from 'src/app/web-api-client';
 
 @Component({
   selector: 'card-list',
   templateUrl: './card-list.component.html',
-  styleUrls: ['./card-list.component.css']
+  styleUrls: ['./card-list.component.css'],
 })
 export class CardListComponent {
   @Input()

@@ -1,19 +1,19 @@
 .header {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 table {
-    width: 100%;
+  width: 100%;
 }
 
 tr.mat-footer-row {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .transactions-actions-group {
-    padding: 16px 0;
+  padding: 16px 0;
 }
 
 .invalid-card-statement {
-    padding-top: 24px;
+  padding-top: 24px;
 }

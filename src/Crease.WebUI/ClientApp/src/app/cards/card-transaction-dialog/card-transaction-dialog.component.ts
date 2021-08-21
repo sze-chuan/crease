@@ -6,7 +6,7 @@ import { CardTransaction } from '../models/cardTransaction';
 @Component({
   selector: 'card-transaction-dialog',
   templateUrl: './card-transaction-dialog.component.html',
-  styleUrls: ['./card-transaction-dialog.component.css']
+  styleUrls: ['./card-transaction-dialog.component.css'],
 })
 export class CardTransactionDialogComponent {
   transactionForm: FormGroup;
@@ -14,14 +14,15 @@ export class CardTransactionDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<CardTransactionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: CardTransaction) {
+    @Inject(MAT_DIALOG_DATA) data: CardTransaction
+  ) {
     this.cardTransaction = data;
 
     this.transactionForm = new FormGroup({
       transactionDate: new FormControl(new Date()),
       vendor: new FormControl(),
       amount: new FormControl(),
-      type: new FormControl()
+      type: new FormControl(),
     });
   }
 

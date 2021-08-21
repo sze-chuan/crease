@@ -1,9 +1,9 @@
 .date-filter-group {
-    display: flex;
+  display: flex;
 }
 
 .mat-form-field {
-    padding-right: 20px;
-    width: 45%;
-    max-width: 240px;
+  padding-right: 20px;
+  width: 45%;
+  max-width: 240px;
 }
