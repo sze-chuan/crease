@@ -157,10 +157,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CardStatementDto"
-                  }
+                  "$ref": "#/components/schemas/CardStatementDto"
                 }
               }
             }
@@ -318,6 +315,10 @@
             "nullable": true
           },
           "paymentTypeCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
             "type": "string",
             "nullable": true
           },

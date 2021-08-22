@@ -5,22 +5,24 @@
 </div>
 <div *ngIf="cardStatement !== undefined">
   <h3 class="header">Transactions</h3>
-  <table mat-table [dataSource]="cardStatement.cardTransactions">
+  <table mat-table [dataSource]="dataSource">
     <ng-container matColumnDef="index">
       <th mat-header-cell *matHeaderCellDef>S/N</th>
       <td mat-cell *matCellDef="let element; let i = index">{{ i + 1 }}</td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
-    <ng-container matColumnDef="transactionDate">
+    <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Date</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.transactionDate | date: "d LLL yyyy" }}
+        {{ element.date | date: "d LLL yyyy" }}
       </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
-    <ng-container matColumnDef="vendor">
-      <th mat-header-cell *matHeaderCellDef>Vendor</th>
-      <td mat-cell *matCellDef="let element">{{ element.vendor }}</td>
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let element">
+        {{ element.description }}
+      </td>
       <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
     <ng-container matColumnDef="amount">
@@ -47,8 +49,8 @@
   <mat-divider></mat-divider>
   <div class="card-rewards-summary">
     <h3 class="header">Card Rewards Summary</h3>
-    <p>Cashback: {{ cardStatement.cashback | currency }}</p>
+    <!-- <p>Cashback: {{ cardStatement.cashback | currency }}</p>
     <p>Miles: {{ cardStatement.miles }}</p>
-    <p>Points: {{ cardStatement.points }}</p>
+    <p>Points: {{ cardStatement.points }}</p> -->
   </div>
 </div>

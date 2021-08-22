@@ -6,10 +6,14 @@ import { switchMap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { CardTransactionDialogComponent } from '../card-transaction-dialog/card-transaction-dialog.component';
 
-import { Card } from '../models/card';
-import { CardStatement } from '../models/cardStatement';
-import { CardTransaction } from '../models/cardTransaction';
-import { CardsService } from '../cards.service';
+import {
+  CardDto,
+  CardStatementDto,
+  TransactionDto,
+  CardStatementsClient,
+  CardsClient,
+} from 'src/app/web-api-client';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'card-statement-detail',
@@ -17,47 +21,41 @@ import { CardsService } from '../cards.service';
   styleUrls: ['./card-statement-detail.component.css'],
 })
 export class CardStatementDetailComponent implements OnInit {
-  selectedCard?: Card;
-  cardStatement?: CardStatement;
+  selectedCard?: CardDto;
+  cardStatement?: CardStatementDto;
+  dataSource: MatTableDataSource<TransactionDto>;
 
-  displayedColumns: string[] = ['index', 'transactionDate', 'vendor', 'amount'];
+  displayedColumns: string[] = ['index', 'date', 'description', 'amount'];
 
   constructor(
     private dialog: MatDialog,
     private route: ActivatedRoute,
-    private cardService: CardsService
-  ) {}
+    private cardsClient: CardsClient,
+    private cardStatementsClient: CardStatementsClient
+  ) {
+    this.dataSource = new MatTableDataSource<TransactionDto>();
+  }
 
   ngOnInit(): void {
     this.route.params
       .pipe(
-        switchMap((params: Params) =>
-          this.cardService.getCard(Number(params.id))
-        )
+        switchMap((params: Params) => this.cardsClient.get(Number(params.id)))
       )
-      .subscribe((data: Card | undefined) => {
+      .subscribe((data: CardDto | undefined) => {
         this.selectedCard = data;
-        this.getCardStatement(new Date(Date.now()));
       });
   }
 
   openAddCardTransaction(): void {
     const dialogRef = this.dialog.open<
       CardTransactionDialogComponent,
-      CardTransaction
-    >(CardTransactionDialogComponent, {
-      data: {
-        id: 0,
-        transactionDate: new Date(Date.now()),
-        vendor: '',
-        amount: 0,
-      },
-    });
+      TransactionDto
+    >(CardTransactionDialogComponent, { data: new TransactionDto() });
 
     dialogRef.afterClosed().subscribe((data) => {
-      if (this.cardStatement && data) {
-        this.cardStatement.cardTransactions = [
-          ...this.cardStatement.cardTransactions,
+      if (this.cardStatement?.transactions && data) {
+        this.cardStatement.transactions = [
+          ...this.cardStatement.transactions,
           data,
         ];
       }
@@ -70,20 +68,23 @@ export class CardStatementDetailComponent implements OnInit {
 
   getCardStatement(statementPeriod: Date): void {
     if (this.selectedCard) {
-      this.cardService
-        .getCardStatement(this.selectedCard.id, statementPeriod)
-        .subscribe((statement: CardStatement | undefined) => {
+      this.cardStatementsClient
+        .get(this.selectedCard.id, statementPeriod)
+        .subscribe((statement: CardStatementDto | undefined) => {
           this.cardStatement = statement
             ? Object.assign({}, statement)
             : undefined;
+          this.dataSource = new MatTableDataSource<TransactionDto>(
+            this.cardStatement?.transactions
+          );
         });
     }
   }
 
   getTotalAmount(): number {
-    return this.cardStatement !== undefined
-      ? this.cardStatement.cardTransactions
-          .map((x) => x.amount)
+    return this.cardStatement?.transactions !== undefined
+      ? this.cardStatement.transactions
+          .map((x) => x.amount ?? 0)
           .reduce((acc, value) => acc + value, 0)
       : 0;
   }

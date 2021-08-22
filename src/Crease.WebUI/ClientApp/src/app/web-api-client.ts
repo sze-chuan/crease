@@ -268,7 +268,7 @@ export class CardsClient implements ICardsClient {
 }
 
 export interface ICardStatementsClient {
-    get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto[]>;
+    get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto>;
 }
 
 @Injectable({
@@ -284,7 +284,7 @@ export class CardStatementsClient implements ICardStatementsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto[]> {
+    get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto> {
         let url_ = this.baseUrl + "/api/CardStatements?";
         if (cardId === null)
             throw new Error("The parameter 'cardId' cannot be null.");
@@ -311,14 +311,14 @@ export class CardStatementsClient implements ICardStatementsClient {
                 try {
                     return this.processGet(<any>response_);
                 } catch (e) {
-                    return <Observable<CardStatementDto[]>><any>_observableThrow(e);
+                    return <Observable<CardStatementDto>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<CardStatementDto[]>><any>_observableThrow(response_);
+                return <Observable<CardStatementDto>><any>_observableThrow(response_);
         }));
     }
 
-    protected processGet(response: HttpResponseBase): Observable<CardStatementDto[]> {
+    protected processGet(response: HttpResponseBase): Observable<CardStatementDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -329,14 +329,7 @@ export class CardStatementsClient implements ICardStatementsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CardStatementDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
+            result200 = CardStatementDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -344,7 +337,7 @@ export class CardStatementsClient implements ICardStatementsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             }));
         }
-        return _observableOf<CardStatementDto[]>(<any>null);
+        return _observableOf<CardStatementDto>(<any>null);
     }
 }
 
@@ -650,6 +643,7 @@ export class TransactionDto implements ITransactionDto {
     cardStatementId?: number;
     paymentType?: string | undefined;
     paymentTypeCategory?: string | undefined;
+    description?: string | undefined;
     date?: Date;
     amount?: number;
 
@@ -668,6 +662,7 @@ export class TransactionDto implements ITransactionDto {
             this.cardStatementId = _data["cardStatementId"];
             this.paymentType = _data["paymentType"];
             this.paymentTypeCategory = _data["paymentTypeCategory"];
+            this.description = _data["description"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
             this.amount = _data["amount"];
         }
@@ -686,6 +681,7 @@ export class TransactionDto implements ITransactionDto {
         data["cardStatementId"] = this.cardStatementId;
         data["paymentType"] = this.paymentType;
         data["paymentTypeCategory"] = this.paymentTypeCategory;
+        data["description"] = this.description;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         data["amount"] = this.amount;
         return data; 
@@ -697,6 +693,7 @@ export interface ITransactionDto {
     cardStatementId?: number;
     paymentType?: string | undefined;
     paymentTypeCategory?: string | undefined;
+    description?: string | undefined;
     date?: Date;
     amount?: number;
 }

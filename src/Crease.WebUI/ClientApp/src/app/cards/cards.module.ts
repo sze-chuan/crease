@@ -11,8 +11,6 @@ import { AddCardDialogComponent } from './add-card-dialog/add-card-dialog.compon
 import { DateFilterComponent } from './date-filter/date-filter.component';
 import { CardStatementDetailComponent } from './card-statement-detail/card-statement-detail.component';
 
-import { CardsService } from './cards.service';
-
 import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatTableModule } from '@angular/material/table';
@@ -66,7 +64,6 @@ const routes: Routes = [
     MatIconModule,
     MatSidenavModule,
   ],
-  providers: [CardsService],
   exports: [CardViewerComponent, CardListComponent],
   bootstrap: [CardViewerComponent],
 })

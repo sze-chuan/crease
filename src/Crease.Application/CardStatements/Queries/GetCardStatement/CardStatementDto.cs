@@ -8,6 +8,7 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
     {
         public CardStatementDto()
         {
+            Transactions = new List<TransactionDto>();
         }
         
         public int Id { get; set; }

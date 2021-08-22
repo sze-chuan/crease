@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { CardTransaction } from '../models/cardTransaction';
+import { TransactionDto } from 'src/app/web-api-client';
 
 @Component({
   selector: 'card-transaction-dialog',
@@ -10,11 +10,11 @@ import { CardTransaction } from '../models/cardTransaction';
 })
 export class CardTransactionDialogComponent {
   transactionForm: FormGroup;
-  cardTransaction: CardTransaction;
+  cardTransaction: TransactionDto;
 
   constructor(
     private dialogRef: MatDialogRef<CardTransactionDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: CardTransaction
+    @Inject(MAT_DIALOG_DATA) data: TransactionDto
   ) {
     this.cardTransaction = data;
 
