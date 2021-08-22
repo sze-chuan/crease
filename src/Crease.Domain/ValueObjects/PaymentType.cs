@@ -7,9 +7,13 @@ namespace Crease.Domain.ValueObjects
     {
         public string Value { get; }
 
-        public PaymentType(string value)
+        private PaymentType(string value)
         {
             Value = value;
+        }
+
+        private PaymentType()
+        {
         }
 
         public static PaymentType Online => new("Online");

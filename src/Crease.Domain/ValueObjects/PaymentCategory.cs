@@ -5,11 +5,15 @@ namespace Crease.Domain.ValueObjects
 {
     public class PaymentCategory : ValueObject
     {
-        public string Value { get; }
+        private string Value { get; }
 
-        public PaymentCategory(string value)
+        private PaymentCategory(string value)
         {
             Value = value;
+        }
+
+        private PaymentCategory()
+        {
         }
 
         public static PaymentCategory Dining => new("Dining");

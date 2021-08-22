@@ -16,4 +16,8 @@
       <ProjectReference Include="..\Crease.Domain\Crease.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="CardStatements\Commands" />
+    </ItemGroup>
+
 </Project>
