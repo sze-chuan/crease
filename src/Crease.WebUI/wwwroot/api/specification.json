@@ -163,6 +163,47 @@
             }
           }
         }
+      },
+      "post": {
+        "tags": [
+          "CardStatements"
+        ],
+        "operationId": "CardStatements_Create",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCardStatementCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -329,6 +370,20 @@
           "amount": {
             "type": "number",
             "format": "decimal"
+          }
+        }
+      },
+      "CreateCardStatementCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "cardId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monthYear": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       }

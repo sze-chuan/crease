@@ -12,16 +12,16 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
 {
     public class GetCardStatementQuery : IRequest<CardStatementDto>
     {
-        public int CardId { get; }
-        
-        public DateTime Date { get; }
+        public int CardId { get; set; }
+
+        public DateTime Date { get; set; }
     }
 
     public class GetCardStatementQueryHandler : IRequestHandler<GetCardStatementQuery, CardStatementDto>
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        
+
         public GetCardStatementQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
             _context = context;
@@ -31,7 +31,7 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
         public async Task<CardStatementDto> Handle(GetCardStatementQuery request, CancellationToken cancellationToken)
         {
             return await _context.CardStatements
-                .Where(x => x.CardId == request.CardId && x.MonthYear == request.Date)
+                .Where(x => x.CardId == request.CardId && x.MonthYear.Month == request.Date.Month && x.MonthYear.Year == request.Date.Year)
                 .AsNoTracking()
                 .ProjectTo<CardStatementDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken);

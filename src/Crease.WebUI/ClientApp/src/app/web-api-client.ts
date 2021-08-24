@@ -269,6 +269,7 @@ export class CardsClient implements ICardsClient {
 
 export interface ICardStatementsClient {
     get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto>;
+    create(command: CreateCardStatementCommand): Observable<number>;
 }
 
 @Injectable({
@@ -338,6 +339,60 @@ export class CardStatementsClient implements ICardStatementsClient {
             }));
         }
         return _observableOf<CardStatementDto>(<any>null);
+    }
+
+    create(command: CreateCardStatementCommand): Observable<number> {
+        let url_ = this.baseUrl + "/api/CardStatements";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCreate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCreate(<any>response_);
+                } catch (e) {
+                    return <Observable<number>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<number>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processCreate(response: HttpResponseBase): Observable<number> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = resultData200 !== undefined ? resultData200 : <any>null;
+            return _observableOf(result200);
+            }));
+        } else {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let resultdefault: any = null;
+            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            resultdefault = ProblemDetails.fromJS(resultDatadefault);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            }));
+        }
     }
 }
 
@@ -696,6 +751,46 @@ export interface ITransactionDto {
     description?: string | undefined;
     date?: Date;
     amount?: number;
+}
+
+export class CreateCardStatementCommand implements ICreateCardStatementCommand {
+    cardId?: number;
+    monthYear?: Date;
+
+    constructor(data?: ICreateCardStatementCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.cardId = _data["cardId"];
+            this.monthYear = _data["monthYear"] ? new Date(_data["monthYear"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): CreateCardStatementCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateCardStatementCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cardId"] = this.cardId;
+        data["monthYear"] = this.monthYear ? this.monthYear.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface ICreateCardStatementCommand {
+    cardId?: number;
+    monthYear?: Date;
 }
 
 export class SwaggerException extends Error {
