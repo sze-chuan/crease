@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Crease.Application.Cards.Commands;
+using Crease.Application.Cards.Commands.CreateCard;
 using Crease.Application.Cards.Queries.GetCard;
 using Crease.Application.Cards.Queries.GetCards;
 using Microsoft.AspNetCore.Http;
