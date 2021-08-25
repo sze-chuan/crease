@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using System.Linq;
 using Crease.Domain.Common;
+using Crease.Domain.Exceptions;
 
 namespace Crease.Domain.ValueObjects
 {
@@ -16,15 +18,37 @@ namespace Crease.Domain.ValueObjects
         {
         }
 
-        public static PaymentType Online => new("Online");
+        public static PaymentType From(string value)
+        {
+            var paymentType = new PaymentType(value);
 
-        public static PaymentType Contactless => new("Contactless");
+            if (!SupportedPaymentTypes.Contains(paymentType))
+            {
+                throw new InvalidValueObjectException(nameof(PaymentType), value);
+            }
 
-        public static PaymentType Physical => new("Physical");
+            return paymentType;
+        }
+
+        public static PaymentType Online => new(nameof(Online));
+
+        public static PaymentType Contactless => new(nameof(Contactless));
+
+        public static PaymentType Physical => new(nameof(Physical));
 
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Value;
+        }
+
+        private static IEnumerable<PaymentType> SupportedPaymentTypes
+        {
+            get
+            {
+                yield return Online;
+                yield return Contactless;
+                yield return Physical;
+            }
         }
     }
 }

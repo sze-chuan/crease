@@ -16,6 +16,10 @@ namespace Crease.Infrastructure.Persistence.Configurations
 
             builder.Property(transaction => transaction.Amount)
                 .IsRequired();
+                
+            builder.Property(transaction => transaction.Description)
+                .HasMaxLength(200)
+                .IsRequired();
 
             builder.OwnsOne(b => b.PaymentCategory);
             builder.OwnsOne(b => b.PaymentType);
