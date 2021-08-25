@@ -14,11 +14,11 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
         public DateTime MonthYear { get; set; }
     }
 
-    public class CreateCardStatementCommandHander : IRequestHandler<CreateCardStatementCommand, int>
+    public class CreateCardStatementCommandHandler : IRequestHandler<CreateCardStatementCommand, int>
     {
         private readonly IApplicationDbContext _context;
 
-        public CreateCardStatementCommandHander(IApplicationDbContext context)
+        public CreateCardStatementCommandHandler(IApplicationDbContext context)
         {
             _context = context;
         }
