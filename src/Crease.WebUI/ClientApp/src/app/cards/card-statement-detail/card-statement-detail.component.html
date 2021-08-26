@@ -1,7 +1,7 @@
 <date-filter (changeDate)="onChangeDate($event)"></date-filter>
 <div *ngIf="!cardStatement" class="invalid-card-statement">
   <h3>No card statement available for the selected month/year.</h3>
-  <button mat-flat-button color="primary">Create Statement</button>
+  <button mat-flat-button color="primary" (click)="createStatement()">Create Statement</button>
 </div>
 <div *ngIf="cardStatement !== undefined">
   <h3 class="header">Transactions</h3>

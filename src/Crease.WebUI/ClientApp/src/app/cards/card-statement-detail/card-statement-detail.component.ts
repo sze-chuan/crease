@@ -12,6 +12,7 @@ import {
   TransactionDto,
   CardStatementsClient,
   CardsClient,
+  CreateCardStatementCommand,
 } from 'src/app/web-api-client';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -21,6 +22,7 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./card-statement-detail.component.css'],
 })
 export class CardStatementDetailComponent implements OnInit {
+  selectedMonthYear?: Date;
   selectedCard?: CardDto;
   cardStatement?: CardStatementDto;
   dataSource: MatTableDataSource<TransactionDto>;
@@ -34,6 +36,9 @@ export class CardStatementDetailComponent implements OnInit {
     private cardStatementsClient: CardStatementsClient
   ) {
     this.dataSource = new MatTableDataSource<TransactionDto>();
+
+    const currentDate = new Date(Date.now());
+    this.selectedMonthYear = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1); 
   }
 
   ngOnInit(): void {
@@ -43,6 +48,7 @@ export class CardStatementDetailComponent implements OnInit {
       )
       .subscribe((data: CardDto | undefined) => {
         this.selectedCard = data;
+        this.getCardStatement(this.selectedMonthYear);
       });
   }
 
@@ -63,11 +69,12 @@ export class CardStatementDetailComponent implements OnInit {
   }
 
   onChangeDate(event: Date): void {
+    this.selectedMonthYear = event;
     this.getCardStatement(event);
   }
 
-  getCardStatement(statementPeriod: Date): void {
-    if (this.selectedCard) {
+  getCardStatement(statementPeriod: Date | undefined): void {
+    if (this.selectedCard && statementPeriod) {
       this.cardStatementsClient
         .get(this.selectedCard.id, statementPeriod)
         .subscribe((statement: CardStatementDto | undefined) => {
@@ -87,5 +94,17 @@ export class CardStatementDetailComponent implements OnInit {
           .map((x) => x.amount ?? 0)
           .reduce((acc, value) => acc + value, 0)
       : 0;
+  }
+
+  createStatement(): void {
+    this.cardStatementsClient.create(<CreateCardStatementCommand>{
+      cardId: this.selectedCard?.id,
+      monthYear: this.selectedMonthYear
+    }).subscribe(
+      (result) => {
+        this.cardStatement = <CardStatementDto>{ id: result, monthYear: this.selectedMonthYear}
+      },
+      (error) => console.error(error)
+    );
   }
 }
