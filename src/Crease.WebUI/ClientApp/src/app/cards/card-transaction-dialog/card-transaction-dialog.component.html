@@ -1,25 +1,25 @@
 <h2 mat-dialog-title>Add Transaction</h2>
 <mat-dialog-content [formGroup]="transactionForm" class="global-dialog">
   <mat-form-field>
-    <mat-label>Transaction Date</mat-label>
+    <mat-label>Date</mat-label>
     <input
       matInput
       [matDatepicker]="picker"
-      name="transactionDate"
-      formControlName="transactionDate"
+      name="date"
+      formControlName="date"
       required
     />
     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
   </mat-form-field>
   <mat-form-field>
-    <mat-label>Vendor</mat-label>
+    <mat-label>Description</mat-label>
     <input
       matInput
-      placeholder="Vendor"
+      placeholder="Description"
       type="text"
-      name="vendor"
-      formControlName="vendor"
+      name="description"
+      formControlName="description"
       required
     />
   </mat-form-field>
@@ -37,9 +37,24 @@
       required
     />
   </mat-form-field>
+  <mat-form-field>
+    <mat-label>Category</mat-label>
+    <mat-select
+      name="transactionCategory"
+      formControlName="transactionCategory"
+      required
+    >
+      <mat-option
+        *ngFor="let transactionCategory of transactionCategories"
+        [value]="transactionCategory"
+      >
+        {{ transactionCategory }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <div>
     <p>Transaction Type</p>
-    <mat-button-toggle-group name="type" formControlName="type" required>
+    <mat-button-toggle-group name="paymentType" formControlName="paymentType" required>
       <mat-button-toggle value="online">Online</mat-button-toggle>
       <mat-button-toggle value="contactless">Contactless</mat-button-toggle>
       <mat-button-toggle value="physical">Physical</mat-button-toggle>
