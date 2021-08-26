@@ -769,7 +769,7 @@ export class TransactionDto implements ITransactionDto {
     id?: number;
     cardStatementId?: number;
     paymentType?: string | undefined;
-    paymentTypeCategory?: string | undefined;
+    transactionCategory?: string | undefined;
     description?: string | undefined;
     date?: Date;
     amount?: number;
@@ -788,7 +788,7 @@ export class TransactionDto implements ITransactionDto {
             this.id = _data["id"];
             this.cardStatementId = _data["cardStatementId"];
             this.paymentType = _data["paymentType"];
-            this.paymentTypeCategory = _data["paymentTypeCategory"];
+            this.transactionCategory = _data["transactionCategory"];
             this.description = _data["description"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
             this.amount = _data["amount"];
@@ -807,7 +807,7 @@ export class TransactionDto implements ITransactionDto {
         data["id"] = this.id;
         data["cardStatementId"] = this.cardStatementId;
         data["paymentType"] = this.paymentType;
-        data["paymentTypeCategory"] = this.paymentTypeCategory;
+        data["transactionCategory"] = this.transactionCategory;
         data["description"] = this.description;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         data["amount"] = this.amount;
@@ -819,7 +819,7 @@ export interface ITransactionDto {
     id?: number;
     cardStatementId?: number;
     paymentType?: string | undefined;
-    paymentTypeCategory?: string | undefined;
+    transactionCategory?: string | undefined;
     description?: string | undefined;
     date?: Date;
     amount?: number;
@@ -868,7 +868,7 @@ export interface ICreateCardStatementCommand {
 export class CreateTransactionCommand implements ICreateTransactionCommand {
     cardStatementId?: number;
     paymentType?: string | undefined;
-    paymentCategory?: string | undefined;
+    transactionCategory?: string | undefined;
     description?: string | undefined;
     date?: Date;
     amount?: number;
@@ -886,7 +886,7 @@ export class CreateTransactionCommand implements ICreateTransactionCommand {
         if (_data) {
             this.cardStatementId = _data["cardStatementId"];
             this.paymentType = _data["paymentType"];
-            this.paymentCategory = _data["paymentCategory"];
+            this.transactionCategory = _data["transactionCategory"];
             this.description = _data["description"];
             this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
             this.amount = _data["amount"];
@@ -904,7 +904,7 @@ export class CreateTransactionCommand implements ICreateTransactionCommand {
         data = typeof data === 'object' ? data : {};
         data["cardStatementId"] = this.cardStatementId;
         data["paymentType"] = this.paymentType;
-        data["paymentCategory"] = this.paymentCategory;
+        data["transactionCategory"] = this.transactionCategory;
         data["description"] = this.description;
         data["date"] = this.date ? this.date.toISOString() : <any>undefined;
         data["amount"] = this.amount;
@@ -915,7 +915,7 @@ export class CreateTransactionCommand implements ICreateTransactionCommand {
 export interface ICreateTransactionCommand {
     cardStatementId?: number;
     paymentType?: string | undefined;
-    paymentCategory?: string | undefined;
+    transactionCategory?: string | undefined;
     description?: string | undefined;
     date?: Date;
     amount?: number;

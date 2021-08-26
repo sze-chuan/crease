@@ -12,7 +12,7 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
         
         public string PaymentType { get; set; }
         
-        public string PaymentCategory { get; set; }
+        public string TransactionCategory { get; set; }
         
         public string Description { get; set; }
         

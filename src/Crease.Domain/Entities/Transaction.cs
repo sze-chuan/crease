@@ -10,7 +10,7 @@ namespace Crease.Domain.Entities
         
         public PaymentType PaymentType { get; set; }
         
-        public PaymentCategory PaymentCategory { get; set; }
+        public TransactionCategory TransactionCategory { get; set; }
         
         public string Description { get; set; }
         

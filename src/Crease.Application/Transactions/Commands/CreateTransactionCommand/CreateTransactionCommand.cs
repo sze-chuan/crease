@@ -14,7 +14,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
         
         public string PaymentType { get; set; }
         
-        public string PaymentCategory { get; set; }
+        public string TransactionCategory { get; set; }
         
         public string Description { get; set; }
         
@@ -38,7 +38,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
             {
                 CardStatementId = request.CardStatementId,
                 PaymentType = PaymentType.From(request.PaymentType),
-                PaymentCategory = PaymentCategory.From(request.PaymentCategory),
+                TransactionCategory = TransactionCategory.From(request.TransactionCategory),
                 Description = request.Description,
                 Date = request.Date,
                 Amount = request.Amount

@@ -398,7 +398,7 @@
             "type": "string",
             "nullable": true
           },
-          "paymentTypeCategory": {
+          "transactionCategory": {
             "type": "string",
             "nullable": true
           },
@@ -442,7 +442,7 @@
             "type": "string",
             "nullable": true
           },
-          "paymentCategory": {
+          "transactionCategory": {
             "type": "string",
             "nullable": true
           },

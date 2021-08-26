@@ -12,7 +12,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
         
         public string PaymentType { get; set; }
         
-        public string PaymentCategory { get; set; }
+        public string TransactionCategory { get; set; }
         
         public string Description { get; set; }
         
