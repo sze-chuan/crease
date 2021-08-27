@@ -1,7 +1,6 @@
 ﻿using Crease.Application.Common.Interfaces;
 using Crease.Infrastructure.Persistence;
 using Crease.Infrastructure.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
