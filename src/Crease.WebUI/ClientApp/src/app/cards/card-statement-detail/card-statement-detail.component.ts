@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 import { switchMap } from 'rxjs/operators';
 
@@ -12,9 +12,10 @@ import {
   TransactionDto,
   CardStatementsClient,
   CardsClient,
+  TransactionsClient,
   CreateCardStatementCommand,
+  CreateTransactionCommand,
 } from 'src/app/web-api-client';
-import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'card-statement-detail',
@@ -25,7 +26,6 @@ export class CardStatementDetailComponent implements OnInit {
   selectedMonthYear?: Date;
   selectedCard?: CardDto;
   cardStatement?: CardStatementDto;
-  dataSource: MatTableDataSource<TransactionDto>;
 
   displayedColumns: string[] = ['index', 'date', 'description', 'amount'];
 
@@ -33,12 +33,15 @@ export class CardStatementDetailComponent implements OnInit {
     private dialog: MatDialog,
     private route: ActivatedRoute,
     private cardsClient: CardsClient,
-    private cardStatementsClient: CardStatementsClient
+    private cardStatementsClient: CardStatementsClient,
+    private transactionsClient: TransactionsClient
   ) {
-    this.dataSource = new MatTableDataSource<TransactionDto>();
-
     const currentDate = new Date(Date.now());
-    this.selectedMonthYear = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1); 
+    this.selectedMonthYear = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1
+    );
   }
 
   ngOnInit(): void {
@@ -56,15 +59,15 @@ export class CardStatementDetailComponent implements OnInit {
     const dialogRef = this.dialog.open<
       CardTransactionDialogComponent,
       TransactionDto
-    >(CardTransactionDialogComponent, { data: new TransactionDto() });
+    >(CardTransactionDialogComponent, {
+      data: <TransactionDto>{
+        cardStatementId: this.cardStatement?.id,
+        date: new Date(),
+      },
+    });
 
     dialogRef.afterClosed().subscribe((data) => {
-      if (this.cardStatement?.transactions && data) {
-        this.cardStatement.transactions = [
-          ...this.cardStatement.transactions,
-          data,
-        ];
-      }
+      this.addTransaction(data);
     });
   }
 
@@ -81,9 +84,6 @@ export class CardStatementDetailComponent implements OnInit {
           this.cardStatement = statement
             ? Object.assign({}, statement)
             : undefined;
-          this.dataSource = new MatTableDataSource<TransactionDto>(
-            this.cardStatement?.transactions
-          );
         });
     }
   }
@@ -96,15 +96,38 @@ export class CardStatementDetailComponent implements OnInit {
       : 0;
   }
 
+  addTransaction(transaction: TransactionDto): void {
+    this.transactionsClient
+      .create(<CreateTransactionCommand>{ ...transaction })
+      .subscribe(
+        (result) => {
+          transaction.id = result;
+          if (this.cardStatement?.transactions) {
+            this.cardStatement.transactions = [
+              ...this.cardStatement.transactions,
+              transaction,
+            ];
+          }
+        },
+        (error) => console.error(error)
+      );
+  }
+
   createStatement(): void {
-    this.cardStatementsClient.create(<CreateCardStatementCommand>{
-      cardId: this.selectedCard?.id,
-      monthYear: this.selectedMonthYear
-    }).subscribe(
-      (result) => {
-        this.cardStatement = <CardStatementDto>{ id: result, monthYear: this.selectedMonthYear}
-      },
-      (error) => console.error(error)
-    );
+    this.cardStatementsClient
+      .create(<CreateCardStatementCommand>{
+        cardId: this.selectedCard?.id,
+        monthYear: this.selectedMonthYear,
+      })
+      .subscribe(
+        (result) => {
+          this.cardStatement = <CardStatementDto>{
+            id: result,
+            monthYear: this.selectedMonthYear,
+            transactions: <TransactionDto[]>[],
+          };
+        },
+        (error) => console.error(error)
+      );
   }
 }

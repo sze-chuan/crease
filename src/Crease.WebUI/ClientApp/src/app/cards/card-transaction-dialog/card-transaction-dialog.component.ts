@@ -10,21 +10,23 @@ import { TransactionDto } from 'src/app/web-api-client';
 })
 export class CardTransactionDialogComponent {
   transactionForm: FormGroup;
-  transaction: TransactionDto;
-  readonly transactionCategories: string[] = ["Shopping", "Dining", "Groceries"];
+  readonly transactionCategories: string[] = [
+    'Shopping',
+    'Dining',
+    'Groceries',
+  ];
 
   constructor(
     private dialogRef: MatDialogRef<CardTransactionDialogComponent>,
     @Inject(MAT_DIALOG_DATA) data: TransactionDto
   ) {
-    this.transaction = data;
-
     this.transactionForm = new FormGroup({
-      date: new FormControl(new Date()),
-      description: new FormControl(),
-      amount: new FormControl(),
-      paymentType: new FormControl(),
-      transactionCategory: new FormControl(),
+      date: new FormControl(data.date),
+      description: new FormControl(data.description),
+      amount: new FormControl(data.amount),
+      paymentType: new FormControl(data.paymentType),
+      transactionCategory: new FormControl(data.transactionCategory),
+      cardStatementId: new FormControl(data.cardStatementId),
     });
   }
 

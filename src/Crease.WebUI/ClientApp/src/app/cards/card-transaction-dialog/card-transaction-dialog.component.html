@@ -54,12 +54,21 @@
   </mat-form-field>
   <div>
     <p>Transaction Type</p>
-    <mat-button-toggle-group name="paymentType" formControlName="paymentType" required>
-      <mat-button-toggle value="online">Online</mat-button-toggle>
-      <mat-button-toggle value="contactless">Contactless</mat-button-toggle>
-      <mat-button-toggle value="physical">Physical</mat-button-toggle>
+    <mat-button-toggle-group
+      name="paymentType"
+      formControlName="paymentType"
+      required
+    >
+      <mat-button-toggle value="Online">Online</mat-button-toggle>
+      <mat-button-toggle value="Contactless">Contactless</mat-button-toggle>
+      <mat-button-toggle value="Physical">Physical</mat-button-toggle>
     </mat-button-toggle-group>
   </div>
+  <input
+    type="hidden"
+    formControlName="cardStatementId"
+    name="cardStatementId"
+  />
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button
