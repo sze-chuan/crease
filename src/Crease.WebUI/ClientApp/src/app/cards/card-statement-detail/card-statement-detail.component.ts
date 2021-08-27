@@ -27,7 +27,7 @@ export class CardStatementDetailComponent implements OnInit {
   selectedCard?: CardDto;
   cardStatement?: CardStatementDto;
 
-  displayedColumns: string[] = ['index', 'date', 'description', 'amount'];
+  displayedColumns: string[] = ['date', 'description', 'amount'];
 
   constructor(
     private dialog: MatDialog,
