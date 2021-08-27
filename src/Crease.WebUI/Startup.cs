@@ -32,6 +32,7 @@ namespace Crease.WebUI
             services.AddInfrastructure(Configuration);
 
             services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            services.AddRazorPages();
 
             services.AddHttpContextAccessor();
 
@@ -49,15 +50,6 @@ namespace Crease.WebUI
             services.AddOpenApiDocument(configure =>
             {
                 configure.Title = "Crease API";
-                configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
-                {
-                    Type = OpenApiSecuritySchemeType.ApiKey,
-                    Name = "Authorization",
-                    In = OpenApiSecurityApiKeyLocation.Header,
-                    Description = "Type into the textbox: Bearer {your JWT token}."
-                });
-
-                configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
             });
         }
 
@@ -89,10 +81,7 @@ namespace Crease.WebUI
             });
 
             app.UseRouting();
-            
-            app.UseAuthentication();
-            app.UseIdentityServer();
-            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
