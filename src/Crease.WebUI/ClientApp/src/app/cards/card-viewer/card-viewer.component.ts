@@ -55,9 +55,7 @@ export class CardViewerComponent implements OnInit, OnDestroy {
 
     if (this.route.children.length > 0) {
       this.route.firstChild?.params
-        .pipe(
-          switchMap((params: Params) => this.cardsClient.get(Number(params.id)))
-        )
+        .pipe(switchMap((params: Params) => this.cardsClient.get(params.id)))
         .subscribe((data: CardDto | undefined) => (this.selectedCard = data));
     }
   }

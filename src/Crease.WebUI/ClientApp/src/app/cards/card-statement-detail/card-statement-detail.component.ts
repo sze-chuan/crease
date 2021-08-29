@@ -46,9 +46,7 @@ export class CardStatementDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.params
-      .pipe(
-        switchMap((params: Params) => this.cardsClient.get(Number(params.id)))
-      )
+      .pipe(switchMap((params: Params) => this.cardsClient.get(params.id)))
       .subscribe((data: CardDto | undefined) => {
         this.selectedCard = data;
         this.getCardStatement(this.selectedMonthYear);

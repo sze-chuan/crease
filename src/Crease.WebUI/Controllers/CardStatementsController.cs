@@ -16,9 +16,9 @@ namespace Crease.WebUI.Controllers
         }
         
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
-        public async Task<ActionResult<int>> Create(CreateCardStatementCommand command)
+        public async Task<ActionResult<string>> Create(CreateCardStatementCommand command)
         {
             return Ok(await Mediator.Send(command));
         }

@@ -269,7 +269,7 @@ export class CardsClient implements ICardsClient {
 
 export interface ICardStatementsClient {
     get(cardId: string | null | undefined, monthYear: Date | undefined): Observable<CardStatementDto>;
-    create(command: CreateCardStatementCommand): Observable<number>;
+    create(command: CreateCardStatementCommand): Observable<string>;
 }
 
 @Injectable({
@@ -339,7 +339,7 @@ export class CardStatementsClient implements ICardStatementsClient {
         return _observableOf<CardStatementDto>(<any>null);
     }
 
-    create(command: CreateCardStatementCommand): Observable<number> {
+    create(command: CreateCardStatementCommand): Observable<string> {
         let url_ = this.baseUrl + "/api/CardStatements";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -362,14 +362,14 @@ export class CardStatementsClient implements ICardStatementsClient {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<number>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<number> {
+    protected processCreate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
