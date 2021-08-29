@@ -19,13 +19,13 @@ namespace Crease.WebUI.Controllers
 
         [HttpGet("{cardId}")]
         [ProducesResponseType(typeof(CardDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<CardDto>> Get(int cardId)
+        public async Task<ActionResult<CardDto>> Get(string cardId)
         {
             return Ok(await Mediator.Send(new GetCardQuery(cardId)));
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(int), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesDefaultResponseType]
         public async Task<ActionResult<int>> Create(CreateCardCommand command)
         {

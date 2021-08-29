@@ -7,14 +7,14 @@ using MediatR;
 
 namespace Crease.Application.CardStatements.Commands.CreateCardStatement
 {
-    public class CreateCardStatementCommand : IRequest<int>
+    public class CreateCardStatementCommand : IRequest<string>
     {
-        public int CardId { get; set; }
+        public string CardId { get; set; }
         
         public DateTime MonthYear { get; set; }
     }
 
-    public class CreateCardStatementCommandHandler : IRequestHandler<CreateCardStatementCommand, int>
+    public class CreateCardStatementCommandHandler : IRequestHandler<CreateCardStatementCommand, string>
     {
         private readonly IApplicationDbContext _context;
 
@@ -23,7 +23,7 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
             _context = context;
         }
 
-        public async Task<int> Handle(CreateCardStatementCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateCardStatementCommand request, CancellationToken cancellationToken)
         {
             var entity = new CardStatement
             {
@@ -35,7 +35,7 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.Id;
+            return entity.Id.ToString();
         }
     }
 }

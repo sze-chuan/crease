@@ -89,8 +89,8 @@ export class BankCardsClient implements IBankCardsClient {
 
 export interface ICardsClient {
     getAll(): Observable<CardDto[]>;
-    create(command: CreateCardCommand): Observable<number>;
-    get(cardId: number): Observable<CardDto>;
+    create(command: CreateCardCommand): Observable<string>;
+    get(cardId: string | null): Observable<CardDto>;
 }
 
 @Injectable({
@@ -161,7 +161,7 @@ export class CardsClient implements ICardsClient {
         return _observableOf<CardDto[]>(<any>null);
     }
 
-    create(command: CreateCardCommand): Observable<number> {
+    create(command: CreateCardCommand): Observable<string> {
         let url_ = this.baseUrl + "/api/Cards";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -184,14 +184,14 @@ export class CardsClient implements ICardsClient {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<number>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<number> {
+    protected processCreate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -215,7 +215,7 @@ export class CardsClient implements ICardsClient {
         }
     }
 
-    get(cardId: number): Observable<CardDto> {
+    get(cardId: string | null): Observable<CardDto> {
         let url_ = this.baseUrl + "/api/Cards/{cardId}";
         if (cardId === undefined || cardId === null)
             throw new Error("The parameter 'cardId' must be defined.");
@@ -268,7 +268,7 @@ export class CardsClient implements ICardsClient {
 }
 
 export interface ICardStatementsClient {
-    get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto>;
+    get(cardId: string | null | undefined, monthYear: Date | undefined): Observable<CardStatementDto>;
     create(command: CreateCardStatementCommand): Observable<number>;
 }
 
@@ -285,16 +285,14 @@ export class CardStatementsClient implements ICardStatementsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    get(cardId: number | undefined, date: Date | undefined): Observable<CardStatementDto> {
+    get(cardId: string | null | undefined, monthYear: Date | undefined): Observable<CardStatementDto> {
         let url_ = this.baseUrl + "/api/CardStatements?";
-        if (cardId === null)
-            throw new Error("The parameter 'cardId' cannot be null.");
-        else if (cardId !== undefined)
+        if (cardId !== undefined && cardId !== null)
             url_ += "CardId=" + encodeURIComponent("" + cardId) + "&";
-        if (date === null)
-            throw new Error("The parameter 'date' cannot be null.");
-        else if (date !== undefined)
-            url_ += "Date=" + encodeURIComponent(date ? "" + date.toJSON() : "") + "&";
+        if (monthYear === null)
+            throw new Error("The parameter 'monthYear' cannot be null.");
+        else if (monthYear !== undefined)
+            url_ += "MonthYear=" + encodeURIComponent(monthYear ? "" + monthYear.toJSON() : "") + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -397,7 +395,7 @@ export class CardStatementsClient implements ICardStatementsClient {
 }
 
 export interface ITransactionsClient {
-    create(command: CreateTransactionCommand): Observable<number>;
+    create(command: CreateTransactionCommand): Observable<string>;
 }
 
 @Injectable({
@@ -413,7 +411,7 @@ export class TransactionsClient implements ITransactionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    create(command: CreateTransactionCommand): Observable<number> {
+    create(command: CreateTransactionCommand): Observable<string> {
         let url_ = this.baseUrl + "/api/Transactions";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -436,14 +434,14 @@ export class TransactionsClient implements ITransactionsClient {
                 try {
                     return this.processCreate(<any>response_);
                 } catch (e) {
-                    return <Observable<number>><any>_observableThrow(e);
+                    return <Observable<string>><any>_observableThrow(e);
                 }
             } else
-                return <Observable<number>><any>_observableThrow(response_);
+                return <Observable<string>><any>_observableThrow(response_);
         }));
     }
 
-    protected processCreate(response: HttpResponseBase): Observable<number> {
+    protected processCreate(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -574,7 +572,7 @@ export interface IBank extends IValueObject {
 }
 
 export class CardDto implements ICardDto {
-    id?: number;
+    id?: string | undefined;
     name?: string | undefined;
 
     constructor(data?: ICardDto) {
@@ -609,7 +607,7 @@ export class CardDto implements ICardDto {
 }
 
 export interface ICardDto {
-    id?: number;
+    id?: string | undefined;
     name?: string | undefined;
 }
 
@@ -714,7 +712,7 @@ export interface ICreateCardCommand {
 }
 
 export class CardStatementDto implements ICardStatementDto {
-    id?: number;
+    id?: string | undefined;
     monthYear?: string | undefined;
     transactions?: TransactionDto[] | undefined;
 
@@ -760,14 +758,14 @@ export class CardStatementDto implements ICardStatementDto {
 }
 
 export interface ICardStatementDto {
-    id?: number;
+    id?: string | undefined;
     monthYear?: string | undefined;
     transactions?: TransactionDto[] | undefined;
 }
 
 export class TransactionDto implements ITransactionDto {
-    id?: number;
-    cardStatementId?: number;
+    id?: string | undefined;
+    cardStatementId?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;
@@ -816,8 +814,8 @@ export class TransactionDto implements ITransactionDto {
 }
 
 export interface ITransactionDto {
-    id?: number;
-    cardStatementId?: number;
+    id?: string | undefined;
+    cardStatementId?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;
@@ -826,7 +824,7 @@ export interface ITransactionDto {
 }
 
 export class CreateCardStatementCommand implements ICreateCardStatementCommand {
-    cardId?: number;
+    cardId?: string | undefined;
     monthYear?: Date;
 
     constructor(data?: ICreateCardStatementCommand) {
@@ -861,12 +859,12 @@ export class CreateCardStatementCommand implements ICreateCardStatementCommand {
 }
 
 export interface ICreateCardStatementCommand {
-    cardId?: number;
+    cardId?: string | undefined;
     monthYear?: Date;
 }
 
 export class CreateTransactionCommand implements ICreateTransactionCommand {
-    cardStatementId?: number;
+    cardStatementId?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;
@@ -913,7 +911,7 @@ export class CreateTransactionCommand implements ICreateTransactionCommand {
 }
 
 export interface ICreateTransactionCommand {
-    cardStatementId?: number;
+    cardStatementId?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;

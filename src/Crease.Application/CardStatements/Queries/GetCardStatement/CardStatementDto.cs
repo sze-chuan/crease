@@ -11,7 +11,7 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
             Transactions = new List<TransactionDto>();
         }
         
-        public int Id { get; set; }
+        public string Id { get; set; }
         
         public string MonthYear { get; set; }
         

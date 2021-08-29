@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -12,12 +13,12 @@ namespace Crease.Application.Cards.Queries.GetCard
 {
     public class GetCardQuery : IRequest<CardDto>
     {
-        public GetCardQuery(int cardId)
+        public GetCardQuery(string cardId)
         {
             CardId = cardId;
         }
         
-        public int CardId { get; }
+        public string CardId { get; }
     }
 
     public class GetCardQueryHandler : IRequestHandler<GetCardQuery, CardDto>
@@ -34,7 +35,7 @@ namespace Crease.Application.Cards.Queries.GetCard
         public async Task<CardDto> Handle(GetCardQuery request, CancellationToken cancellationToken)
         {
             return await _context.Cards
-                .Where(x => x.Id == request.CardId)
+                .Where(x => x.Id == Guid.Parse(request.CardId))
                 .ProjectTo<CardDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken);
         }

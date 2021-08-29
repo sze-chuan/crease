@@ -8,9 +8,9 @@ using MediatR;
 
 namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
 {
-    public class CreateTransactionCommand : IRequest<int>
+    public class CreateTransactionCommand : IRequest<string>
     {
-        public int CardStatementId { get; set; }
+        public string CardStatementId { get; set; }
         
         public string PaymentType { get; set; }
         
@@ -23,7 +23,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
         public decimal Amount { get; set; }
     }
 
-    public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, int>
+    public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, string>
     {
         private readonly IApplicationDbContext _context;
 
@@ -32,7 +32,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
             _context = context;
         }
 
-        public async Task<int> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
         {
             var entity = new Transaction
             {
@@ -48,7 +48,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.Id;
+            return entity.Id.ToString();
         }
     }
 }

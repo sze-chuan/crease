@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Crease.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crease.Infrastructure.Persistence
 {
@@ -10,7 +11,9 @@ namespace Crease.Infrastructure.Persistence
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
             // Seed, if necessary
-            if (!context.Cards.Any())
+            var cards = await context.Cards.ToListAsync();
+            
+            if (!cards.Any())
             {
                 context.Cards.Add(new Card
                 {

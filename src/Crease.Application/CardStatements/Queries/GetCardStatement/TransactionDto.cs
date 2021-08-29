@@ -6,9 +6,9 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
 {
     public class TransactionDto : IMapFrom<Transaction>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         
-        public int CardStatementId { get; set; }
+        public string CardStatementId { get; set; }
         
         public string PaymentType { get; set; }
         

@@ -8,7 +8,7 @@ namespace Crease.Domain.Entities
     {
         public DateTime MonthYear { get; set; }
         
-        public int CardId { get; set; }
+        public string CardId { get; set; }
         
         public IList<Transaction> Transactions { get; private set; } = new List<Transaction>();
     }

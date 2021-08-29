@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Crease.Application.Cards.Commands.CreateCard
 {
-    public class CreateCardCommand : IRequest<int>
+    public class CreateCardCommand : IRequest<string>
     {
         public int BankCardId { get; set; }
         
@@ -18,7 +18,7 @@ namespace Crease.Application.Cards.Commands.CreateCard
         public DateTime StartDate { get; set; }
     }
 
-    public class CreateCardCommandHandler : IRequestHandler<CreateCardCommand, int>
+    public class CreateCardCommandHandler : IRequestHandler<CreateCardCommand, string>
     {
         private readonly IApplicationDbContext _context;
 
@@ -27,7 +27,7 @@ namespace Crease.Application.Cards.Commands.CreateCard
             _context = context;
         }
 
-        public async Task<int> Handle(CreateCardCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(CreateCardCommand request, CancellationToken cancellationToken)
         {
             var entity = new Card
             {
@@ -41,7 +41,7 @@ namespace Crease.Application.Cards.Commands.CreateCard
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.Id;
+            return entity.Id.ToString();
         }
     }
 }
