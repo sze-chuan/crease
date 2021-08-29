@@ -10,6 +10,8 @@ namespace Crease.Infrastructure.Persistence
     {
         public static async Task SeedSampleDataAsync(ApplicationDbContext context)
         {
+            await context.Database.EnsureCreatedAsync();
+            
             // Seed, if necessary
             var cards = await context.Cards.ToListAsync();
             
