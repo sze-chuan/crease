@@ -6,7 +6,7 @@ namespace Crease.Domain.Entities
 {
     public class Transaction : Entity
     {
-        public string CardStatementId { get; set; }
+        public Guid CardStatementId { get; set; }
         
         public PaymentType PaymentType { get; set; }
         

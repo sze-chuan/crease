@@ -44,6 +44,8 @@ namespace Crease.Infrastructure.Persistence
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.HasDefaultContainer("card");
             
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }

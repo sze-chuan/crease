@@ -8,9 +8,7 @@ namespace Crease.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Card> builder)
         {
-            builder.ToContainer("card")
-                .HasNoDiscriminator()
-                .HasKey(card => card.Id);
+            builder.HasKey(card => card.Id);
 
             builder.Property(card => card.Id)
                 .ToJsonProperty("id")

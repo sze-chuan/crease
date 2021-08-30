@@ -8,9 +8,7 @@ namespace Crease.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Transaction> builder)
         {
-            builder.ToContainer("transaction")
-                .HasNoDiscriminator()
-                .HasKey(transaction => transaction.Id);
+            builder.HasKey(transaction => transaction.Id);
             
             builder.Property(transaction => transaction.Id)
                 .ToJsonProperty("id")
@@ -36,12 +34,18 @@ namespace Crease.Infrastructure.Persistence.Configurations
             builder.OwnsOne(b => b.TransactionCategory, tc =>
             {
                 tc.ToJsonProperty("transactionCategory");
+                tc.Property(p => p.Value).ToJsonProperty("value");
             });
 
             builder.OwnsOne(b => b.PaymentType, pt =>
             {
                 pt.ToJsonProperty("paymentType");
+                pt.Property(p => p.Value).ToJsonProperty("value");
             });
+
+            builder.HasOne<CardStatement>()
+                .WithMany(cardStatement => cardStatement.Transactions)
+                .HasForeignKey(transaction => transaction.CardStatementId);
         }
     }
 }

@@ -7,7 +7,7 @@ namespace Crease.Domain.ValueObjects
 {
     public class TransactionCategory : ValueObject
     {
-        private string Value { get; }
+        public string Value { get; }
 
         private TransactionCategory(string value)
         {

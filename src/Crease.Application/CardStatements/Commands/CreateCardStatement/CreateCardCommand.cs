@@ -27,7 +27,7 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
         {
             var entity = new CardStatement
             {
-                CardId = request.CardId,
+                CardId = Guid.Parse(request.CardId),
                 MonthYear = request.MonthYear
             };
             

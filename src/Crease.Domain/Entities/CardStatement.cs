@@ -8,8 +8,8 @@ namespace Crease.Domain.Entities
     {
         public DateTime MonthYear { get; set; }
         
-        public string CardId { get; set; }
+        public Guid CardId { get; set; }
         
-        public IList<Transaction> Transactions { get; private set; } = new List<Transaction>();
+        public ICollection<Transaction> Transactions { get; private set; } = new List<Transaction>();
     }
 }

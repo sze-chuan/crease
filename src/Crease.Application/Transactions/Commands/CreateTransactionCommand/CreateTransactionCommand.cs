@@ -36,7 +36,7 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
         {
             var entity = new Transaction
             {
-                CardStatementId = request.CardStatementId,
+                CardStatementId = Guid.Parse(request.CardStatementId),
                 PaymentType = PaymentType.From(request.PaymentType),
                 TransactionCategory = TransactionCategory.From(request.TransactionCategory),
                 Description = request.Description,

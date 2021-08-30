@@ -30,7 +30,7 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
         public async Task<CardStatementDto> Handle(GetCardStatementQuery request, CancellationToken cancellationToken)
         {
             var cardStatement = await _context.CardStatements
-                .Where(x => x.CardId == request.CardId && x.MonthYear == request.MonthYear)
+                .Where(x => x.CardId == Guid.Parse(request.CardId) && x.MonthYear == request.MonthYear)
                 .SingleOrDefaultAsync(cancellationToken);
 
             return _mapper.Map<CardStatementDto>(cardStatement);
