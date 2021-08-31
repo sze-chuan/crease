@@ -33,6 +33,9 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
                 .Where(x => x.CardId == Guid.Parse(request.CardId) && x.MonthYear == request.MonthYear)
                 .SingleOrDefaultAsync(cancellationToken);
 
+            // Load transactions for selected card transactions 
+            var transactions = await _context.Transactions.Where(x => x.CardStatementId == cardStatement.Id).ToListAsync(cancellationToken);
+
             return _mapper.Map<CardStatementDto>(cardStatement);
         }
     }
