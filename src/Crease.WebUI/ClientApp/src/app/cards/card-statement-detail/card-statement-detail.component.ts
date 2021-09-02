@@ -58,10 +58,10 @@ export class CardStatementDetailComponent implements OnInit {
       CardTransactionDialogComponent,
       TransactionDto
     >(CardTransactionDialogComponent, {
-      data: <TransactionDto>{
+      data: {
         cardStatementId: this.cardStatement?.id,
         date: new Date(),
-      },
+      } as TransactionDto,
     });
 
     dialogRef.afterClosed().subscribe((data) => {
@@ -76,8 +76,13 @@ export class CardStatementDetailComponent implements OnInit {
 
   getCardStatement(statementPeriod: Date | undefined): void {
     if (this.selectedCard && statementPeriod) {
+      // Set to utc time to remove time zone offset in generated web service client
+      const utcStatementPeriod = new Date(
+        Date.UTC(statementPeriod.getFullYear(), statementPeriod.getMonth())
+      );
+
       this.cardStatementsClient
-        .get(this.selectedCard.id, statementPeriod)
+        .get(this.selectedCard.id, utcStatementPeriod)
         .subscribe((statement: CardStatementDto | undefined) => {
           this.cardStatement = statement
             ? Object.assign({}, statement)
@@ -96,7 +101,7 @@ export class CardStatementDetailComponent implements OnInit {
 
   addTransaction(transaction: TransactionDto): void {
     this.transactionsClient
-      .create(<CreateTransactionCommand>{ ...transaction })
+      .create({ ...transaction } as CreateTransactionCommand)
       .subscribe(
         (result) => {
           transaction.id = result;
@@ -113,17 +118,17 @@ export class CardStatementDetailComponent implements OnInit {
 
   createStatement(): void {
     this.cardStatementsClient
-      .create(<CreateCardStatementCommand>{
+      .create({
         cardId: this.selectedCard?.id,
         monthYear: this.selectedMonthYear,
-      })
+      } as CreateCardStatementCommand)
       .subscribe(
         (result) => {
-          this.cardStatement = <CardStatementDto>{
+          this.cardStatement = {
             id: result,
             monthYear: this.selectedMonthYear,
-            transactions: <TransactionDto[]>[],
-          };
+            transactions: [] as TransactionDto[],
+          } as CardStatementDto;
         },
         (error) => console.error(error)
       );
