@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Add Transaction</h2>
+<h2 mat-dialog-title>{{ transactionId.value ? "Edit" : "Add" }} Transaction</h2>
 <mat-dialog-content [formGroup]="transactionForm" class="global-dialog">
   <mat-form-field>
     <mat-label>Date</mat-label>
@@ -69,6 +69,7 @@
     formControlName="cardStatementId"
     name="cardStatementId"
   />
+  <input #transactionId type="hidden" formControlName="id" name="id" />
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button
@@ -79,7 +80,7 @@
     (click)="addTransaction()"
     mat-dialog-close
   >
-    Add
+    {{ transactionId.value ? "Edit" : "Add" }}
   </button>
   <button mat-flat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

@@ -14,10 +14,6 @@ namespace Crease.Domain.ValueObjects
             Value = value;
         }
 
-        private PaymentType()
-        {
-        }
-
         public static PaymentType From(string value)
         {
             var paymentType = new PaymentType(value);
@@ -35,6 +31,11 @@ namespace Crease.Domain.ValueObjects
         public static PaymentType Contactless => new(nameof(Contactless));
 
         public static PaymentType Physical => new(nameof(Physical));
+
+        public override string ToString()
+        {
+            return Value;
+        }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

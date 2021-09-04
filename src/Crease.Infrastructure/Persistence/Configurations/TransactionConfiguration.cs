@@ -1,4 +1,5 @@
 using Crease.Domain.Entities;
+using Crease.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -30,18 +31,18 @@ namespace Crease.Infrastructure.Persistence.Configurations
                 .ToJsonProperty("description")
                 .HasMaxLength(200)
                 .IsRequired();
-
-            builder.OwnsOne(b => b.TransactionCategory, tc =>
-            {
-                tc.ToJsonProperty("transactionCategory");
-                tc.Property(p => p.Value).ToJsonProperty("value");
-            });
-
-            builder.OwnsOne(b => b.PaymentType, pt =>
-            {
-                pt.ToJsonProperty("paymentType");
-                pt.Property(p => p.Value).ToJsonProperty("value");
-            });
+            
+            builder.Property(transaction => transaction.TransactionCategory)
+                .ToJsonProperty("transactionCategory")
+                .HasConversion(
+                    tc => tc.Value,
+                    tc => TransactionCategory.From(tc));
+            
+            builder.Property(transaction => transaction.PaymentType)
+                .ToJsonProperty("paymentType")
+                .HasConversion(
+                    pt => pt.Value,
+                    pt => PaymentType.From(pt));
 
             builder.HasOne<CardStatement>()
                 .WithMany(cardStatement => cardStatement.Transactions)

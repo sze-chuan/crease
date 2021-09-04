@@ -396,6 +396,7 @@ export class CardStatementsClient implements ICardStatementsClient {
 
 export interface ITransactionsClient {
     create(command: CreateTransactionCommand): Observable<string>;
+    update(id: string | null, command: UpdateTransactionCommand): Observable<void>;
 }
 
 @Injectable({
@@ -454,6 +455,59 @@ export class TransactionsClient implements ITransactionsClient {
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = resultData200 !== undefined ? resultData200 : <any>null;
             return _observableOf(result200);
+            }));
+        } else {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let resultdefault: any = null;
+            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            resultdefault = ProblemDetails.fromJS(resultDatadefault);
+            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
+            }));
+        }
+    }
+
+    update(id: string | null, command: UpdateTransactionCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/Transactions/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
             }));
         } else {
             return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
@@ -912,6 +966,62 @@ export class CreateTransactionCommand implements ICreateTransactionCommand {
 
 export interface ICreateTransactionCommand {
     cardStatementId?: string | undefined;
+    paymentType?: string | undefined;
+    transactionCategory?: string | undefined;
+    description?: string | undefined;
+    date?: Date;
+    amount?: number;
+}
+
+export class UpdateTransactionCommand implements IUpdateTransactionCommand {
+    id?: string | undefined;
+    paymentType?: string | undefined;
+    transactionCategory?: string | undefined;
+    description?: string | undefined;
+    date?: Date;
+    amount?: number;
+
+    constructor(data?: IUpdateTransactionCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.paymentType = _data["paymentType"];
+            this.transactionCategory = _data["transactionCategory"];
+            this.description = _data["description"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): UpdateTransactionCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateTransactionCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["paymentType"] = this.paymentType;
+        data["transactionCategory"] = this.transactionCategory;
+        data["description"] = this.description;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["amount"] = this.amount;
+        return data; 
+    }
+}
+
+export interface IUpdateTransactionCommand {
+    id?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;

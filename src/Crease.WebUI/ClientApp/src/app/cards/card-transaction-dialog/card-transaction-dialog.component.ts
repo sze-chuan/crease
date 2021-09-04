@@ -21,6 +21,7 @@ export class CardTransactionDialogComponent {
     @Inject(MAT_DIALOG_DATA) data: TransactionDto
   ) {
     this.transactionForm = new FormGroup({
+      id: new FormControl(data.id),
       date: new FormControl(data.date),
       description: new FormControl(data.description),
       amount: new FormControl(data.amount),

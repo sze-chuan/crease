@@ -13,10 +13,6 @@ namespace Crease.Domain.ValueObjects
         {
             Value = value;
         }
-
-        private TransactionCategory()
-        {
-        }
         
         public static TransactionCategory From(string value)
         {
@@ -35,6 +31,11 @@ namespace Crease.Domain.ValueObjects
         public static TransactionCategory Shopping => new(nameof(Shopping));
 
         public static TransactionCategory Groceries => new(nameof(Groceries));
+
+        public override string ToString()
+        {
+            return Value;
+        }
 
         protected override IEnumerable<object> GetEqualityComponents()
         {

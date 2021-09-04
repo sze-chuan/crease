@@ -6,6 +6,14 @@ table {
   width: 100%;
 }
 
+.mat-row .mat-cell {
+  cursor: pointer;
+}
+
+.mat-row:hover {
+  background-color: lightgray;
+}
+
 tr.mat-footer-row {
   font-weight: bold;
 }

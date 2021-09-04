@@ -15,6 +15,7 @@ import {
   TransactionsClient,
   CreateCardStatementCommand,
   CreateTransactionCommand,
+  CreateCardCommand,
 } from 'src/app/web-api-client';
 
 @Component({
@@ -54,14 +55,20 @@ export class CardStatementDetailComponent implements OnInit {
   }
 
   openAddCardTransaction(): void {
+    const newTransaction = {
+      cardStatementId: this.cardStatement?.id,
+      date: new Date(),
+    } as TransactionDto;
+
+    this.openTransactionDialog(newTransaction);
+  }
+
+  openTransactionDialog(transaction: TransactionDto): void {
     const dialogRef = this.dialog.open<
       CardTransactionDialogComponent,
       TransactionDto
     >(CardTransactionDialogComponent, {
-      data: {
-        cardStatementId: this.cardStatement?.id,
-        date: new Date(),
-      } as TransactionDto,
+      data: transaction,
     });
 
     dialogRef.afterClosed().subscribe((data) => {
@@ -100,20 +107,46 @@ export class CardStatementDetailComponent implements OnInit {
   }
 
   addTransaction(transaction: TransactionDto): void {
-    this.transactionsClient
-      .create({ ...transaction } as CreateTransactionCommand)
-      .subscribe(
-        (result) => {
-          transaction.id = result;
-          if (this.cardStatement?.transactions) {
-            this.cardStatement.transactions = [
-              ...this.cardStatement.transactions,
-              transaction,
-            ];
-          }
-        },
-        (error) => console.error(error)
-      );
+    if (transaction.id) {
+      this.transactionsClient
+        .update(transaction.id, { ...transaction } as CreateTransactionCommand)
+        .subscribe(
+          () => {
+            if (this.cardStatement?.transactions) {
+              this.cardStatement.transactions =
+                this.cardStatement.transactions.map((item) => {
+                  if (item.id !== transaction.id) {
+                    return item;
+                  }
+
+                  return transaction;
+                });
+            }
+          },
+          (error) => console.error(error)
+        );
+    } else {
+      this.transactionsClient
+        .create({ ...transaction } as CreateTransactionCommand)
+        .subscribe(
+          (result) => {
+            transaction.id = result;
+            if (this.cardStatement?.transactions) {
+              this.cardStatement.transactions = [
+                ...this.cardStatement.transactions,
+                transaction,
+              ];
+            }
+          },
+          (error) => console.error(error)
+        );
+    }
+  }
+
+  editTransaction(transaction: TransactionDto): void {
+    if (transaction) {
+      this.openTransactionDialog(transaction);
+    }
   }
 
   createStatement(): void {
