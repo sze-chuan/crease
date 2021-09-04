@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Crease.Application.Transactions.Commands.CreateTransactionCommand;
+using Crease.Application.Transactions.Commands.DeleteTransactionCommand;
 using Crease.Application.Transactions.Commands.UpdateTransactionCommand;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,16 @@ namespace Crease.WebUI.Controllers
             }
 
             await Mediator.Send(command);
+
+            return NoContent();
+        }
+        
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesDefaultResponseType]
+        public async Task<ActionResult> Delete(string id)
+        {
+            await Mediator.Send(new DeleteTransactionCommand { Id = id });
 
             return NoContent();
         }
