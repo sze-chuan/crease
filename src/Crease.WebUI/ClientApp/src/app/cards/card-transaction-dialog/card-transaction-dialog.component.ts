@@ -10,6 +10,7 @@ import { TransactionDto } from 'src/app/web-api-client';
 })
 export class CardTransactionDialogComponent {
   transactionForm: FormGroup;
+  transactionActionText: string;
   readonly transactionCategories: string[] = [
     'Shopping',
     'Dining',
@@ -29,6 +30,7 @@ export class CardTransactionDialogComponent {
       transactionCategory: new FormControl(data.transactionCategory),
       cardStatementId: new FormControl(data.cardStatementId),
     });
+    this.transactionActionText = data.id ? 'Edit' : 'Add';
   }
 
   addTransaction(): void {

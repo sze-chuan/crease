@@ -72,7 +72,9 @@ export class CardStatementDetailComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe((data) => {
-      this.addTransaction(data);
+      if (data) {
+        this.addTransaction(data);
+      }
     });
   }
 
