@@ -11,7 +11,7 @@
     <ng-container matColumnDef="date">
       <th mat-header-cell *matHeaderCellDef>Date</th>
       <td mat-cell *matCellDef="let element">
-        {{ element.date | date: "d LLL yyyy" }}
+        {{ element.date | date: "d LLL yy" }}
       </td>
       <td mat-footer-cell *matFooterCellDef>Total</td>
     </ng-container>
