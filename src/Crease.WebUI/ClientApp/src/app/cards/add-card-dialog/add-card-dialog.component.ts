@@ -2,7 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { BankCardDto } from 'src/app/web-api-client';
-import { Card } from '../models/card';
 
 @Component({
   selector: 'add-card-dialog',
@@ -12,7 +11,6 @@ import { Card } from '../models/card';
 export class AddCardDialogComponent {
   cardForm: FormGroup;
   bankCards: BankCardDto[];
-  card: Card | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<AddCardDialogComponent>,
