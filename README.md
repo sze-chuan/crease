@@ -1,6 +1,6 @@
 # Crease
 
-##Description
+## Description
 Crease is built to tackle the pain points of tracking credit card rewards. Some of the main features include:
 - Adding credit cards
 - Adding transactions and computing the rewards based on each card's rewards' requirements
@@ -10,7 +10,7 @@ This is also a personal side project to pick up the following concepts:
 - Clean Architecture
 - Domain Driven Design
 
-##Tech stack
+## Tech stack
 - Angular 11
 - ASP.Net Core 5
 - Entity Framework Core 5
