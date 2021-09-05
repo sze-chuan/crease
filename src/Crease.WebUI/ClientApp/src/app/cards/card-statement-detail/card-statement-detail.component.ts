@@ -15,7 +15,6 @@ import {
   TransactionsClient,
   CreateCardStatementCommand,
   CreateTransactionCommand,
-  CreateCardCommand,
 } from 'src/app/web-api-client';
 
 @Component({
@@ -71,10 +70,8 @@ export class CardStatementDetailComponent implements OnInit {
       data: transaction,
     });
 
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.addTransaction(data);
-      }
+    dialogRef.afterClosed().subscribe((result) => {
+      this.modifyTransaction(result.event, result.data);
     });
   }
 
@@ -108,8 +105,23 @@ export class CardStatementDetailComponent implements OnInit {
       : 0;
   }
 
-  addTransaction(transaction: TransactionDto): void {
-    if (transaction.id) {
+  modifyTransaction(event: string, transaction: TransactionDto): void {
+    if (event === 'Add') {
+      this.transactionsClient
+        .create({ ...transaction } as CreateTransactionCommand)
+        .subscribe(
+          (result) => {
+            transaction.id = result;
+            if (this.cardStatement?.transactions) {
+              this.cardStatement.transactions = [
+                ...this.cardStatement.transactions,
+                transaction,
+              ];
+            }
+          },
+          (error) => console.error(error)
+        );
+    } else if (event === 'Update' && transaction.id) {
       this.transactionsClient
         .update(transaction.id, { ...transaction } as CreateTransactionCommand)
         .subscribe(
@@ -127,25 +139,22 @@ export class CardStatementDetailComponent implements OnInit {
           },
           (error) => console.error(error)
         );
-    } else {
-      this.transactionsClient
-        .create({ ...transaction } as CreateTransactionCommand)
-        .subscribe(
-          (result) => {
-            transaction.id = result;
-            if (this.cardStatement?.transactions) {
-              this.cardStatement.transactions = [
-                ...this.cardStatement.transactions,
-                transaction,
-              ];
-            }
-          },
-          (error) => console.error(error)
-        );
+    } else if (event === 'Delete' && transaction.id) {
+      this.transactionsClient.delete(transaction.id).subscribe(
+        () => {
+          if (this.cardStatement?.transactions) {
+            this.cardStatement.transactions =
+              this.cardStatement.transactions.filter(
+                (item) => item.id !== transaction.id
+              );
+          }
+        },
+        (error) => console.error(error)
+      );
     }
   }
 
-  editTransaction(transaction: TransactionDto): void {
+  editTransactionDialog(transaction: TransactionDto): void {
     if (transaction) {
       this.openTransactionDialog(transaction);
     }

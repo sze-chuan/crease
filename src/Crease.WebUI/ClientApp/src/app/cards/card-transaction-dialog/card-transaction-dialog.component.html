@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>{{ transactionActionText }} Transaction</h2>
+<h2 mat-dialog-title>{{ isNew ? "Add" : "Update" }} Transaction</h2>
 <mat-dialog-content [formGroup]="transactionForm" class="global-dialog">
   <mat-form-field>
     <mat-label>Date</mat-label>
@@ -77,10 +77,20 @@
     color="primary"
     type="submit"
     [disabled]="transactionForm.invalid"
-    (click)="addTransaction()"
+    (click)="doAction(isNew ? 'Add' : 'Update')"
     mat-dialog-close
   >
-    {{ transactionActionText }}
+    {{ isNew ? "Add" : "Update" }}
+  </button>
+  <button
+    *ngIf="!isNew"
+    mat-flat-button
+    mat-dialog-close
+    color="primary"
+    type="submit"
+    (click)="doAction('Delete')"
+  >
+    Delete
   </button>
   <button mat-flat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>
