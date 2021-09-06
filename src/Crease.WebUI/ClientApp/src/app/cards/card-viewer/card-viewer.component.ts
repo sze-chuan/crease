@@ -12,6 +12,7 @@ import {
 } from '../../web-api-client';
 
 import { filter, switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'card-viewer',
@@ -23,7 +24,7 @@ export class CardViewerComponent implements OnInit, OnDestroy {
   cards: CardDto[];
   bankCards: BankCardDto[];
   selectedCard?: CardDto;
-  routerObserver!: any;
+  routerObserver!: Subscription;
 
   constructor(
     private router: Router,

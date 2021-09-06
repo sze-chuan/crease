@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -6,10 +6,6 @@ import { faCreditCard } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   faCreditCard = faCreditCard;
-
-  constructor() {}
-
-  ngOnInit(): void {}
 }

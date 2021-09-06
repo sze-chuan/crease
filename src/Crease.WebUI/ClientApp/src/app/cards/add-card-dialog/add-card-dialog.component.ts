@@ -14,9 +14,9 @@ export class AddCardDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<AddCardDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) data: any
+    @Inject(MAT_DIALOG_DATA) data: BankCardDto[]
   ) {
-    this.bankCards = data?.bankCards;
+    this.bankCards = data;
 
     this.cardForm = new FormGroup({
       bankCard: new FormControl(),
