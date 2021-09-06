@@ -5,9 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e",
     "prepare": "cd ../../.. && husky install src/Crease.WebUI/ClientApp/.husky"
   },
   "private": true,
@@ -23,7 +21,7 @@
     "@angular/platform-browser": "~12.2.4",
     "@angular/platform-browser-dynamic": "~12.2.4",
     "@angular/router": "~12.2.4",
-    "@fortawesome/angular-fontawesome": "^0.8.2",
+    "@fortawesome/angular-fontawesome": "^0.9.0",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
     "moment": "^2.29.1",
@@ -47,7 +45,6 @@
     "husky": "^7.0.1",
     "lint-staged": "^11.1.2",
     "prettier": "^2.3.2",
-    "protractor": "~7.0.0",
     "ts-node": "~8.3.0",
     "typescript": "~4.3.5"
   },
