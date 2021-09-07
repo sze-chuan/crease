@@ -11,7 +11,7 @@ This is also a personal side project to pick up the following concepts:
 - Domain Driven Design
 
 ## Tech stack
-- Angular 11
+- Angular 12
 - ASP.Net Core 5
 - Entity Framework Core 5
 - MediatR
@@ -27,11 +27,23 @@ Make sure the following is installed:
 - Node.js LTS
 
 ### Database Configuration
-To be updated
+There are 2 types of database, in memory and Cosmos DB.
+
+#### In Memory Database
+To configure in memory database, go to `src/Crease.WebUI/appsettings.json` and set `UseInMemoryDatabase` to `true`.
+
+#### Cosmos DB
+To develop locally with Cosmos DB, perform the following steps:
+
+1. Install and run [Azure Cosmos DB Emulator](https://aka.ms/cosmosdb-emulator).
+2. Run the data explorer from Cosmos DB Emulator and copy the `Primary Connection String` in the home page.
+3. Navigate to `src/Crease.WebUI` with terminal.
+4. Execute the following command: `dotnet user-secrets set "ConnectionStrings:Crease" "<Primary Connection String>"`
+5. Go to `src/Crease.WebUI/appsettings.json` and set `UseInMemoryDatabase` to `false`
 
 ### Running the web application:
 
 1. Navigate to `src/Crease.WebUI/ClientApp` and run `npm install`
 2. Navigate to `src/Crease.WebUI/ClientApp` and run `npm start` to run the front end client
-3. Navigate to `src/Crease.WebUI/ClientApp` and run `dotnet run` to start the back end API services
+3. Navigate to `src/Crease.WebUI` and run `dotnet run` to start the back end API services
 
