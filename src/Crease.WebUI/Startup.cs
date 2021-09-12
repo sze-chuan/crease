@@ -1,18 +1,17 @@
-using System.Linq;
 using Crease.Application;
 using Crease.Application.Common.Interfaces;
 using Crease.Infrastructure;
 using Crease.WebUI.Filters;
 using Crease.WebUI.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NSwag;
-using NSwag.Generation.Processors.Security;
+using Microsoft.Identity.Web;
 
 namespace Crease.WebUI
 {
@@ -35,22 +34,34 @@ namespace Crease.WebUI
             services.AddRazorPages();
 
             services.AddHttpContextAccessor();
+            services.AddRouting(options => options.LowercaseUrls = true);
 
             services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>())
                 .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
 
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+            services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApi(options =>
+                    {
+                        Configuration.Bind("AzureAdB2C", options);
+                        options.TokenValidationParameters.NameClaimType = "name";
+                    },
+                    options => { Configuration.Bind("AzureAdB2C", options); });
+            services.AddAuthorization();
             
+            // For development purposes
+            services.AddCors(options => options.AddPolicy("default", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
-            
-            services.AddOpenApiDocument(configure =>
-            {
-                configure.Title = "Crease API";
-            });
+
+            services.AddOpenApiDocument(configure => { configure.Title = "Crease API"; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -73,14 +84,17 @@ namespace Crease.WebUI
             {
                 app.UseSpaStaticFiles();
             }
-            
+
             app.UseSwaggerUi3(settings =>
             {
                 settings.Path = "/api";
                 settings.DocumentPath = "/api/specification.json";
             });
 
+            app.UseCors("default");
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

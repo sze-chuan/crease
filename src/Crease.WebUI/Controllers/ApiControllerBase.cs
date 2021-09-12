@@ -11,5 +11,7 @@ namespace Crease.WebUI.Controllers
         private ISender _mediator;
 
         protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
+
+        protected static readonly string[] ScopeRequiredByApi = { "crease.user" };
     }
 }

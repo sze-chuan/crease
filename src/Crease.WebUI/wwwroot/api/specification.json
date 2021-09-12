@@ -6,7 +6,7 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/BankCards": {
+    "/api/bankcards": {
       "get": {
         "tags": [
           "BankCards"
@@ -29,7 +29,7 @@
         }
       }
     },
-    "/api/Cards": {
+    "/api/cards": {
       "get": {
         "tags": [
           "Cards"
@@ -92,7 +92,7 @@
         }
       }
     },
-    "/api/Cards/{cardId}": {
+    "/api/cards/{cardId}": {
       "get": {
         "tags": [
           "Cards"
@@ -124,7 +124,7 @@
         }
       }
     },
-    "/api/CardStatements": {
+    "/api/cardstatements": {
       "get": {
         "tags": [
           "CardStatements"
@@ -204,7 +204,7 @@
         }
       }
     },
-    "/api/Transactions": {
+    "/api/transactions": {
       "post": {
         "tags": [
           "Transactions"
@@ -246,7 +246,7 @@
         }
       }
     },
-    "/api/Transactions/{id}": {
+    "/api/transactions/{id}": {
       "put": {
         "tags": [
           "Transactions"
