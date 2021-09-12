@@ -26,11 +26,13 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
+import { MsalGuard } from '@azure/msal-angular';
 
 const routes: Routes = [
   {
     path: 'cards',
     component: CardViewerComponent,
+    canActivate: [MsalGuard],
     children: [{ path: ':id', component: CardStatementDetailComponent }],
   },
 ];
