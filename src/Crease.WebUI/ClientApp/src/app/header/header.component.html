@@ -6,4 +6,12 @@
   <a mat-button [routerLink]="'/cards'">
     <span>Cards</span>
   </a>
+  <span class="spacer"></span>
+  <button mat-button *ngIf="!userAccount" (click)="handleLogin()">Login</button>
+  <button mat-button *ngIf="userAccount" [matMenuTriggerFor]="menu">
+    {{ userAccount.name }}
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="handleLogout()">Logout</button>
+  </mat-menu>
 </mat-toolbar>
