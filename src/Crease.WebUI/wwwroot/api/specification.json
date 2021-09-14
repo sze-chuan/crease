@@ -204,12 +204,24 @@
         }
       }
     },
-    "/api/transactions": {
+    "/api/cardstatements/{cardStatementId}/transactions": {
       "post": {
         "tags": [
           "Transactions"
         ],
         "operationId": "Transactions_Create",
+        "parameters": [
+          {
+            "name": "cardStatementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -220,7 +232,7 @@
             }
           },
           "required": true,
-          "x-position": 1
+          "x-position": 2
         },
         "responses": {
           "200": {
@@ -246,7 +258,7 @@
         }
       }
     },
-    "/api/transactions/{id}": {
+    "/api/cardstatements/{cardStatementId}/transactions/{id}": {
       "put": {
         "tags": [
           "Transactions"
@@ -262,6 +274,16 @@
               "nullable": true
             },
             "x-position": 1
+          },
+          {
+            "name": "cardStatementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
           }
         ],
         "requestBody": {
@@ -274,7 +296,7 @@
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 3
         },
         "responses": {
           "204": {
@@ -307,6 +329,16 @@
               "nullable": true
             },
             "x-position": 1
+          },
+          {
+            "name": "cardStatementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
           }
         ],
         "responses": {
@@ -542,6 +574,10 @@
         "additionalProperties": false,
         "properties": {
           "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardStatementId": {
             "type": "string",
             "nullable": true
           },

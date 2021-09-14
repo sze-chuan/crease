@@ -395,9 +395,9 @@ export class CardStatementsClient implements ICardStatementsClient {
 }
 
 export interface ITransactionsClient {
-    create(command: CreateTransactionCommand): Observable<string>;
-    update(id: string | null, command: UpdateTransactionCommand): Observable<void>;
-    delete(id: string | null): Observable<void>;
+    create(cardStatementId: string | null, command: CreateTransactionCommand): Observable<string>;
+    update(id: string | null, cardStatementId: string | null, command: UpdateTransactionCommand): Observable<void>;
+    delete(id: string | null, cardStatementId: string | null): Observable<void>;
 }
 
 @Injectable({
@@ -413,8 +413,11 @@ export class TransactionsClient implements ITransactionsClient {
         this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
     }
 
-    create(command: CreateTransactionCommand): Observable<string> {
-        let url_ = this.baseUrl + "/api/transactions";
+    create(cardStatementId: string | null, command: CreateTransactionCommand): Observable<string> {
+        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}/transactions";
+        if (cardStatementId === undefined || cardStatementId === null)
+            throw new Error("The parameter 'cardStatementId' must be defined.");
+        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -467,11 +470,14 @@ export class TransactionsClient implements ITransactionsClient {
         }
     }
 
-    update(id: string | null, command: UpdateTransactionCommand): Observable<void> {
-        let url_ = this.baseUrl + "/api/transactions/{id}";
+    update(id: string | null, cardStatementId: string | null, command: UpdateTransactionCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}/transactions/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (cardStatementId === undefined || cardStatementId === null)
+            throw new Error("The parameter 'cardStatementId' must be defined.");
+        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(command);
@@ -520,11 +526,14 @@ export class TransactionsClient implements ITransactionsClient {
         }
     }
 
-    delete(id: string | null): Observable<void> {
-        let url_ = this.baseUrl + "/api/transactions/{id}";
+    delete(id: string | null, cardStatementId: string | null): Observable<void> {
+        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}/transactions/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (cardStatementId === undefined || cardStatementId === null)
+            throw new Error("The parameter 'cardStatementId' must be defined.");
+        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -1025,6 +1034,7 @@ export interface ICreateTransactionCommand {
 
 export class UpdateTransactionCommand implements IUpdateTransactionCommand {
     id?: string | undefined;
+    cardStatementId?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;
@@ -1043,6 +1053,7 @@ export class UpdateTransactionCommand implements IUpdateTransactionCommand {
     init(_data?: any) {
         if (_data) {
             this.id = _data["id"];
+            this.cardStatementId = _data["cardStatementId"];
             this.paymentType = _data["paymentType"];
             this.transactionCategory = _data["transactionCategory"];
             this.description = _data["description"];
@@ -1061,6 +1072,7 @@ export class UpdateTransactionCommand implements IUpdateTransactionCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
+        data["cardStatementId"] = this.cardStatementId;
         data["paymentType"] = this.paymentType;
         data["transactionCategory"] = this.transactionCategory;
         data["description"] = this.description;
@@ -1072,6 +1084,7 @@ export class UpdateTransactionCommand implements IUpdateTransactionCommand {
 
 export interface IUpdateTransactionCommand {
     id?: string | undefined;
+    cardStatementId?: string | undefined;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;

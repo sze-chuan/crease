@@ -106,9 +106,16 @@ export class CardStatementDetailComponent implements OnInit {
   }
 
   modifyTransaction(event: string, transaction: TransactionDto): void {
+    if (!transaction.cardStatementId) {
+      console.error('CardStatementId is missing.');
+      return;
+    }
+
     if (event === 'Add') {
       this.transactionsClient
-        .create({ ...transaction } as CreateTransactionCommand)
+        .create(transaction.cardStatementId, {
+          ...transaction,
+        } as CreateTransactionCommand)
         .subscribe(
           (result) => {
             transaction.id = result;
@@ -123,7 +130,9 @@ export class CardStatementDetailComponent implements OnInit {
         );
     } else if (event === 'Update' && transaction.id) {
       this.transactionsClient
-        .update(transaction.id, { ...transaction } as CreateTransactionCommand)
+        .update(transaction.id, transaction.cardStatementId, {
+          ...transaction,
+        } as CreateTransactionCommand)
         .subscribe(
           () => {
             if (this.cardStatement?.transactions) {
@@ -140,17 +149,19 @@ export class CardStatementDetailComponent implements OnInit {
           (error) => console.error(error)
         );
     } else if (event === 'Delete' && transaction.id) {
-      this.transactionsClient.delete(transaction.id).subscribe(
-        () => {
-          if (this.cardStatement?.transactions) {
-            this.cardStatement.transactions =
-              this.cardStatement.transactions.filter(
-                (item) => item.id !== transaction.id
-              );
-          }
-        },
-        (error) => console.error(error)
-      );
+      this.transactionsClient
+        .delete(transaction.id, transaction.cardStatementId)
+        .subscribe(
+          () => {
+            if (this.cardStatement?.transactions) {
+              this.cardStatement.transactions =
+                this.cardStatement.transactions.filter(
+                  (item) => item.id !== transaction.id
+                );
+            }
+          },
+          (error) => console.error(error)
+        );
     }
   }
 
