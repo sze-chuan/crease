@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Crease.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -29,19 +30,11 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
 
         public async Task<CardStatementDto> Handle(GetCardStatementQuery request, CancellationToken cancellationToken)
         {
-            var cardStatement = await _context.CardStatements
+            return await _context.CardStatements
                 .Where(x => x.CardId == Guid.Parse(request.CardId) && x.MonthYear == request.MonthYear)
+                .AsNoTracking()
+                .ProjectTo<CardStatementDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken);
-
-            if (cardStatement == null)
-            {
-                return null;
-            }
-
-            // Load transactions for selected card transactions 
-            var transactions = await _context.Transactions.Where(x => x.CardStatementId == cardStatement.Id).ToListAsync(cancellationToken);
-
-            return _mapper.Map<CardStatementDto>(cardStatement);
         }
     }
 }

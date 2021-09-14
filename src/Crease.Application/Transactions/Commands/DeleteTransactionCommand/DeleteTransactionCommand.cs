@@ -11,6 +11,8 @@ namespace Crease.Application.Transactions.Commands.DeleteTransactionCommand
     public class DeleteTransactionCommand : IRequest
     {
         public string Id { get; set; }
+        
+        public string CardStatementId { get; set; }
     }
 
     public class DeleteTransactionCommandHandler : IRequestHandler<DeleteTransactionCommand>
@@ -24,14 +26,15 @@ namespace Crease.Application.Transactions.Commands.DeleteTransactionCommand
 
         public async Task<Unit> Handle(DeleteTransactionCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Transactions.FindAsync(new object[] { Guid.Parse(request.Id) }, cancellationToken);
-            
-            if (entity == null)
+            var cardStatement =
+                await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
+
+            if (cardStatement == null)
             {
-                throw new NotFoundException(nameof(Transaction), request.Id);
+                throw new NotFoundException(nameof(CardStatement), request.CardStatementId);
             }
 
-            _context.Transactions.Remove(entity);
+            cardStatement.RemoveTransaction(Guid.Parse(request.Id));
             
             await _context.SaveChangesAsync(cancellationToken);
 

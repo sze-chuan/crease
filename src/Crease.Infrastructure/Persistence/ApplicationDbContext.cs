@@ -29,8 +29,6 @@ namespace Crease.Infrastructure.Persistence
         public DbSet<Card> Cards { get; set; }
         
         public DbSet<CardStatement> CardStatements { get; set; }
-        
-        public DbSet<Transaction> Transactions { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {

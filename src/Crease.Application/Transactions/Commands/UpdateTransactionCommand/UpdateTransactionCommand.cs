@@ -14,6 +14,8 @@ namespace Crease.Application.Transactions.Commands.UpdateTransactionCommand
     {
         public string Id { get; set; }
         
+        public string CardStatementId { get; set; }
+        
         public string PaymentType { get; set; }
         
         public string TransactionCategory { get; set; }
@@ -36,18 +38,22 @@ namespace Crease.Application.Transactions.Commands.UpdateTransactionCommand
 
         public async Task<Unit> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Transactions.FindAsync(new object[] { Guid.Parse(request.Id) }, cancellationToken);
+            var cardStatement = await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
 
-            if (entity == null)
+            if (cardStatement == null)
             {
                 throw new NotFoundException(nameof(Transaction), request.Id);
             }
-
-            entity.Description = request.Description;
-            entity.PaymentType = PaymentType.From(request.PaymentType);
-            entity.TransactionCategory = TransactionCategory.From(request.TransactionCategory);
-            entity.Date = request.Date;
-            entity.Amount = request.Amount;
+            
+            cardStatement.UpdateTransaction(new Transaction
+            {
+                Id = Guid.Parse(request.Id),
+                Amount = request.Amount,
+                Description = request.Description,
+                Date = request.Date,
+                PaymentType = PaymentType.From(request.PaymentType),
+                TransactionCategory = TransactionCategory.From(request.TransactionCategory)
+            });
 
             await _context.SaveChangesAsync(cancellationToken);
 

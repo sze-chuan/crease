@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Crease.Application.Common.Exceptions;
 using Crease.Application.Common.Interfaces;
 using Crease.Domain.Entities;
 using Crease.Domain.ValueObjects;
@@ -34,21 +36,29 @@ namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
 
         public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
         {
-            var entity = new Transaction
+            var cardStatement =
+                await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
+
+            if (cardStatement == null)
             {
-                CardStatementId = Guid.Parse(request.CardStatementId),
+                throw new NotFoundException(nameof(CardStatement), request.CardStatementId);
+            }
+
+            var transactionEntity = new Transaction
+            {
+                Id = Guid.NewGuid(),
                 PaymentType = PaymentType.From(request.PaymentType),
                 TransactionCategory = TransactionCategory.From(request.TransactionCategory),
                 Description = request.Description,
                 Date = request.Date,
                 Amount = request.Amount
             };
-            
-            _context.Transactions.Add(entity);
+
+            cardStatement.Transactions.Add(transactionEntity);
 
             await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.Id.ToString();
+            return transactionEntity.Id.ToString();
         }
     }
 }
