@@ -17,7 +17,7 @@ namespace Crease.Application.Cards.Queries.GetCard
         {
             CardId = cardId;
         }
-        
+
         public string CardId { get; }
     }
 
@@ -25,17 +25,19 @@ namespace Crease.Application.Cards.Queries.GetCard
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
-        
-        public GetCardQueryHandler(IApplicationDbContext context, IMapper mapper)
+        private readonly ICurrentUserService _userService;
+
+        public GetCardQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<CardDto> Handle(GetCardQuery request, CancellationToken cancellationToken)
         {
             return await _context.Cards
-                .Where(x => x.Id == Guid.Parse(request.CardId))
+                .Where(x => x.Id == Guid.Parse(request.CardId) && x.UserId == _userService.UserId)
                 .ProjectTo<CardDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken);
         }

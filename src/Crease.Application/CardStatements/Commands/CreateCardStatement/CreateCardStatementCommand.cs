@@ -17,10 +17,12 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
     public class CreateCardStatementCommandHandler : IRequestHandler<CreateCardStatementCommand, string>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _userService;
 
-        public CreateCardStatementCommandHandler(IApplicationDbContext context)
+        public CreateCardStatementCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         public async Task<string> Handle(CreateCardStatementCommand request, CancellationToken cancellationToken)
@@ -28,9 +30,10 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
             var entity = new CardStatement
             {
                 CardId = Guid.Parse(request.CardId),
-                MonthYear = request.MonthYear
+                MonthYear = request.MonthYear,
+                UserId = _userService.UserId
             };
-            
+
             _context.CardStatements.Add(entity);
 
             await _context.SaveChangesAsync(cancellationToken);

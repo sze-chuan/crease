@@ -9,11 +9,16 @@ namespace Crease.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Card> builder)
         {
             builder.HasKey(card => card.Id);
+            builder.HasPartitionKey(card => card.UserId);
 
             builder.Property(card => card.Id)
                 .ToJsonProperty("id")
                 .HasConversion<string>();
-            
+
+            builder.Property(card => card.UserId)
+                .ToJsonProperty("userId")
+                .IsRequired();
+
             builder.Property(card => card.Name)
                 .ToJsonProperty("name")
                 .HasMaxLength(100)

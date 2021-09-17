@@ -21,10 +21,12 @@ namespace Crease.Application.Cards.Commands.CreateCard
     public class CreateCardCommandHandler : IRequestHandler<CreateCardCommand, string>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _userService;
 
-        public CreateCardCommandHandler(IApplicationDbContext context)
+        public CreateCardCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         public async Task<string> Handle(CreateCardCommand request, CancellationToken cancellationToken)
@@ -34,7 +36,8 @@ namespace Crease.Application.Cards.Commands.CreateCard
                 BankCardId = request.BankCardId,
                 Name = request.Name,
                 CardNumber = request.CardNumber,
-                StartDate = request.StartDate
+                StartDate = request.StartDate,
+                UserId = _userService.UserId
             };
             
             _context.Cards.Add(entity);

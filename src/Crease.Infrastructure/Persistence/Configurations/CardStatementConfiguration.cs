@@ -10,6 +10,7 @@ namespace Crease.Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<CardStatement> builder)
         {
             builder.HasKey(cardStatement => cardStatement.Id);
+            builder.HasPartitionKey(cardStatement => cardStatement.UserId);
             
             builder.Property(cardStatement => cardStatement.Id)
                 .ToJsonProperty("id")
@@ -21,6 +22,10 @@ namespace Crease.Infrastructure.Persistence.Configurations
 
             builder.Property(cardStatement => cardStatement.MonthYear)
                 .ToJsonProperty("monthYear")
+                .IsRequired();
+
+            builder.Property(cardStatement => cardStatement.UserId)
+                .ToJsonProperty("userId")
                 .IsRequired();
 
             builder.OwnsMany(cardStatement => cardStatement.Transactions, action =>

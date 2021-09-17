@@ -30,17 +30,19 @@ namespace Crease.Application.Transactions.Commands.UpdateTransactionCommand
     public class UpdateTransactionCommandHandler : IRequestHandler<UpdateTransactionCommand>
     {
         private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _userService;
 
-        public UpdateTransactionCommandHandler(IApplicationDbContext context)
+        public UpdateTransactionCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
         {
             _context = context;
+            _userService = userService;
         }
 
         public async Task<Unit> Handle(UpdateTransactionCommand request, CancellationToken cancellationToken)
         {
             var cardStatement = await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
 
-            if (cardStatement == null)
+            if (cardStatement == null || cardStatement.UserId != _userService.UserId)
             {
                 throw new NotFoundException(nameof(Transaction), request.Id);
             }

@@ -11,6 +11,8 @@ namespace Crease.Domain.Entities
         
         public Guid CardId { get; set; }
         
+        public string UserId { get; set; }
+        
         public List<Transaction> Transactions { get; private set; } = new();
 
         public void UpdateTransaction(Transaction updatedTransaction)

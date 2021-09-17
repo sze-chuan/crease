@@ -22,7 +22,8 @@ namespace Crease.Infrastructure.Persistence
                     BankCardId = 1,
                     CardNumber = "8604",
                     Name = "DBS Live Fresh",
-                    StartDate = new DateTime(2021, 9, 1)
+                    StartDate = new DateTime(2021, 9, 1, 0, 0, 0, DateTimeKind.Utc),
+                    UserId = "development"
                 });
 
                 await context.SaveChangesAsync();

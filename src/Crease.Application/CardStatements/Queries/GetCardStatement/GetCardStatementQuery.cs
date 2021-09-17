@@ -21,17 +21,19 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _userService;
 
-        public GetCardStatementQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetCardStatementQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<CardStatementDto> Handle(GetCardStatementQuery request, CancellationToken cancellationToken)
         {
             return await _context.CardStatements
-                .Where(x => x.CardId == Guid.Parse(request.CardId) && x.MonthYear == request.MonthYear)
+                .Where(x => x.CardId == Guid.Parse(request.CardId) && x.MonthYear == request.MonthYear && x.UserId == _userService.UserId)
                 .AsNoTracking()
                 .ProjectTo<CardStatementDto>(_mapper.ConfigurationProvider)
                 .SingleOrDefaultAsync(cancellationToken);

@@ -18,16 +18,19 @@ namespace Crease.Application.Cards.Queries.GetCards
     {
         private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _userService;
         
-        public GetCardsQueryHandler(IApplicationDbContext context, IMapper mapper)
+        public GetCardsQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService userService)
         {
             _context = context;
             _mapper = mapper;
+            _userService = userService;
         }
 
         public async Task<IEnumerable<CardDto>> Handle(GetCardsQuery request, CancellationToken cancellationToken)
         {
             return await _context.Cards
+                .Where(card => card.UserId == _userService.UserId)
                 .AsNoTracking()
                 .ProjectTo<CardDto>(_mapper.ConfigurationProvider)
                 .OrderBy(t => t.Name)

@@ -7,6 +7,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,7 +31,9 @@ namespace Crease.WebUI
             services.AddApplication();
             services.AddInfrastructure(Configuration);
 
-            services.AddSingleton<ICurrentUserService, CurrentUserService>();
+            var useDevelopmentUser = Configuration.GetValue<bool>("UseDevelopmentUser");
+            services.AddSingleton<ICurrentUserService>(
+                userService => new CurrentUserService(userService.GetService<IHttpContextAccessor>(), useDevelopmentUser));
             services.AddRazorPages();
 
             services.AddHttpContextAccessor();
@@ -49,7 +52,7 @@ namespace Crease.WebUI
                     },
                     options => { Configuration.Bind("AzureAdB2C", options); });
             services.AddAuthorization();
-            
+
             // For development purposes
             services.AddCors(options => options.AddPolicy("default", builder =>
             {
