@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
+import { saveDateAsUtc } from 'src/util/date.helper';
 
 import { switchMap } from 'rxjs/operators';
 
@@ -37,10 +38,8 @@ export class CardStatementDetailComponent implements OnInit {
     private transactionsClient: TransactionsClient
   ) {
     const currentDate = new Date(Date.now());
-    this.selectedMonthYear = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1
+    this.selectedMonthYear = saveDateAsUtc(
+      new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
     );
   }
 

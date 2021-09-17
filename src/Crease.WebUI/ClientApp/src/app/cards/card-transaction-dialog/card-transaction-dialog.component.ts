@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TransactionDto } from 'src/app/web-api-client';
+import { saveDateAsUtc } from 'src/util/date.helper';
 
 @Component({
   selector: 'card-transaction-dialog',
@@ -35,9 +36,12 @@ export class CardTransactionDialogComponent {
   }
 
   doAction(event: string): void {
+    const transactionData = this.transactionForm.value;
+    transactionData.date = saveDateAsUtc(transactionData.date);
+
     this.dialogRef.close({
       event,
-      data: this.transactionForm.value,
+      data: transactionData,
     });
   }
 }
