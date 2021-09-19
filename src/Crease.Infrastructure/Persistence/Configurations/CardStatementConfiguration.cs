@@ -32,8 +32,9 @@ namespace Crease.Infrastructure.Persistence.Configurations
             {
                 action.ToJsonProperty("transactions");
                 action.HasKey(transaction => transaction.Id);
-
+                
                 action.Property(transaction => transaction.Id)
+                    .ValueGeneratedNever()
                     .ToJsonProperty("id");
 
                 action.Property(transaction => transaction.CardStatementId)
