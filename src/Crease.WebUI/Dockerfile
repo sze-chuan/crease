@@ -7,9 +7,10 @@ WORKDIR /app
 EXPOSE 5000
 EXPOSE 5001
 
+FROM node:lts-buster-slim AS node_base
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install -y build-essential nodejs
+COPY --from=node_base . .
+  
 WORKDIR /src
 COPY ["src/Crease.WebUI/Crease.WebUI.csproj", "src/Crease.WebUI/"]
 COPY ["src/Crease.Application/Crease.Application.csproj", "src/Crease.Application/"]
