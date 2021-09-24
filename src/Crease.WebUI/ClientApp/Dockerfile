@@ -1,7 +1,9 @@
 FROM node:14-slim AS BUILD_IMAGE
-EXPOSE 4200
+EXPOSE 4200 19153
 WORKDIR /usr/src/app
+
 COPY package*.json ./
+
 RUN npm install
 COPY . .
 RUN npm build

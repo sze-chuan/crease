@@ -19,3 +19,6 @@ services:
     restart: on-failure
     ports:
       - "4200:4200"
+      - "49153:49153"
+    volumes:
+      - ./src/Crease.WebUI/ClientApp:/usr/src/app
