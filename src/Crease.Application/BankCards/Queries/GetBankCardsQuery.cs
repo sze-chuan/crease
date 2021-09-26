@@ -1,11 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Crease.Application.Common.Interfaces;
-using Crease.Domain.Entities;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crease.Application.BankCards.Queries
 {
@@ -15,19 +16,22 @@ namespace Crease.Application.BankCards.Queries
 
     public class GetBankCardsQueryHandler : IRequestHandler<GetBankCardsQuery, IEnumerable<BankCardDto>>
     {
-        private readonly IBankCardsService _bankCardsService;
+        private readonly IApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public GetBankCardsQueryHandler(IBankCardsService context, IMapper mapper)
+        public GetBankCardsQueryHandler(IApplicationDbContext context, IMapper mapper)
         {
-            _bankCardsService = context;
+            _context = context;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<BankCardDto>> Handle(GetBankCardsQuery request, CancellationToken cancellationToken)
         {
-            return await Task.Run(() => _mapper.Map<IList<BankCard>, IList<BankCardDto>>(_bankCardsService.GetBankCards()),
-                cancellationToken);
+            return await _context.BankCards
+                .AsNoTracking()
+                .ProjectTo<BankCardDto>(_mapper.ConfigurationProvider)
+                .OrderBy(t => t.Name)
+                .ToListAsync(cancellationToken);
         }
     }
 }

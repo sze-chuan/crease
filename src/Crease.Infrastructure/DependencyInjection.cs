@@ -31,9 +31,7 @@ namespace Crease.Infrastructure
             services.AddScoped<IDomainEventService, DomainEventService>();
 
             services.AddTransient<IDateTime, DateTimeService>();
-            services.AddTransient<IBankCardsService>(s =>
-                new BankCardsService(configuration.GetSection("BankCardsResourceFilePath").Value));
-            
+
             return services;
         }
     }

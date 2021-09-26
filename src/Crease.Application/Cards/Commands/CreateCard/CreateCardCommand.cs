@@ -9,7 +9,7 @@ namespace Crease.Application.Cards.Commands.CreateCard
 {
     public class CreateCardCommand : IRequest<string>
     {
-        public int BankCardId { get; set; }
+        public string BankCardId { get; set; }
         
         public string Name { get; set; }
         

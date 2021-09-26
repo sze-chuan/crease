@@ -11,6 +11,13 @@ namespace Crease.Domain.ValueObjects
         {
             Name = name;
         }
+        
+        public static Bank From(string name)
+        {
+            var paymentType = new Bank(name);
+
+            return paymentType;
+        }
 
         public static Bank Dbs => new("DBS");
 

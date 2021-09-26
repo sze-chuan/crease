@@ -11,17 +11,14 @@ namespace Crease.Infrastructure.Persistence
 {
     public class ApplicationDbContext : DbContext, IApplicationDbContext
     {
-        private readonly ICurrentUserService _currentUserService;
         private readonly IDateTime _dateTime;
         private readonly IDomainEventService _domainEventService;
 
         public ApplicationDbContext(
             DbContextOptions options,
-            ICurrentUserService currentUserService,
             IDomainEventService domainEventService,
             IDateTime dateTime) : base(options)
         {
-            _currentUserService = currentUserService;
             _domainEventService = domainEventService;
             _dateTime = dateTime;
         }
@@ -29,6 +26,8 @@ namespace Crease.Infrastructure.Persistence
         public DbSet<Card> Cards { get; set; }
         
         public DbSet<CardStatement> CardStatements { get; set; }
+        
+        public DbSet<BankCard> BankCards { get; set; }
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
         {

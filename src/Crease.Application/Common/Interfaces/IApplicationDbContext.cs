@@ -10,6 +10,8 @@ namespace Crease.Application.Common.Interfaces
         DbSet<Card> Cards { get; }
         
         DbSet<CardStatement> CardStatements { get; }
+        
+        DbSet<BankCard> BankCards { get; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

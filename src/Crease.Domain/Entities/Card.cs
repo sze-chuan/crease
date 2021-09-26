@@ -5,7 +5,7 @@ namespace Crease.Domain.Entities
 {
     public class Card : Entity
     {
-        public int BankCardId { get; set; }
+        public string BankCardId { get; set; }
 
         public string Name { get; set; }
         
