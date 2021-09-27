@@ -10,7 +10,8 @@ EXPOSE 5001
 FROM node:lts-buster-slim AS node_base
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 COPY --from=node_base . .
-  
+RUN apt-get update -y && apt-get install python3 build-essential -y
+
 WORKDIR /src
 COPY ["src/Crease.WebUI/Crease.WebUI.csproj", "src/Crease.WebUI/"]
 COPY ["src/Crease.Application/Crease.Application.csproj", "src/Crease.Application/"]
