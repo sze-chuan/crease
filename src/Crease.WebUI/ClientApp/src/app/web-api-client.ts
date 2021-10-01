@@ -580,9 +580,11 @@ export class TransactionsClient implements ITransactionsClient {
 }
 
 export class BankCardDto implements IBankCardDto {
-    id?: number;
+    id?: string | undefined;
     name?: string | undefined;
     bank?: Bank | undefined;
+    statementType?: StatementType | undefined;
+    transactionDateType?: TransactionDateType | undefined;
 
     constructor(data?: IBankCardDto) {
         if (data) {
@@ -598,6 +600,8 @@ export class BankCardDto implements IBankCardDto {
             this.id = _data["id"];
             this.name = _data["name"];
             this.bank = _data["bank"] ? Bank.fromJS(_data["bank"]) : <any>undefined;
+            this.statementType = _data["statementType"] ? StatementType.fromJS(_data["statementType"]) : <any>undefined;
+            this.transactionDateType = _data["transactionDateType"] ? TransactionDateType.fromJS(_data["transactionDateType"]) : <any>undefined;
         }
     }
 
@@ -613,14 +617,18 @@ export class BankCardDto implements IBankCardDto {
         data["id"] = this.id;
         data["name"] = this.name;
         data["bank"] = this.bank ? this.bank.toJSON() : <any>undefined;
+        data["statementType"] = this.statementType ? this.statementType.toJSON() : <any>undefined;
+        data["transactionDateType"] = this.transactionDateType ? this.transactionDateType.toJSON() : <any>undefined;
         return data; 
     }
 }
 
 export interface IBankCardDto {
-    id?: number;
+    id?: string | undefined;
     name?: string | undefined;
     bank?: Bank | undefined;
+    statementType?: StatementType | undefined;
+    transactionDateType?: TransactionDateType | undefined;
 }
 
 export abstract class ValueObject implements IValueObject {
@@ -682,6 +690,72 @@ export class Bank extends ValueObject implements IBank {
 
 export interface IBank extends IValueObject {
     name?: string | undefined;
+}
+
+export class StatementType extends ValueObject implements IStatementType {
+    value?: string | undefined;
+
+    constructor(data?: IStatementType) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): StatementType {
+        data = typeof data === 'object' ? data : {};
+        let result = new StatementType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface IStatementType extends IValueObject {
+    value?: string | undefined;
+}
+
+export class TransactionDateType extends ValueObject implements ITransactionDateType {
+    value?: string | undefined;
+
+    constructor(data?: ITransactionDateType) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): TransactionDateType {
+        data = typeof data === 'object' ? data : {};
+        let result = new TransactionDateType();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ITransactionDateType extends IValueObject {
+    value?: string | undefined;
 }
 
 export class CardDto implements ICardDto {
@@ -777,7 +851,7 @@ export interface IProblemDetails {
 }
 
 export class CreateCardCommand implements ICreateCardCommand {
-    bankCardId?: number;
+    bankCardId?: string | undefined;
     name?: string | undefined;
     cardNumber?: string | undefined;
     startDate?: Date;
@@ -818,7 +892,7 @@ export class CreateCardCommand implements ICreateCardCommand {
 }
 
 export interface ICreateCardCommand {
-    bankCardId?: number;
+    bankCardId?: string | undefined;
     name?: string | undefined;
     cardNumber?: string | undefined;
     startDate?: Date;

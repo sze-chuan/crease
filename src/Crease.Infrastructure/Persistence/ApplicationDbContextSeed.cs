@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -29,19 +30,27 @@ namespace Crease.Infrastructure.Persistence
                     Bank = Bank.Dbs,
                     Name = "Live Fresh",
                     StatementType = StatementType.Calendar,
-                    TransactionDateType = TransactionDateType.Transaction
+                    TransactionDateType = TransactionDateType.Transaction,
+                    RewardVersions = new List<RewardVersion>
+                    {
+                        new(new DateTime(2021, 9, 1, 0, 0, 0, DateTimeKind.Utc), DateTime.MaxValue, 600,
+                            new List<RewardComputation>
+                            {
+                                new(RewardType.Cashback, new List<PaymentType> { PaymentType.Contactless }, null,0.05M, 20)
+                            })
+                    }
                 });
 
                 await context.SaveChangesAsync(CancellationToken.None);
             }
         }
-        
+
         private static async Task SeedCardData(IApplicationDbContext context)
         {
             // Seed, if necessary
             var cards = await context.Cards.ToListAsync();
             var bankCards = await context.BankCards.Where(card => card.Name == "Live Fresh").ToListAsync();
-            
+
             if (!cards.Any() && bankCards.Any())
             {
                 context.Cards.Add(new Card
@@ -52,7 +61,7 @@ namespace Crease.Infrastructure.Persistence
                     StartDate = new DateTime(2021, 9, 1, 0, 0, 0, DateTimeKind.Utc),
                     UserId = "development"
                 });
-                
+
                 await context.SaveChangesAsync(CancellationToken.None);
             }
         }

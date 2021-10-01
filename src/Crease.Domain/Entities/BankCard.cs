@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Crease.Domain.ValueObjects;
 
 namespace Crease.Domain.Entities
@@ -14,5 +15,7 @@ namespace Crease.Domain.Entities
         public StatementType StatementType { get; set; }
         
         public TransactionDateType TransactionDateType { get; set; }
+        
+        public List<RewardVersion> RewardVersions { get; set; }
     }
 }

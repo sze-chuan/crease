@@ -11,5 +11,9 @@ namespace Crease.Application.BankCards.Queries
         public string Name { get; set; }
         
         public Bank Bank { get; set;}
+        
+        public StatementType StatementType { get; set; }
+        
+        public TransactionDateType TransactionDateType { get; set; }
     }
 }
