@@ -466,6 +466,10 @@
           "name": {
             "type": "string",
             "nullable": true
+          },
+          "bankCardId": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -580,6 +584,10 @@
         "additionalProperties": false,
         "properties": {
           "cardId": {
+            "type": "string",
+            "nullable": true
+          },
+          "bankCardId": {
             "type": "string",
             "nullable": true
           },

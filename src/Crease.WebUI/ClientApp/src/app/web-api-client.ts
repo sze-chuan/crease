@@ -761,6 +761,7 @@ export interface ITransactionDateType extends IValueObject {
 export class CardDto implements ICardDto {
     id?: string | undefined;
     name?: string | undefined;
+    bankCardId?: string | undefined;
 
     constructor(data?: ICardDto) {
         if (data) {
@@ -775,6 +776,7 @@ export class CardDto implements ICardDto {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.bankCardId = _data["bankCardId"];
         }
     }
 
@@ -789,6 +791,7 @@ export class CardDto implements ICardDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["bankCardId"] = this.bankCardId;
         return data; 
     }
 }
@@ -796,6 +799,7 @@ export class CardDto implements ICardDto {
 export interface ICardDto {
     id?: string | undefined;
     name?: string | undefined;
+    bankCardId?: string | undefined;
 }
 
 export class ProblemDetails implements IProblemDetails {
@@ -1012,6 +1016,7 @@ export interface ITransactionDto {
 
 export class CreateCardStatementCommand implements ICreateCardStatementCommand {
     cardId?: string | undefined;
+    bankCardId?: string | undefined;
     monthYear?: Date;
 
     constructor(data?: ICreateCardStatementCommand) {
@@ -1026,6 +1031,7 @@ export class CreateCardStatementCommand implements ICreateCardStatementCommand {
     init(_data?: any) {
         if (_data) {
             this.cardId = _data["cardId"];
+            this.bankCardId = _data["bankCardId"];
             this.monthYear = _data["monthYear"] ? new Date(_data["monthYear"].toString()) : <any>undefined;
         }
     }
@@ -1040,6 +1046,7 @@ export class CreateCardStatementCommand implements ICreateCardStatementCommand {
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
         data["cardId"] = this.cardId;
+        data["bankCardId"] = this.bankCardId;
         data["monthYear"] = this.monthYear ? this.monthYear.toISOString() : <any>undefined;
         return data; 
     }
@@ -1047,6 +1054,7 @@ export class CreateCardStatementCommand implements ICreateCardStatementCommand {
 
 export interface ICreateCardStatementCommand {
     cardId?: string | undefined;
+    bankCardId?: string | undefined;
     monthYear?: Date;
 }
 

@@ -1,41 +1,35 @@
 using System.Collections.Generic;
 using Crease.Domain.Common;
+using Crease.Domain.Entities;
+using Crease.Domain.Extensions;
 
 namespace Crease.Domain.ValueObjects
 {
-    public class RewardComputation : ValueObject
+    public class RewardComputation : Entity
     {
-        public readonly RewardType RewardType;
+        public int Priority { get; set; }
+        
+        public RewardType RewardType { get; set; }
 
-        public List<PaymentType> PaymentTypes { get; }
+        public List<PaymentType> PaymentTypes { get; set; }
 
-        public List<TransactionCategory> TransactionCategories { get; }
+        public List<TransactionCategory> TransactionCategories { get; set; }
 
-        public readonly decimal Multiplier;
+        public decimal Multiplier { get; set; }
 
-        public readonly decimal? RewardsCap;
+        public decimal RewardsCap { get; set; }
 
-        private RewardComputation()
+        public decimal MinSpendAmount { get; set; }
+        
+        public bool IsValidComputation(Transaction transaction, decimal totalTransactionAmount)
         {
-        }
+            if (PaymentTypes.IsNullOrEmpty() && TransactionCategories.IsNullOrEmpty())
+            {
+                return true;
+            }
 
-        public RewardComputation(RewardType rewardType, List<PaymentType> paymentTypes, List<TransactionCategory> transactionCategories,
-            decimal multiplier, decimal? rewardsCap)
-        {
-            RewardType = rewardType;
-            PaymentTypes = paymentTypes;
-            TransactionCategories = transactionCategories;
-            Multiplier = multiplier;
-            RewardsCap = rewardsCap;
-        }
-
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return RewardType;
-            yield return Multiplier;
-            yield return RewardsCap;
-            yield return PaymentTypes; 
-            yield return TransactionCategories;
+            return (PaymentTypes.Contains(transaction.PaymentType) || TransactionCategories.Contains(transaction.TransactionCategory))
+                && totalTransactionAmount >= MinSpendAmount;
         }
     }
 }

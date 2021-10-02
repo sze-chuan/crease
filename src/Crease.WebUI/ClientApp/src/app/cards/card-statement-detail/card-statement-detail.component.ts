@@ -174,6 +174,7 @@ export class CardStatementDetailComponent implements OnInit {
     this.cardStatementsClient
       .create({
         cardId: this.selectedCard?.id,
+        bankCardId: this.selectedCard?.bankCardId,
         monthYear: this.selectedMonthYear,
       } as CreateCardStatementCommand)
       .subscribe(

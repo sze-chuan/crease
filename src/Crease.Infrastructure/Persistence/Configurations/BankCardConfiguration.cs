@@ -41,17 +41,25 @@ namespace Crease.Infrastructure.Persistence.Configurations
             builder.OwnsMany(card => card.RewardVersions, rewardVersion =>
             {
                 rewardVersion.ToJsonProperty("rewardVersions");
+                rewardVersion.Property(version => version.Id)
+                    .ToJsonProperty("id")
+                    .HasConversion<string>();
                 rewardVersion.Property(version => version.EffectiveStartDate).ToJsonProperty("effectiveStartDate");
                 rewardVersion.Property(version => version.EffectiveEndDate).ToJsonProperty("effectiveEndDate");
-                rewardVersion.Property(version => version.MinSpendAmount).ToJsonProperty("minSpendAmount");
                 rewardVersion.OwnsMany(version => version.RewardComputations, rewardComputation =>
                 {
                     rewardComputation.ToJsonProperty("rewardComputations");
+                    rewardComputation.Property(computation => computation.Id)
+                        .ToJsonProperty("id")
+                        .HasConversion<string>();
+                    rewardComputation.Property(computation => computation.Priority).ToJsonProperty("priority");
                     rewardComputation.Property(computation => computation.RewardType)
                         .ToJsonProperty("rewardType")
                         .HasConversion(rt => rt.Value, rt => RewardType.From(rt));
                     rewardComputation.Property(computation => computation.Multiplier).ToJsonProperty("multiplier");
                     rewardComputation.Property(computation => computation.RewardsCap).ToJsonProperty("rewardsCap");
+                    rewardComputation.Property(computation => computation.MinSpendAmount).ToJsonProperty("minSpendAmount");
+
                     rewardComputation.OwnsMany(computation => computation.PaymentTypes, ptBuilder =>
                     {
                         ptBuilder.ToJsonProperty("paymentTypes");

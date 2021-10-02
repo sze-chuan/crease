@@ -33,11 +33,40 @@ namespace Crease.Infrastructure.Persistence
                     TransactionDateType = TransactionDateType.Transaction,
                     RewardVersions = new List<RewardVersion>
                     {
-                        new(new DateTime(2021, 9, 1, 0, 0, 0, DateTimeKind.Utc), DateTime.MaxValue, 600,
-                            new List<RewardComputation>
+                        new()
+                        {
+                            EffectiveStartDate = new DateTime(2021, 9, 1, 0, 0, 0, DateTimeKind.Utc),
+                            EffectiveEndDate = DateTime.MaxValue,
+                            RewardComputations = new List<RewardComputation>
                             {
-                                new(RewardType.Cashback, new List<PaymentType> { PaymentType.Contactless }, null,0.05M, 20)
-                            })
+                                new()
+                                {
+                                    Priority = 1,
+                                    RewardType = RewardType.Cashback,
+                                    PaymentTypes = new List<PaymentType> { PaymentType.Contactless },
+                                    Multiplier = 0.05M,
+                                    RewardsCap = 20,
+                                    MinSpendAmount = 600
+                                },
+                                new()
+                                {
+                                    Priority = 2,
+                                    RewardType = RewardType.Cashback,
+                                    PaymentTypes = new List<PaymentType> { PaymentType.Online },
+                                    Multiplier = 0.05M,
+                                    RewardsCap = 20,
+                                    MinSpendAmount = 600
+                                },
+                                new()
+                                {
+                                    Priority = 3,
+                                    RewardType = RewardType.Cashback,
+                                    Multiplier = 0.003M,
+                                    RewardsCap = 0,
+                                    MinSpendAmount = 0
+                                }
+                            }
+                        }
                     }
                 });
 

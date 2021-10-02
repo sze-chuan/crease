@@ -17,5 +17,11 @@ namespace Crease.Domain.Entities
         public TransactionDateType TransactionDateType { get; set; }
         
         public List<RewardVersion> RewardVersions { get; set; }
+
+        public RewardVersion GetEffectiveRewardVersion(DateTime statementMonthYear)
+        {
+            return RewardVersions.Find(version =>
+                version.EffectiveStartDate <= statementMonthYear && version.EffectiveEndDate >= statementMonthYear);
+        }
     }
 }

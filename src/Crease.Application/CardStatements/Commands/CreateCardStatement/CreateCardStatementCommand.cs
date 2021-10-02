@@ -11,6 +11,8 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
     {
         public string CardId { get; set; }
         
+        public string BankCardId { get; set; }
+        
         public DateTime MonthYear { get; set; }
     }
 
@@ -29,7 +31,8 @@ namespace Crease.Application.CardStatements.Commands.CreateCardStatement
         {
             var entity = new CardStatement
             {
-                CardId = Guid.Parse(request.CardId),
+                CardId = request.CardId,
+                BankCardId = request.BankCardId,
                 MonthYear = request.MonthYear,
                 UserId = _userService.UserId
             };

@@ -19,6 +19,10 @@ namespace Crease.Infrastructure.Persistence.Configurations
             builder.Property(cardStatement => cardStatement.CardId)
                 .ToJsonProperty("cardId")
                 .IsRequired();
+            
+            builder.Property(cardStatement => cardStatement.BankCardId)
+                .ToJsonProperty("bankCardId")
+                .IsRequired();
 
             builder.Property(cardStatement => cardStatement.MonthYear)
                 .ToJsonProperty("monthYear")
@@ -27,6 +31,14 @@ namespace Crease.Infrastructure.Persistence.Configurations
             builder.Property(cardStatement => cardStatement.UserId)
                 .ToJsonProperty("userId")
                 .IsRequired();
+
+            builder.OwnsOne(cardStatement => cardStatement.StatementReward, srBuilder =>
+            {
+                srBuilder.ToJsonProperty("statementReward");
+                srBuilder.Property(reward => reward.Miles).ToJsonProperty("miles");
+                srBuilder.Property(reward => reward.Cashback).ToJsonProperty("cashback");
+                srBuilder.Property(reward => reward.Points).ToJsonProperty("points");
+            });
 
             builder.OwnsMany(cardStatement => cardStatement.Transactions, action =>
             {
