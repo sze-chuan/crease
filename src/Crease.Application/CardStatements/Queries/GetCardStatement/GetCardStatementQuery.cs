@@ -1,20 +1,22 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
+using Crease.Application.CardStatements.Queries.Dto;
 using Crease.Application.Common.Interfaces;
+using Crease.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Crease.Application.CardStatements.Queries.GetCardStatement
 {
     public class GetCardStatementQuery : IRequest<CardStatementDto>
     {
-        public string CardId { get; set; }
+        public string CardStatementId { get; set; }
 
-        public DateTime MonthYear { get; set; }
+        public GetCardStatementQuery(string cardStatementId)
+        {
+            CardStatementId = cardStatementId;
+        }
     }
 
     public class GetCardStatementQueryHandler : IRequestHandler<GetCardStatementQuery, CardStatementDto>
@@ -32,11 +34,15 @@ namespace Crease.Application.CardStatements.Queries.GetCardStatement
 
         public async Task<CardStatementDto> Handle(GetCardStatementQuery request, CancellationToken cancellationToken)
         {
-            return await _context.CardStatements
-                .Where(x => x.CardId == request.CardId && x.MonthYear == request.MonthYear && x.UserId == _userService.UserId)
-                .AsNoTracking()
-                .ProjectTo<CardStatementDto>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync(cancellationToken);
+            var cardStatement =
+                await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
+
+            if (cardStatement == null || cardStatement.UserId != _userService.UserId)
+            {
+                return null;
+            }
+
+            return _mapper.Map<CardStatement, CardStatementDto>(cardStatement);
         }
     }
 }

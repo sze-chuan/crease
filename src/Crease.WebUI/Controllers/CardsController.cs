@@ -17,7 +17,6 @@ namespace Crease.WebUI.Controllers
         [ProducesResponseType(typeof(IEnumerable<CardDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<CardDto>>> Get()
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(ScopeRequiredByApi);
             return Ok(await Mediator.Send(new GetCardsQuery()));
         }
 
@@ -25,7 +24,6 @@ namespace Crease.WebUI.Controllers
         [ProducesResponseType(typeof(CardDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<CardDto>> Get(string cardId)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(ScopeRequiredByApi);
             return Ok(await Mediator.Send(new GetCardQuery(cardId)));
         }
 
@@ -34,7 +32,6 @@ namespace Crease.WebUI.Controllers
         [ProducesDefaultResponseType]
         public async Task<ActionResult<int>> Create(CreateCardCommand command)
         {
-            HttpContext.VerifyUserHasAnyAcceptedScope(ScopeRequiredByApi);
             return Ok(await Mediator.Send(command));
         }
     }

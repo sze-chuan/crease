@@ -48,7 +48,7 @@ export class CardStatementDetailComponent implements OnInit {
       .pipe(switchMap((params: Params) => this.cardsClient.get(params.id)))
       .subscribe((data: CardDto | undefined) => {
         this.selectedCard = data;
-        this.getCardStatement(this.selectedMonthYear);
+        this.getCardStatementByPeriod(this.selectedMonthYear);
       });
   }
 
@@ -75,11 +75,11 @@ export class CardStatementDetailComponent implements OnInit {
   }
 
   onChangeDate(event: Date): void {
-    this.selectedMonthYear = event;
-    this.getCardStatement(event);
+    this.selectedMonthYear = saveDateAsUtc(event);
+    this.getCardStatementByPeriod(this.selectedMonthYear);
   }
 
-  getCardStatement(statementPeriod: Date | undefined): void {
+  getCardStatementByPeriod(statementPeriod: Date | undefined): void {
     if (this.selectedCard && statementPeriod) {
       // Set to utc time to remove time zone offset in generated web service client
       const utcStatementPeriod = new Date(
@@ -94,6 +94,16 @@ export class CardStatementDetailComponent implements OnInit {
             : undefined;
         });
     }
+  }
+
+  getCardStatementById(cardStatementId: string): void {
+    this.cardStatementsClient
+      .get2(cardStatementId)
+      .subscribe((statement: CardStatementDto | undefined) => {
+        this.cardStatement = statement
+          ? Object.assign({}, statement)
+          : undefined;
+      });
   }
 
   getTotalAmount(): number {
@@ -116,14 +126,8 @@ export class CardStatementDetailComponent implements OnInit {
           ...transaction,
         } as CreateTransactionCommand)
         .subscribe(
-          (result) => {
-            transaction.id = result;
-            if (this.cardStatement?.transactions) {
-              this.cardStatement.transactions = [
-                ...this.cardStatement.transactions,
-                transaction,
-              ];
-            }
+          () => {
+            this.getCardStatementById(transaction.cardStatementId!);
           },
           (error) => console.error(error)
         );
@@ -134,16 +138,7 @@ export class CardStatementDetailComponent implements OnInit {
         } as CreateTransactionCommand)
         .subscribe(
           () => {
-            if (this.cardStatement?.transactions) {
-              this.cardStatement.transactions =
-                this.cardStatement.transactions.map((item) => {
-                  if (item.id !== transaction.id) {
-                    return item;
-                  }
-
-                  return transaction;
-                });
-            }
+            this.getCardStatementById(transaction.cardStatementId!);
           },
           (error) => console.error(error)
         );
@@ -152,12 +147,7 @@ export class CardStatementDetailComponent implements OnInit {
         .delete(transaction.id, transaction.cardStatementId)
         .subscribe(
           () => {
-            if (this.cardStatement?.transactions) {
-              this.cardStatement.transactions =
-                this.cardStatement.transactions.filter(
-                  (item) => item.id !== transaction.id
-                );
-            }
+            this.getCardStatementById(transaction.cardStatementId!);
           },
           (error) => console.error(error)
         );

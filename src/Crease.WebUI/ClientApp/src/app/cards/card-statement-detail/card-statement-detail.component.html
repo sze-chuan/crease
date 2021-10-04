@@ -45,8 +45,8 @@
   <mat-divider></mat-divider>
   <div class="card-rewards-summary">
     <h3 class="header">Card Rewards Summary</h3>
-    <!-- <p>Cashback: {{ cardStatement.cashback | currency }}</p>
-    <p>Miles: {{ cardStatement.miles }}</p>
-    <p>Points: {{ cardStatement.points }}</p> -->
+    <p>Cashback: {{ cardStatement.statementReward?.cashback | currency }}</p>
+    <p>Miles: {{ cardStatement.statementReward?.miles }}</p>
+    <p>Points: {{ cardStatement.statementReward?.miles }}</p>
   </div>
 </div>

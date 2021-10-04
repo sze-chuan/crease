@@ -269,6 +269,7 @@ export class CardsClient implements ICardsClient {
 
 export interface ICardStatementsClient {
     get(cardId: string | null | undefined, monthYear: Date | undefined): Observable<CardStatementDto>;
+    get2(cardStatementId: string | null): Observable<CardStatementDto>;
     create(command: CreateCardStatementCommand): Observable<string>;
 }
 
@@ -286,7 +287,7 @@ export class CardStatementsClient implements ICardStatementsClient {
     }
 
     get(cardId: string | null | undefined, monthYear: Date | undefined): Observable<CardStatementDto> {
-        let url_ = this.baseUrl + "/api/cardstatements?";
+        let url_ = this.baseUrl + "/api/cardstatements/period?";
         if (cardId !== undefined && cardId !== null)
             url_ += "CardId=" + encodeURIComponent("" + cardId) + "&";
         if (monthYear === null)
@@ -318,6 +319,57 @@ export class CardStatementsClient implements ICardStatementsClient {
     }
 
     protected processGet(response: HttpResponseBase): Observable<CardStatementDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CardStatementDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<CardStatementDto>(<any>null);
+    }
+
+    get2(cardStatementId: string | null): Observable<CardStatementDto> {
+        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}";
+        if (cardStatementId === undefined || cardStatementId === null)
+            throw new Error("The parameter 'cardStatementId' must be defined.");
+        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGet2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGet2(<any>response_);
+                } catch (e) {
+                    return <Observable<CardStatementDto>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<CardStatementDto>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processGet2(response: HttpResponseBase): Observable<CardStatementDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -905,6 +957,7 @@ export interface ICreateCardCommand {
 export class CardStatementDto implements ICardStatementDto {
     id?: string | undefined;
     monthYear?: string | undefined;
+    statementReward?: CardStatementReward | undefined;
     transactions?: TransactionDto[] | undefined;
 
     constructor(data?: ICardStatementDto) {
@@ -920,6 +973,7 @@ export class CardStatementDto implements ICardStatementDto {
         if (_data) {
             this.id = _data["id"];
             this.monthYear = _data["monthYear"];
+            this.statementReward = _data["statementReward"] ? CardStatementReward.fromJS(_data["statementReward"]) : <any>undefined;
             if (Array.isArray(_data["transactions"])) {
                 this.transactions = [] as any;
                 for (let item of _data["transactions"])
@@ -939,6 +993,7 @@ export class CardStatementDto implements ICardStatementDto {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["monthYear"] = this.monthYear;
+        data["statementReward"] = this.statementReward ? this.statementReward.toJSON() : <any>undefined;
         if (Array.isArray(this.transactions)) {
             data["transactions"] = [];
             for (let item of this.transactions)
@@ -951,7 +1006,49 @@ export class CardStatementDto implements ICardStatementDto {
 export interface ICardStatementDto {
     id?: string | undefined;
     monthYear?: string | undefined;
+    statementReward?: CardStatementReward | undefined;
     transactions?: TransactionDto[] | undefined;
+}
+
+export class CardStatementReward extends ValueObject implements ICardStatementReward {
+    miles?: number | undefined;
+    cashback?: number | undefined;
+    points?: number | undefined;
+
+    constructor(data?: ICardStatementReward) {
+        super(data);
+    }
+
+    init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.miles = _data["miles"];
+            this.cashback = _data["cashback"];
+            this.points = _data["points"];
+        }
+    }
+
+    static fromJS(data: any): CardStatementReward {
+        data = typeof data === 'object' ? data : {};
+        let result = new CardStatementReward();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["miles"] = this.miles;
+        data["cashback"] = this.cashback;
+        data["points"] = this.points;
+        super.toJSON(data);
+        return data; 
+    }
+}
+
+export interface ICardStatementReward extends IValueObject {
+    miles?: number | undefined;
+    cashback?: number | undefined;
+    points?: number | undefined;
 }
 
 export class TransactionDto implements ITransactionDto {
