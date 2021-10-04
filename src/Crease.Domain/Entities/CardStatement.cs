@@ -49,7 +49,6 @@ namespace Crease.Domain.Entities
             }
 
             var rewardsDict = new Dictionary<Guid, CardStatementReward>();
-            var rewardsCapDict = new Dictionary<Guid, decimal>();
 
             foreach (var transaction in Transactions)
             {
@@ -64,19 +63,22 @@ namespace Crease.Domain.Entities
                 {
                     var totalReward = rewardsDict[computation.Id] + reward;
 
-                    rewardsDict[computation.Id] =
-                        totalReward.GetRewardValue(computation.RewardType) > rewardsCapDict[computation.Id] 
-                            ? CardStatementReward.WithRewardType(computation.RewardType, rewardsCapDict[computation.Id])  
-                            : totalReward;
+                    rewardsDict[computation.Id] = CalculateRewardWithCap(totalReward, computation);
                 }
                 else
                 {
-                    rewardsDict.Add(computation.Id, reward);
-                    rewardsCapDict.Add(computation.Id, computation.RewardsCap);
+                    rewardsDict.Add(computation.Id, CalculateRewardWithCap(reward, computation));
                 }
             }
 
             StatementReward = rewardsDict.Aggregate(CardStatementReward.NoRewards, (current, reward) => current + reward.Value);
+        }
+
+        private static CardStatementReward CalculateRewardWithCap(CardStatementReward reward, RewardComputation computation)
+        {
+            return reward.GetRewardValue(computation.RewardType) > computation.RewardsCap
+                ? CardStatementReward.WithRewardType(computation.RewardType, computation.RewardsCap)  
+                : reward;
         }
     }
 }
