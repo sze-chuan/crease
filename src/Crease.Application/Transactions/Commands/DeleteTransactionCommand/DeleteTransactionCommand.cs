@@ -35,8 +35,12 @@ namespace Crease.Application.Transactions.Commands.DeleteTransactionCommand
             {
                 throw new NotFoundException(nameof(CardStatement), request.CardStatementId);
             }
+            
+            var bankCard =
+                await _context.BankCards.FindAsync(new object[] { Guid.Parse(cardStatement.BankCardId) }, cancellationToken);
 
             cardStatement.RemoveTransaction(Guid.Parse(request.Id));
+            cardStatement.UpdateStatementReward(bankCard.GetEffectiveRewardVersion(cardStatement.MonthYear));
             
             await _context.SaveChangesAsync(cancellationToken);
 

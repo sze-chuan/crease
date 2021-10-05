@@ -47,6 +47,9 @@ namespace Crease.Application.Transactions.Commands.UpdateTransactionCommand
                 throw new NotFoundException(nameof(Transaction), request.Id);
             }
             
+            var bankCard =
+                await _context.BankCards.FindAsync(new object[] { Guid.Parse(cardStatement.BankCardId) }, cancellationToken);
+            
             cardStatement.UpdateTransaction(new Transaction
             {
                 Id = Guid.Parse(request.Id),
@@ -57,6 +60,7 @@ namespace Crease.Application.Transactions.Commands.UpdateTransactionCommand
                 TransactionCategory = TransactionCategory.From(request.TransactionCategory)
             });
 
+            cardStatement.UpdateStatementReward(bankCard.GetEffectiveRewardVersion(cardStatement.MonthYear));
             await _context.SaveChangesAsync(cancellationToken);
 
             return Unit.Value;
