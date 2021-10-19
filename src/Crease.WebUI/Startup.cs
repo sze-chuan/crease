@@ -86,11 +86,6 @@ namespace Crease.WebUI
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            if (!env.IsDevelopment())
-            {
-                app.UseSpaStaticFiles();
-            }
-
             app.UseSwaggerUi3(settings =>
             {
                 settings.Path = "/api";
@@ -110,19 +105,14 @@ namespace Crease.WebUI
                 endpoints.MapRazorPages();
             });
 
-            app.UseSpa(spa =>
+            if (env.IsDevelopment())
             {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
+                app.UseSpa(spa =>
                 {
-                    //spa.UseAngularCliServer(npmScript: "start");
+                    spa.Options.SourcePath = "ClientApp";
                     spa.UseProxyToSpaDevelopmentServer(Configuration["SpaBaseUrl"] ?? "http://localhost:4200");
-                }
-            });
+                });
+            }
         }
     }
 }
