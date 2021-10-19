@@ -28,6 +28,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatIconModule } from '@angular/material/icon';
 import { MsalGuard } from '@azure/msal-angular';
 
+import { environment } from 'src/environments/environment';
+import { API_BASE_URL } from '../web-api-client';
+
 const routes: Routes = [
   {
     path: 'cards',
@@ -70,5 +73,11 @@ const routes: Routes = [
   ],
   exports: [CardViewerComponent, CardListComponent],
   bootstrap: [CardViewerComponent],
+  providers: [
+    {
+      provide: API_BASE_URL,
+      useValue: environment.apiUrl,
+    },
+  ],
 })
 export class CardsModule {}
