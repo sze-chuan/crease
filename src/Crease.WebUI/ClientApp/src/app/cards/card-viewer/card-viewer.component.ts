@@ -76,9 +76,7 @@ export class CardViewerComponent implements OnInit, OnDestroy {
 
   openAddNewCardDialog(): void {
     const dialogRef = this.dialog.open(AddCardDialogComponent, {
-      data: {
-        bankCards: this.bankCards,
-      },
+      data: this.bankCards,
     });
 
     dialogRef.afterClosed().subscribe((card: CardDto) => {
