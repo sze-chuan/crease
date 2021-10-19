@@ -57,15 +57,15 @@ namespace Crease.WebUI
             services.AddAuthorization();
 
             // For development purposes
-            services.AddCors(options => options.AddPolicy("default", builder =>
+            if (CurrentEnvironment.IsDevelopment())
             {
-                builder.AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader();
-            }));
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist"; });
+                services.AddCors(options => options.AddPolicy("default", builder =>
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                }));    
+            }
 
             services.AddOpenApiDocument(configure => { configure.Title = "Crease API"; });
         }
@@ -92,7 +92,11 @@ namespace Crease.WebUI
                 settings.DocumentPath = "/api/specification.json";
             });
 
-            app.UseCors("default");
+            if (env.IsDevelopment())
+            {
+                app.UseCors("default");
+            }
+            
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
