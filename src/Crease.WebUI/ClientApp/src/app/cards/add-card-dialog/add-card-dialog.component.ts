@@ -19,7 +19,7 @@ export class AddCardDialogComponent {
     this.bankCards = data;
 
     this.cardForm = new FormGroup({
-      bankCard: new FormControl(),
+      bankCardId: new FormControl(),
       name: new FormControl(),
       cardNumber: new FormControl(),
       startDate: new FormControl(),

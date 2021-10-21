@@ -2,7 +2,7 @@
 <mat-dialog-content [formGroup]="cardForm" class="global-dialog">
   <mat-form-field>
     <mat-label>Card</mat-label>
-    <mat-select name="bankCard" formControlName="bankCard" required>
+    <mat-select name="bankCard" formControlName="bankCardId" required>
       <mat-option *ngFor="let bankCard of bankCards" [value]="bankCard.id">
         {{ bankCard.name }}
       </mat-option>
