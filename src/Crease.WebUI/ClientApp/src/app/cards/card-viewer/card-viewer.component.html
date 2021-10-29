@@ -1,4 +1,4 @@
-<div class="card-container">
+<div class="card-container" *ngIf="cards$ | async as cards">
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav mode="side" [fixedInViewport]="true" fixedTopGap="64">
       <mat-nav-list>

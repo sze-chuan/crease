@@ -12,7 +12,7 @@ import {
 } from '../../web-api-client';
 
 import { filter, switchMap } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'card-viewer',
@@ -21,10 +21,10 @@ import { Subscription } from 'rxjs';
 })
 export class CardViewerComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav!: MatSidenav;
-  cards: CardDto[];
   bankCards: BankCardDto[];
   selectedCard?: CardDto;
   routerObserver!: Subscription;
+  cards$: Observable<CardDto[]>;
 
   constructor(
     private router: Router,
@@ -33,18 +33,14 @@ export class CardViewerComponent implements OnInit, OnDestroy {
     private bankCardsClient: BankCardsClient,
     private cardsClient: CardsClient
   ) {
-    this.cards = [];
     this.bankCards = [];
+    this.cards$ = this.cardsClient.getAll();
   }
 
   ngOnInit(): void {
     this.bankCardsClient.get().subscribe((data: BankCardDto[]) => {
       this.bankCards = data;
     });
-
-    this.cardsClient
-      .getAll()
-      .subscribe((data: CardDto[]) => (this.cards = data));
 
     this.routerObserver = this.router.events
       .pipe(
@@ -87,14 +83,13 @@ export class CardViewerComponent implements OnInit, OnDestroy {
       this.cardsClient.create(CreateCardCommand.fromJS({ ...card })).subscribe(
         (result) => {
           card.id = result;
-          this.cards = [...this.cards, card];
+          if (!this.selectedCard) {
+            this.selectedCard = card;
+          }
+          this.cards$ = this.cardsClient.getAll();
         },
         (error) => console.error(error)
       );
-
-      if (!this.selectedCard) {
-        this.selectedCard = card;
-      }
     });
   }
 }
