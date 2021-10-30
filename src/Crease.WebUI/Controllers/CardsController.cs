@@ -37,7 +37,7 @@ namespace Crease.WebUI.Controllers
         
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> Get(string id, UpdateCardCommand command)
+        public async Task<ActionResult> Update(string id, UpdateCardCommand command)
         {
             if (id != command.Id)
             {
