@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Crease.Application.Cards.Commands.CreateCard;
+using Crease.Application.Cards.Commands.UpdateCard;
 using Crease.Application.Cards.Queries.GetCard;
 using Crease.Application.Cards.Queries.GetCards;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Web.Resource;
 
 namespace Crease.WebUI.Controllers
 {
@@ -33,6 +33,20 @@ namespace Crease.WebUI.Controllers
         public async Task<ActionResult<int>> Create(CreateCardCommand command)
         {
             return Ok(await Mediator.Send(command));
+        }
+        
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> Get(string id, UpdateCardCommand command)
+        {
+            if (id != command.Id)
+            {
+                return BadRequest();
+            }
+
+            await Mediator.Send(command);
+
+            return NoContent();
         }
     }
 }
