@@ -23,6 +23,8 @@ namespace Crease.Domain.ValueObjects
 
         public static Bank Ocbc => new("OCBC");
 
+        public static Bank Maybank => new ("MAYBANK");
+
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return Name;

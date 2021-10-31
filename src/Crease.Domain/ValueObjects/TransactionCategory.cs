@@ -32,9 +32,18 @@ namespace Crease.Domain.ValueObjects
 
         public static TransactionCategory Dining => new(nameof(Dining));
 
+        public static TransactionCategory FoodDelivery => new(nameof(FoodDelivery));
+
         public static TransactionCategory Shopping => new(nameof(Shopping));
 
         public static TransactionCategory Groceries => new(nameof(Groceries));
+
+        public static TransactionCategory Transport => new(nameof(Transport));
+
+        public static TransactionCategory Telco => new(nameof(Telco));
+
+        public static TransactionCategory OnlineTvStreaming => new(nameof(OnlineTvStreaming));
+
 
         public override string ToString()
         {
