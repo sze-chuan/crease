@@ -3,11 +3,10 @@
     <fa-icon [icon]="faCreditCard" class="crease-logo"></fa-icon>
     <span>Crease</span>
   </a>
-  <a mat-button [routerLink]="'/cards'">
-    <span>Cards</span>
-  </a>
   <span class="spacer"></span>
-  <button mat-button *ngIf="!userAccount" (click)="handleLogin()">Login</button>
+  <button mat-button *ngIf="!userAccount" (click)="handleLogin()">
+    Sign Up / Log In
+  </button>
   <button mat-button *ngIf="userAccount" [matMenuTriggerFor]="menu">
     {{ userAccount.name }}
   </button>
