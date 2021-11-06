@@ -91,6 +91,7 @@ export interface ICardsClient {
     getAll(): Observable<CardDto[]>;
     create(command: CreateCardCommand): Observable<string>;
     get(cardId: string | null): Observable<CardDto>;
+    update(id: string | null, command: UpdateCardCommand): Observable<void>;
 }
 
 @Injectable({
@@ -264,6 +265,57 @@ export class CardsClient implements ICardsClient {
             }));
         }
         return _observableOf<CardDto>(<any>null);
+    }
+
+    update(id: string | null, command: UpdateCardCommand): Observable<void> {
+        let url_ = this.baseUrl + "/api/cards/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(command);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdate(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdate(<any>response_);
+                } catch (e) {
+                    return <Observable<void>><any>_observableThrow(e);
+                }
+            } else
+                return <Observable<void>><any>_observableThrow(response_);
+        }));
+    }
+
+    protected processUpdate(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (<any>response).error instanceof Blob ? (<any>response).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return _observableOf<void>(<any>null);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap(_responseText => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf<void>(<any>null);
     }
 }
 
@@ -949,6 +1001,54 @@ export class CreateCardCommand implements ICreateCardCommand {
 
 export interface ICreateCardCommand {
     bankCardId?: string | undefined;
+    name?: string | undefined;
+    cardNumber?: string | undefined;
+    startDate?: Date;
+}
+
+export class UpdateCardCommand implements IUpdateCardCommand {
+    id?: string | undefined;
+    name?: string | undefined;
+    cardNumber?: string | undefined;
+    startDate?: Date;
+
+    constructor(data?: IUpdateCardCommand) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.cardNumber = _data["cardNumber"];
+            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): UpdateCardCommand {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateCardCommand();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["cardNumber"] = this.cardNumber;
+        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
+        return data; 
+    }
+}
+
+export interface IUpdateCardCommand {
+    id?: string | undefined;
     name?: string | undefined;
     cardNumber?: string | undefined;
     startDate?: Date;
