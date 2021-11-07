@@ -1612,7 +1612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.16.0
   resolution: "@babel/runtime@npm:7.16.0"
   dependencies:
@@ -4659,6 +4659,8 @@ __metadata:
     prettier: ^2.4.1
     react: ^17.0.2
     react-dom: ^17.0.2
+    react-router: ^6.0.1
+    react-router-dom: ^6.0.1
     react-scripts: 4.0.3
     typescript: ^4.1.2
     web-vitals: ^1.0.1
@@ -7663,6 +7665,15 @@ __metadata:
   version: 1.1.0
   resolution: "hex-color-regex@npm:1.1.0"
   checksum: 44fa1b7a26d745012f3bfeeab8015f60514f72d2fcf10dce33068352456b8d71a2e6bc5a17f933ab470da2c5ab1e3e04b05caf3fefe3c1cabd7e02e516fc8784
+  languageName: node
+  linkType: hard
+
+"history@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "history@npm:5.1.0"
+  dependencies:
+    "@babel/runtime": ^7.7.6
+  checksum: c978710a188ee5ad5d2acf55721c77e27469578c891a66311e71e8920d1390d14476e39a6db07e0ab0f5f8d594f1f62eb55a1059c7549cde7795a36367df5869
   languageName: node
   linkType: hard
 
@@ -12584,6 +12595,30 @@ __metadata:
   version: 0.8.3
   resolution: "react-refresh@npm:0.8.3"
   checksum: 3cffe5a9cbac1c5d59bf74bf9fff43c987d87ef32098b9092ea94b6637377d86c08565b9374d9397f446b3fbcd95de986ec77220a16f979687cb39b7b89e2f91
+  languageName: node
+  linkType: hard
+
+"react-router-dom@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "react-router-dom@npm:6.0.1"
+  dependencies:
+    history: ^5.1.0
+    react-router: 6.0.1
+  peerDependencies:
+    react: ">=16.8"
+    react-dom: ">=16.8"
+  checksum: cc2d80536f4a02b8fcef826185ad0acb5d66245e9fb89345d54ec0eaea73eb4ff809cbf68ebb1ac8c3de15cbe45f539d7879cc2d3ed4a76c8c42a602dece71b0
+  languageName: node
+  linkType: hard
+
+"react-router@npm:6.0.1, react-router@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "react-router@npm:6.0.1"
+  dependencies:
+    history: ^5.1.0
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 66bbaaa98637a0bf4e4c3e4392f8929388e2d07438759129e14709809add974bfa3307d508055c259986439b2f5f9c5558410771355e547c06005ed4feef7c7f
   languageName: node
   linkType: hard
 
