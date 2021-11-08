@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { LandingPage } from './components/LandingPage';
+import { LandingPage } from '../components/LandingPage';
 
-import './App.css';
+import '../styles/App.css';
 
-function App() {
+export const App: React.FC = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
     </Routes>
   );
-}
+};
 
 export default App;
