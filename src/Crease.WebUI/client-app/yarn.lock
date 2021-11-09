@@ -1612,7 +1612,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.13.10, @babel/runtime@npm:^7.15.4, @babel/runtime@npm:^7.16.0, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.16.0
   resolution: "@babel/runtime@npm:7.16.0"
   dependencies:
@@ -2167,6 +2167,22 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 7c5ef0e1a34736ff91a76bf39f9075d25f49b88a059b78e56cefc6843bf15bca3a7b027291fe166dc45e0c68962c4a86baf688020a0e52d6eef4bacb445e6892
+  languageName: node
+  linkType: hard
+
+"@mui/icons-material@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@mui/icons-material@npm:5.1.0"
+  dependencies:
+    "@babel/runtime": ^7.16.0
+  peerDependencies:
+    "@mui/material": ^5.0.0
+    "@types/react": ^16.8.6 || ^17.0.0
+    react: ^17.0.2
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: f3a2b37bfa8947712835c7c0d7a507c87c9dc9f5f60a153415ba2374aed1fb5911e620009584f87406d2e7c65ab59ca7ccf2b78ab154854278dd975ec86c5b1e
   languageName: node
   linkType: hard
 
@@ -5063,6 +5079,7 @@ __metadata:
   dependencies:
     "@emotion/react": ^11.5.0
     "@emotion/styled": ^11.3.0
+    "@mui/icons-material": ^5.1.0
     "@mui/material": ^5.0.6
     "@testing-library/jest-dom": ^5.11.4
     "@testing-library/react": ^11.1.0
