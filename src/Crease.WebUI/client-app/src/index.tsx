@@ -9,7 +9,7 @@ import App from './containers/App';
 import theme from './theme';
 import reportWebVitals from './reportWebVitals';
 
-import './styles/index.css';
+import './styles/index.scss';
 
 ReactDOM.render(
   <Router>
