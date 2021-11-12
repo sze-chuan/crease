@@ -7,7 +7,7 @@ import Container from '@mui/material/Container';
 
 export const App: React.FC = () => {
   return (
-    <Container>
+    <Container className="app">
       <Header />
       <Routes>
         <Route path="/" element={<LandingPage />} />
