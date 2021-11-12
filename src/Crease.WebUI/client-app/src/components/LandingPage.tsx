@@ -6,7 +6,7 @@ export const LandingPage: React.FC = () => {
   return (
     <section className="landing-page">
       <h1>Maximise your rewards</h1>
-      <Typography variant="caption">
+      <Typography variant="body1">
         Track your credit card rewards with ease
       </Typography>
       <Button className="get-started-btn" variant="outlined">
