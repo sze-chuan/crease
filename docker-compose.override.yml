@@ -4,7 +4,7 @@ services:
   webui:
     environment:
       - "ASPNETCORE_ENVIRONMENT=Development"
-      - "SpaBaseUrl=http://clientapp:4200"
+      - "SpaBaseUrl=http://clientapp:3000"
     volumes:
       - $APPDATA/Microsoft/UserSecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID:ro
       - $HOME/.microsoft/usersecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID:ro
@@ -12,13 +12,13 @@ services:
   clientapp:
     image: ${DOCKER_REGISTRY-}clientapp
     build:
-      context: src/Crease.WebUI/ClientApp
+      context: src/Crease.WebUI/client-app
       dockerfile: Dockerfile
     depends_on:
       - webui
     restart: on-failure
     ports:
-      - "4200:4200"
+      - "3000:3000"
       - "49153:49153"
     volumes:
-      - ./src/Crease.WebUI/ClientApp:/usr/src/app
+      - ./src/Crease.WebUI/client-app:/usr/src/app

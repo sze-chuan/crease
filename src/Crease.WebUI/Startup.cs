@@ -113,8 +113,8 @@ namespace Crease.WebUI
             {
                 app.UseSpa(spa =>
                 {
-                    spa.Options.SourcePath = "ClientApp";
-                    spa.UseProxyToSpaDevelopmentServer(Configuration["SpaBaseUrl"] ?? "http://localhost:4200");
+                    spa.Options.SourcePath = "client-app";
+                    spa.UseProxyToSpaDevelopmentServer(Configuration["SpaBaseUrl"] ?? "http://localhost:3000");
                 });
             }
         }
