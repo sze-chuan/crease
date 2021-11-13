@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - src/Crease.WebUI/ClientApp/**
+      - src/Crease.WebUI/client-app/**
       - .github/workflows/azure-static-web-apps-ambitious-hill-0247fe400.yml
   pull_request:
     types: [opened, synchronize, reopened, closed]
@@ -30,10 +30,10 @@ jobs:
           action: "upload"
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
-          app_location: "/src/Crease.WebUI/ClientApp" # App source code path
+          app_location: "/src/Crease.WebUI/client-app" # App source code path
           api_location: "" # Api source code path - optional
-          output_location: "dist/crease" # Built app content directory - optional
-          app_build_command: "npm run build -- --configuration production"
+          output_location: "build" # Built app content directory - optional
+          app_build_command: "yarn build"
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
