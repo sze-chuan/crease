@@ -10,7 +10,9 @@ export const Header: React.FC = () => {
     <header>
       <AppBar position="static">
         <Toolbar>
-          <CreditCardIcon />
+          <a href="/">
+            <CreditCardIcon sx={{ color: 'white' }} />
+          </a>
           <Box sx={{ flexGrow: 1 }} />
           <Button className="login-btn" variant="contained">
             Login
