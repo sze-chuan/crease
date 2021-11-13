@@ -5,7 +5,7 @@ import { LandingPage } from '../components/LandingPage';
 import { Home } from './Home';
 import Container from '@mui/material/Container';
 
-export const App: React.FC = () => {
+export const App = (): JSX.Element => {
   return (
     <Container className="app">
       <Header />

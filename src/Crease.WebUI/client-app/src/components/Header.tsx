@@ -5,7 +5,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 
-export const Header: React.FC = () => {
+export const Header = (): JSX.Element => {
   return (
     <header>
       <AppBar position="static">

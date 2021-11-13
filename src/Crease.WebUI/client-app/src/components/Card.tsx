@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 
-export const Card: React.FC = () => {
+export const Card = (): JSX.Element => {
   return (
     <div className="add-card">
       <AddIcon className="add-icon" sx={{ color: 'primary.main' }} />
