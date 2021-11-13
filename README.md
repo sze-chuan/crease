@@ -11,7 +11,7 @@ This is also a personal side project to pick up the following concepts:
 - Domain Driven Design
 
 ## Tech stack
-- Angular 12
+- React 17
 - ASP.Net Core 5
 - Entity Framework Core 5
 - MediatR
@@ -43,7 +43,7 @@ To develop locally with Cosmos DB, perform the following steps:
 
 ### Running the web application:
 
-1. Navigate to `src/Crease.WebUI/ClientApp` and run `npm install`
-2. Navigate to `src/Crease.WebUI/ClientApp` and run `npm start` to run the front end client
+1. Navigate to `src/Crease.WebUI/client-app` and run `yarn install`
+2. Navigate to `src/Crease.WebUI/client-app` and run `yarn start` to run the front end client
 3. Navigate to `src/Crease.WebUI` and run `dotnet run` to start the back end API services
 
