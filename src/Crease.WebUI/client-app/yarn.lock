@@ -5098,6 +5098,7 @@ __metadata:
     husky: ^7.0.0
     lint-staged: ^11.2.6
     node-sass: ^6.0.1
+    nswag: ^13.14.2
     prettier: ^2.4.1
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -11432,6 +11433,15 @@ __metadata:
     gauge: ~2.7.3
     set-blocking: ~2.0.0
   checksum: edbda9f95ec20957a892de1839afc6fb735054c3accf6fbefe767bac9a639fd5cea2baeac6bd2bcd50a85cb54924d57d9886c81c7fbc2332c2ddd19227504192
+  languageName: node
+  linkType: hard
+
+"nswag@npm:^13.14.2":
+  version: 13.14.2
+  resolution: "nswag@npm:13.14.2"
+  bin:
+    nswag: bin/nswag.js
+  checksum: c21be82a0f7ce16462b6436b29d5bbff9d0e97d5871cadb08ef2dbf1c7aea10dce8c503162b06aea6e6e79b3532054c4561d56be8686638626e3ff61a29290d3
   languageName: node
   linkType: hard
 

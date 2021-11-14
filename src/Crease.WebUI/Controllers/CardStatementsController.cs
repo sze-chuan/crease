@@ -14,7 +14,7 @@ namespace Crease.WebUI.Controllers
     {
         [HttpGet("period")]
         [ProducesResponseType(typeof(CardStatementDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<CardStatementDto>> Get([FromQuery] GetCardStatementByMonthYearQuery byMonthYearQuery)
+        public async Task<ActionResult<CardStatementDto>> GetByQuery([FromQuery] GetCardStatementByMonthYearQuery byMonthYearQuery)
         {
             return Ok(await Mediator.Send(byMonthYearQuery));
         }

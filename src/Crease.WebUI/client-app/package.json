@@ -31,7 +31,8 @@
     "lint": "eslint src",
     "prettier:fix": "prettier --write",
     "prettier:check": "prettier --check .",
-    "postinstall": "cd ../../.. && husky install src/Crease.WebUI/client-app/.husky"
+    "postinstall": "cd ../../.. && husky install src/Crease.WebUI/client-app/.husky",
+    "gen-api": "nswag run ../nswag.json /runtime:Net50"
   },
   "browserslist": {
     "production": [
@@ -56,6 +57,7 @@
     "eslint-plugin-react": "^7.26.1",
     "husky": "^7.0.0",
     "lint-staged": "^11.2.6",
+    "nswag": "^13.14.2",
     "prettier": "^2.4.1"
   },
   "lint-staged": {
