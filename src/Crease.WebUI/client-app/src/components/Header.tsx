@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
@@ -10,9 +11,9 @@ export const Header = (): JSX.Element => {
     <header>
       <AppBar position="static">
         <Toolbar>
-          <a href="/">
+          <Link to="/">
             <CreditCardIcon sx={{ color: 'white' }} />
-          </a>
+          </Link>
           <Box sx={{ flexGrow: 1 }} />
           <Button className="login-btn" variant="contained">
             Login
