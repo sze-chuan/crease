@@ -2,7 +2,13 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 
-export const Card = (): JSX.Element => {
+import { CardDto } from '../web-api-client';
+
+export interface CardProps {
+  card: CardDto;
+}
+
+export const Card = ({ card }: CardProps): JSX.Element => {
   return (
     <div className="add-card">
       <AddIcon className="add-icon" sx={{ color: 'primary.main' }} />
