@@ -4,7 +4,9 @@ import { CardsList } from '../components/CardsList';
 import { CardDto } from '../web-api-client';
 
 export const Home = (): JSX.Element => {
-  const [cards, setCards] = useState<CardDto[] | null>(null);
+  const [cards, setCards] = useState<CardDto[] | null>([
+    { id: '1', name: 'test', bankCardId: '1' } as CardDto,
+  ]);
 
   return (
     <section className="home">

@@ -13,5 +13,10 @@ export const CardsList = ({ cards }: CardsListProps): JSX.Element => {
       })
     : null;
 
-  return <React.Fragment>{cardsComponents}</React.Fragment>;
+  return (
+    <React.Fragment>
+      {cardsComponents}
+      <Card key="addCard" card={undefined} />
+    </React.Fragment>
+  );
 };
