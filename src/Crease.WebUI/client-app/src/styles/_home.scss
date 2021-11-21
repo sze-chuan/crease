@@ -7,11 +7,14 @@
     display: flex;
     width: 100%;
     max-width: 480px;
-    height: 300px;
     border-radius: 16px;
     justify-content: center;
     align-items: center;
     margin: 10px auto;
+
+    img {
+      width: 100%;
+    }
   }
 
   .bank-card {

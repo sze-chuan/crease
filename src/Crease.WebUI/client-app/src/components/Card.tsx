@@ -19,11 +19,10 @@ export const Card = ({ card }: CardProps): JSX.Element => {
   });
 
   return (
-    <div
-      className={`card ${card ? 'bank-card' : 'add-card'}`}
-      style={{ backgroundImage: `url(${cardImage})` }}
-    >
-      {!card && (
+    <div className={`card ${card ? 'bank-card' : 'add-card'}`}>
+      {card ? (
+        <img src={`${cardImage}`} />
+      ) : (
         <React.Fragment>
           <AddIcon className="add-icon" sx={{ color: 'primary.main' }} />
           <Typography variant="body1" sx={{ color: 'primary.main' }}>
