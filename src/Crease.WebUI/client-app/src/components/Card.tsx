@@ -8,13 +8,20 @@ export interface CardProps {
   card: CardDto | undefined;
 }
 
+const cardImagesMapping: { [cardName: string]: string } = {
+  frank: 'frank',
+};
+
 export const Card = ({ card }: CardProps): JSX.Element => {
   const [cardImage, setCardImage] = useState<string>('');
+
   useEffect(() => {
-    if (card) {
-      import(`../resources/cards/frank.png`).then((image) => {
-        setCardImage(image.default);
-      });
+    if (card && card.name) {
+      import(`../resources/cards/${cardImagesMapping[card?.name]}.png`).then(
+        (image) => {
+          setCardImage(image.default);
+        }
+      );
     }
   });
 
