@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths-ignore:
-      - src/Crease.WebUI/ClientApp/**
+      - src/Crease.WebUI/client-app/**
       - .github/workflows/azure-static-web-apps-ambitious-hill-0247fe400.yml
   workflow_dispatch:
 
