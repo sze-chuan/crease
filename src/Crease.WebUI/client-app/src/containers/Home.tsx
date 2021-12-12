@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import { CardsList } from '../components/CardsList';
+import { AddCardDialog } from '../components/AddCardDialog';
 import { CardsClient, BankCardsClient } from '../web-api-client';
 import { loadBankCards, loadCards, getCards } from '../slices/cardSlice';
 
@@ -33,6 +34,7 @@ export const Home = (): JSX.Element => {
     <section className="home">
       <Box />
       <CardsList cards={cards} />
+      <AddCardDialog />
     </section>
   );
 };

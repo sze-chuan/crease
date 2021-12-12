@@ -1,22 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 
 import { ICardDto } from '../web-api-client';
-import { getBankCards } from '../slices/cardSlice';
+import { getBankCards, setIsAddCardDialogVisible } from '../slices/cardSlice';
 
 export interface CardProps {
   card: ICardDto | undefined;
 }
 
 export const Card = ({ card }: CardProps): JSX.Element => {
+  const dispatch = useDispatch();
   const [cardImage, setCardImage] = useState<string>('');
   const bankCards = useSelector(getBankCards);
 
   const replaceBankCardName = (bankCardName: string) =>
     bankCardName.toLowerCase().replaceAll(' ', '-');
+
+  const onCardClick = () => {
+    if (!card) {
+      dispatch(setIsAddCardDialogVisible(true));
+    }
+  };
 
   useEffect(() => {
     if (card?.bankCardId) {
@@ -35,7 +42,10 @@ export const Card = ({ card }: CardProps): JSX.Element => {
   }, []);
 
   return (
-    <div className={`card ${card ? 'bank-card' : 'add-card'}`}>
+    <div
+      className={`card ${card ? 'bank-card' : 'add-card'}`}
+      onClick={onCardClick}
+    >
       {card ? (
         <img src={`${cardImage}`} />
       ) : (
