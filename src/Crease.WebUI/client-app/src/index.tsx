@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
@@ -8,16 +10,27 @@ import { ThemeProvider } from '@mui/material/styles';
 import App from './containers/App';
 import theme from './theme';
 import reportWebVitals from './reportWebVitals';
+import rootReducer from './slices';
 
 import './styles/index.scss';
 
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
 ReactDOM.render(
-  <Router>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
-    </ThemeProvider>
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 

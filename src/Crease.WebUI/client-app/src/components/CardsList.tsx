@@ -1,9 +1,8 @@
 import React from 'react';
 import { Card } from '../components/Card';
-import { CardDto } from '../web-api-client';
-
+import { ICardDto } from '../web-api-client';
 export interface CardsListProps {
-  cards: CardDto[] | null;
+  cards: ICardDto[] | null;
 }
 
 export const CardsList = ({ cards }: CardsListProps): JSX.Element => {
@@ -16,7 +15,7 @@ export const CardsList = ({ cards }: CardsListProps): JSX.Element => {
   return (
     <React.Fragment>
       {cardsComponents}
-      <Card key="addCard" card={undefined} />
+      <Card key="addCard" />
     </React.Fragment>
   );
 };
