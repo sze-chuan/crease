@@ -1,29 +1,38 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import Typography from '@mui/material/Typography';
 import AddIcon from '@mui/icons-material/Add';
 
-import { CardDto } from '../web-api-client';
+import { ICardDto } from '../web-api-client';
+import { getBankCards } from '../slices/cardSlice';
 
 export interface CardProps {
-  card: CardDto | undefined;
+  card: ICardDto | undefined;
 }
-
-const cardImagesMapping: { [cardName: string]: string } = {
-  frank: 'frank',
-};
 
 export const Card = ({ card }: CardProps): JSX.Element => {
   const [cardImage, setCardImage] = useState<string>('');
+  const bankCards = useSelector(getBankCards);
+
+  const replaceBankCardName = (bankCardName: string) =>
+    bankCardName.toLowerCase().replaceAll(' ', '-');
 
   useEffect(() => {
-    if (card && card.name) {
-      import(`../resources/cards/${cardImagesMapping[card?.name]}.png`).then(
-        (image) => {
-          setCardImage(image.default);
-        }
+    if (card?.bankCardId) {
+      const bankCard = bankCards.find(
+        (bankCardData) => bankCardData.id === card.bankCardId
       );
+
+      if (bankCard?.name) {
+        import(
+          `../resources/cards/${replaceBankCardName(bankCard.name)}.png`
+        ).then((image) => {
+          setCardImage(image.default);
+        });
+      }
     }
-  });
+  }, []);
 
   return (
     <div className={`card ${card ? 'bank-card' : 'add-card'}`}>
@@ -39,6 +48,10 @@ export const Card = ({ card }: CardProps): JSX.Element => {
       )}
     </div>
   );
+};
+
+Card.defaultProps = {
+  card: undefined,
 };
 
 export default Card;
