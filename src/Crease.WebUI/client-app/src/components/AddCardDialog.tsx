@@ -2,11 +2,19 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Dialog from '@mui/material/Dialog';
-import { DialogTitle } from '@mui/material';
+import {
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+} from '@mui/material';
 import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 
 import {
+  getBankCards,
   getIsAddCardDialogVisible,
   setIsAddCardDialogVisible,
 } from '../slices/cardSlice';
@@ -23,10 +31,19 @@ const Transition = React.forwardRef(function Transition(
 export const AddCardDialog = (): JSX.Element => {
   const isDialogVisible = useSelector(getIsAddCardDialogVisible);
   const dispatch = useDispatch();
+  const bankCards = useSelector(getBankCards);
 
   const handleClose = () => {
     dispatch(setIsAddCardDialogVisible(false));
   };
+
+  const bankSelectItems = [
+    ...Array.from(new Set(bankCards.map((bankCard) => bankCard.bank?.name))),
+  ].map((bankName) => (
+    <MenuItem key={bankName} value={bankName}>
+      {bankName}
+    </MenuItem>
+  ));
 
   return (
     <Dialog
@@ -36,6 +53,14 @@ export const AddCardDialog = (): JSX.Element => {
       TransitionComponent={Transition}
     >
       <DialogTitle>{'Add New Card'}</DialogTitle>
+      <DialogContent>
+        <FormControl fullWidth>
+          <InputLabel id="bank-label">Bank</InputLabel>
+          <Select labelId="bank-label" id="bank-select" label="Bank">
+            {bankSelectItems}
+          </Select>
+        </FormControl>
+      </DialogContent>
     </Dialog>
   );
 };
