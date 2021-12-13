@@ -12,10 +12,6 @@
     align-items: center;
     margin: 10px auto;
     cursor: pointer;
-
-    img {
-      width: 100%;
-    }
   }
 
   .bank-card {
@@ -25,9 +21,5 @@
   .add-card {
     border: 2px solid #{$accent-blue};
     aspect-ratio: 16 / 10;
-
-    & .add-icon {
-      margin-right: 12px;
-    }
   }
 }
