@@ -46,10 +46,7 @@ const Card = ({ card }: CardProps): JSX.Element => {
   }, []);
 
   return (
-    <div
-      className={`card ${card ? 'bank-card' : 'add-card'}`}
-      onClick={onCardClick}
-    >
+    <S.StyledCardDiv $isBankCard={card != null} onClick={onCardClick}>
       {card ? (
         <S.StyledImage src={`${cardImage}`} />
       ) : (
@@ -60,7 +57,7 @@ const Card = ({ card }: CardProps): JSX.Element => {
           </Typography>
         </React.Fragment>
       )}
-    </div>
+    </S.StyledCardDiv>
   );
 };
 

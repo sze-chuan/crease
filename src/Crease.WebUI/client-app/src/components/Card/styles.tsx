@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import AddIcon from '@mui/icons-material/Add';
 import theme from '../../theme';
 
-const StyledDiv = styled.div`
+const StyledCardDiv = styled.div<{ $isBankCard: boolean }>`
   display: flex;
   width: 100%;
   max-width: 480px;
@@ -11,6 +11,9 @@ const StyledDiv = styled.div`
   align-items: center;
   margin: 10px auto;
   cursor: pointer;
+  background-size: ${(props) => (props.$isBankCard ? 'contain' : 'none')};
+  aspect-ratio: ${(props) => (props.$isBankCard ? 'auto' : '16 / 10')};
+  border: ${(props) => (props.$isBankCard ? 'auto' : '2px solid #007fff')};
 `;
 
 const StyledImage = styled.img`
@@ -22,4 +25,4 @@ const StyledAddIcon = styled(AddIcon)`
   color: ${theme.palette.primary.main};
 `;
 
-export { StyledDiv, StyledImage, StyledAddIcon };
+export { StyledCardDiv, StyledImage, StyledAddIcon };

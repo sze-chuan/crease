@@ -2,24 +2,4 @@
   display: flex;
   flex-wrap: wrap;
   padding: 12px;
-
-  .card {
-    display: flex;
-    width: 100%;
-    max-width: 480px;
-    border-radius: 16px;
-    justify-content: center;
-    align-items: center;
-    margin: 10px auto;
-    cursor: pointer;
-  }
-
-  .bank-card {
-    background-size: contain;
-  }
-
-  .add-card {
-    border: 2px solid #{$accent-blue};
-    aspect-ratio: 16 / 10;
-  }
 }
