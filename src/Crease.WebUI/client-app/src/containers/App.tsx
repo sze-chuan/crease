@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Header from '../components/Header';
-import { LandingPage } from '../components/LandingPage';
+import LandingPage from '../components/LandpingPage';
 import Home from './Home';
 import Container from '@mui/material/Container';
 

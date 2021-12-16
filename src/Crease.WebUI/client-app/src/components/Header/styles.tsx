@@ -4,7 +4,6 @@ import ToolBar from '@mui/material/Toolbar';
 
 const LoginButton = styled(Button)({
   color: 'white',
-  variant: 'abc',
 });
 
 const StyledToolBar = styled(ToolBar)({
