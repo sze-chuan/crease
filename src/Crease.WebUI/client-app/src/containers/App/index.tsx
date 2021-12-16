@@ -1,19 +1,19 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Header from '../components/Header';
-import LandingPage from '../components/LandpingPage';
-import Home from './Home';
-import Container from '@mui/material/Container';
+import Header from '../../components/Header';
+import LandingPage from '../../components/LandpingPage';
+import Home from '../Home';
+import StyledContainer from './styles';
 
-export const App = (): JSX.Element => {
+const App = (): JSX.Element => {
   return (
-    <Container className="app">
+    <StyledContainer>
       <Header />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="home" element={<Home />} />
       </Routes>
-    </Container>
+    </StyledContainer>
   );
 };
 
