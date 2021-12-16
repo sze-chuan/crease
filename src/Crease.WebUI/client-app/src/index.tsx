@@ -8,11 +8,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 
 import App from './containers/App';
-import theme from './theme';
+import theme from './styles/theme';
 import reportWebVitals from './reportWebVitals';
 import rootReducer from './slices';
-
-import './styles/index.scss';
 
 const store = configureStore({
   reducer: rootReducer,
