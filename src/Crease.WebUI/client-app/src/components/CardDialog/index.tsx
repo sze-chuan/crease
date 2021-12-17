@@ -1,23 +1,25 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import {
+  getBankCards,
+  getIsAddCardDialogVisible,
+  setIsAddCardDialogVisible,
+} from '../../slices/cardSlice';
+
 import Dialog from '@mui/material/Dialog';
 import {
-  DialogContent,
   DialogTitle,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps } from '@mui/material/transitions';
 import { Slide } from '@mui/material';
 
-import {
-  getBankCards,
-  getIsAddCardDialogVisible,
-  setIsAddCardDialogVisible,
-} from '../slices/cardSlice';
+import * as S from './styles';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -29,7 +31,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export const AddCardDialog = (): JSX.Element => {
+export const CardDialog = (): JSX.Element => {
   const isDialogVisible = useSelector(getIsAddCardDialogVisible);
   const dispatch = useDispatch();
   const bankCards = useSelector(getBankCards);
@@ -53,15 +55,30 @@ export const AddCardDialog = (): JSX.Element => {
       onClose={handleClose}
       TransitionComponent={Transition}
     >
-      <DialogTitle>{'Add New Card'}</DialogTitle>
-      <DialogContent>
+      <DialogTitle>
+        {'Add New Card'}
+        <S.StyledCloseBtn aria-label="close" onClick={handleClose}>
+          <CloseIcon />
+        </S.StyledCloseBtn>
+      </DialogTitle>
+      <S.StyledDialogContent>
         <FormControl fullWidth>
           <InputLabel id="bank-label">Bank</InputLabel>
           <Select labelId="bank-label" id="bank-select" label="Bank">
             {bankSelectItems}
           </Select>
+          <S.StyledTextField
+            id="card-name"
+            label="Card name"
+            variant="outlined"
+          />
+          <S.StyledTextField
+            id="card-number"
+            label="Last 4 digits of card"
+            variant="outlined"
+          />
         </FormControl>
-      </DialogContent>
+      </S.StyledDialogContent>
     </Dialog>
   );
 };
