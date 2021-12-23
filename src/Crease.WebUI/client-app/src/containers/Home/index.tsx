@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import { CardsList } from '../../components/CardsList';
-import { CardDialog } from '../../components/CardDialog';
+import CardDialog from '../../components/CardDialog';
 import { CardsClient, BankCardsClient } from '../../web-api-client';
 import { loadBankCards, loadCards, getCards } from '../../slices/cardSlice';
 import StyledSection from './styles';
