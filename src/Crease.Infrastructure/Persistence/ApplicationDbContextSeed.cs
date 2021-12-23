@@ -31,7 +31,8 @@ namespace Crease.Infrastructure.Persistence
 
         private static async Task SeedCardData(IApplicationDbContext context)
         {
-            if (context.Cards.Any())
+            var cards = await context.Cards.ToListAsync();
+            if (cards.Any())
             {
                 return;
             }
