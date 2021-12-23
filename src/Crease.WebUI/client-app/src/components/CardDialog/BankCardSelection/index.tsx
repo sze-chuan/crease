@@ -15,13 +15,16 @@ import * as S from './styles';
 
 export interface BankCardSelectionProps {
   bankCards: IBankCardDto[];
+  onBankCardSelect: (bankCard: IBankCardDto) => void;
 }
 
 const BankCardSelection = ({
   bankCards,
+  onBankCardSelect,
 }: BankCardSelectionProps): JSX.Element => {
   const [bank, setBank] = useState('');
   const [validBankCards, setValidBankCards] = useState<IBankCardDto[]>([]);
+
   const bankSelectItems = [
     ...Array.from(new Set(bankCards.map((bankCard) => bankCard.bank?.name))),
   ].map((bankName) => (
@@ -31,7 +34,11 @@ const BankCardSelection = ({
   ));
 
   const validBankCardItems = validBankCards.map((bankCard) => (
-    <BankCard key={bankCard.id} bankCard={bankCard} />
+    <BankCard
+      key={bankCard.id}
+      bankCard={bankCard}
+      onBankCardSelect={onBankCardSelect}
+    />
   ));
 
   const onBankSelect = (event: SelectChangeEvent) => {

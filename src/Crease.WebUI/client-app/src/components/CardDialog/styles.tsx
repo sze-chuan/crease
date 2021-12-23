@@ -10,8 +10,17 @@ const StyledCloseBtn = styled(IconButton)`
   float: right;
 `;
 
+const StyledCardImageDiv = styled('div')`
+  margin-bottom: ${theme.spacing(1)};
+`;
+
 const StyledTextField = styled(TextField)`
   margin: ${theme.spacing(1)} 0;
 `;
 
-export { StyledDialogContent, StyledCloseBtn, StyledTextField };
+export {
+  StyledDialogContent,
+  StyledCloseBtn,
+  StyledTextField,
+  StyledCardImageDiv,
+};

@@ -8,11 +8,19 @@ import * as S from './styles';
 
 export interface BankCardProps {
   bankCard: IBankCardDto;
+  onBankCardSelect: (bankCard: IBankCardDto) => void;
 }
 
-const BankCard = ({ bankCard }: BankCardProps): JSX.Element => {
+const BankCard = ({
+  bankCard,
+  onBankCardSelect,
+}: BankCardProps): JSX.Element => {
+  const onClick = () => {
+    onBankCardSelect(bankCard);
+  };
+
   return (
-    <S.StyledBankCardDiv>
+    <S.StyledBankCardDiv onClick={onClick}>
       <CardImage cardName={bankCard.name} />
       <Typography variant="subtitle2">{bankCard.name}</Typography>
     </S.StyledBankCardDiv>
