@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Typography from '@mui/material/Typography';
 
-import { ICardDto } from '../../web-api-client';
+import { IBankCardDto, ICardDto } from '../../web-api-client';
 import {
   getBankCards,
   setIsAddCardDialogVisible,
 } from '../../slices/cardSlice';
 
+import CardImage from '../shared/CardImage';
 import * as S from './styles';
 
 export interface CardProps {
@@ -17,11 +18,12 @@ export interface CardProps {
 
 const Card = ({ card }: CardProps): JSX.Element => {
   const dispatch = useDispatch();
-  const [cardImage, setCardImage] = useState<string>('');
-  const bankCards = useSelector(getBankCards);
+  const bankCards: IBankCardDto[] = useSelector(getBankCards);
+  let bankCard: IBankCardDto | undefined;
 
-  const replaceBankCardName = (bankCardName: string) =>
-    bankCardName.toLowerCase().replaceAll(' ', '-');
+  if (card) {
+    bankCard = bankCards.find((bc) => bc.id === card.bankCardId);
+  }
 
   const onCardClick = () => {
     if (!card) {
@@ -29,26 +31,10 @@ const Card = ({ card }: CardProps): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    if (card?.bankCardId) {
-      const bankCard = bankCards.find(
-        (bankCardData) => bankCardData.id === card.bankCardId
-      );
-
-      if (bankCard?.name) {
-        import(
-          `../../resources/cards/${replaceBankCardName(bankCard.name)}.png`
-        ).then((image) => {
-          setCardImage(image.default);
-        });
-      }
-    }
-  }, []);
-
   return (
     <S.StyledCardDiv $isBankCard={card != null} onClick={onCardClick}>
       {card ? (
-        <S.StyledImage src={`${cardImage}`} />
+        <CardImage cardName={bankCard?.name} />
       ) : (
         <React.Fragment>
           <S.StyledAddIcon />
