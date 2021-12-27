@@ -8,10 +8,12 @@ import {
 } from '../../slices/cardSlice';
 
 import Dialog from '@mui/material/Dialog';
-import { DialogTitle, FormControl } from '@mui/material';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import DatePicker from '@mui/lab/DatePicker';
 import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps } from '@mui/material/transitions';
-import { Slide } from '@mui/material';
+import Slide from '@mui/material/Slide';
 
 import CardImage from '../shared/CardImage';
 import BankCardSelection from './BankCardSelection';
@@ -35,6 +37,7 @@ const CardDialog = (): JSX.Element => {
   const [selectedBankCard, setSelectedBankCard] = useState<
     IBankCardDto | undefined
   >(undefined);
+  const [approvalDate, setApprovalDate] = useState<Date | null>(new Date());
 
   const handleClose = () => {
     setSelectedBankCard(undefined);
@@ -73,6 +76,15 @@ const CardDialog = (): JSX.Element => {
               id="card-number"
               label="Last 4 digits of card"
               variant="outlined"
+            />
+            <DatePicker
+              label="Approval Date"
+              value={approvalDate}
+              inputFormat="DD/MM/YYYY"
+              onChange={(newValue): void => {
+                setApprovalDate(newValue as Date);
+              }}
+              renderInput={(params) => <S.StyledTextField {...params} />}
             />
           </FormControl>
         ) : (
