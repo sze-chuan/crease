@@ -1,4 +1,4 @@
-import { DialogContent, IconButton, TextField } from '@mui/material';
+import { DialogContent, IconButton, TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import theme from '../../styles/theme';
 
@@ -18,9 +18,14 @@ const StyledTextField = styled(TextField)`
   margin: ${theme.spacing(1)} 0;
 `;
 
+const StyledSubmitButton = styled(Button)`
+  margin: ${theme.spacing(1)} 0;
+`;
+
 export {
   StyledDialogContent,
   StyledCloseBtn,
   StyledTextField,
   StyledCardImageDiv,
+  StyledSubmitButton,
 };

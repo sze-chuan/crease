@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
 
 import {
   getBankCards,
@@ -30,6 +33,24 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const schema = yup
+  .object({
+    cardName: yup.string().label('Card name').required(),
+    cardNumber: yup
+      .string()
+      .label('Card number')
+      .min(4)
+      .max(4)
+      .matches(/[0-9]{4}/, 'Invalid card number format')
+      .required(),
+    approvalDate: yup
+      .date()
+      .label('Approval Date')
+      .required()
+      .typeError('Invalid approval date'),
+  })
+  .required();
+
 const CardDialog = (): JSX.Element => {
   const isDialogVisible = useSelector(getIsAddCardDialogVisible);
   const dispatch = useDispatch();
@@ -37,11 +58,22 @@ const CardDialog = (): JSX.Element => {
   const [selectedBankCard, setSelectedBankCard] = useState<
     IBankCardDto | undefined
   >(undefined);
-  const [approvalDate, setApprovalDate] = useState<Date | null>(new Date());
+  const {
+    reset,
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data: any) => console.log(data);
 
   const handleClose = () => {
     setSelectedBankCard(undefined);
     dispatch(setIsAddCardDialogVisible(false));
+    reset();
   };
 
   const onBankCardSelect = (bankCard: IBankCardDto) => {
@@ -63,30 +95,67 @@ const CardDialog = (): JSX.Element => {
       </DialogTitle>
       <S.StyledDialogContent>
         {selectedBankCard ? (
-          <FormControl fullWidth>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            autoComplete="off"
+            noValidate={true}
+          >
             <S.StyledCardImageDiv>
               <CardImage cardName={selectedBankCard.name} />
             </S.StyledCardImageDiv>
-            <S.StyledTextField
-              id="card-name"
-              label="Card name"
-              variant="outlined"
-            />
-            <S.StyledTextField
-              id="card-number"
-              label="Last 4 digits of card"
-              variant="outlined"
-            />
-            <DatePicker
-              label="Approval Date"
-              value={approvalDate}
-              inputFormat="DD/MM/YYYY"
-              onChange={(newValue): void => {
-                setApprovalDate(newValue as Date);
-              }}
-              renderInput={(params) => <S.StyledTextField {...params} />}
-            />
-          </FormControl>
+            <FormControl fullWidth>
+              <S.StyledTextField
+                required
+                variant="outlined"
+                label="Card name"
+                {...register('cardName', { required: true })}
+                error={errors.cardName ? true : false}
+                helperText={errors.cardName?.message ?? ''}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <S.StyledTextField
+                required
+                label="Last 4 digits of card"
+                variant="outlined"
+                {...register('cardNumber', {
+                  required: true,
+                  maxLength: 4,
+                  minLength: 4,
+                  pattern: /[0-9]{4}/,
+                })}
+                error={errors.cardNumber ? true : false}
+                helperText={errors.cardNumber?.message ?? ''}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <Controller
+                name="approvalDate"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <DatePicker
+                    {...field}
+                    label="Approval Date"
+                    inputFormat="DD/MM/YYYY"
+                    renderInput={(params) => (
+                      <S.StyledTextField
+                        {...params}
+                        required
+                        error={errors.approvalDate ? true : false}
+                        helperText={errors.approvalDate?.message ?? ''}
+                      />
+                    )}
+                  />
+                )}
+              />
+            </FormControl>
+            <FormControl fullWidth>
+              <S.StyledSubmitButton type="submit" variant="contained">
+                Done
+              </S.StyledSubmitButton>
+            </FormControl>
+          </form>
         ) : (
           <BankCardSelection
             bankCards={bankCards}
