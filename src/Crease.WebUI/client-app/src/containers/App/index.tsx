@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import AdapterDayJs from '@mui/lab/AdapterDayjs';
+import AdapterDayFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 import Header from '../../components/Header';
@@ -11,7 +11,7 @@ import StyledContainer from './styles';
 
 const App = (): JSX.Element => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayJs}>
+    <LocalizationProvider dateAdapter={AdapterDayFns}>
       <StyledContainer>
         <Header />
         <Routes>

@@ -23,6 +23,12 @@ import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
 import { IBankCardDto } from '../../web-api-client';
 
+interface AddCardFormData {
+  cardName: string;
+  cardNumber: string;
+  approvalDate: Date;
+}
+
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,10 +45,10 @@ const schema = yup
     cardNumber: yup
       .string()
       .label('Card number')
+      .required()
       .min(4)
       .max(4)
-      .matches(/[0-9]{4}/, 'Invalid card number format')
-      .required(),
+      .matches(/[0-9]{4}/, 'Invalid card number format'),
     approvalDate: yup
       .date()
       .label('Approval Date')
@@ -64,11 +70,11 @@ const CardDialog = (): JSX.Element => {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<AddCardFormData>({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data: any) => console.log(data);
+  const onSubmit = (data: AddCardFormData) => console.log(data);
 
   const handleClose = () => {
     setSelectedBankCard(undefined);
@@ -137,7 +143,7 @@ const CardDialog = (): JSX.Element => {
                   <DatePicker
                     {...field}
                     label="Approval Date"
-                    inputFormat="DD/MM/YYYY"
+                    inputFormat="dd/MM/yyyy"
                     renderInput={(params) => (
                       <S.StyledTextField
                         {...params}
@@ -151,7 +157,11 @@ const CardDialog = (): JSX.Element => {
               />
             </FormControl>
             <FormControl fullWidth>
-              <S.StyledSubmitButton type="submit" variant="contained">
+              <S.StyledSubmitButton
+                type="submit"
+                variant="contained"
+                disabled={Object.keys(errors).length > 0}
+              >
                 Done
               </S.StyledSubmitButton>
             </FormControl>
