@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
-import { CardsList } from '../components/CardsList';
-import { AddCardDialog } from '../components/AddCardDialog';
-import { CardsClient, BankCardsClient } from '../web-api-client';
-import { loadBankCards, loadCards, getCards } from '../slices/cardSlice';
+import { CardsList } from '../../components/CardsList';
+import CardDialog from '../../components/CardDialog';
+import { CardsClient, BankCardsClient } from '../../web-api-client';
+import { loadBankCards, loadCards, getCards } from '../../slices/cardSlice';
+import StyledSection from './styles';
 
-export const Home = (): JSX.Element => {
+const Home = (): JSX.Element => {
   const dispatch = useDispatch();
   const cards = useSelector(getCards);
 
@@ -31,10 +32,12 @@ export const Home = (): JSX.Element => {
   }, []);
 
   return (
-    <section className="home">
+    <StyledSection>
       <Box />
       <CardsList cards={cards} />
-      <AddCardDialog />
-    </section>
+      <CardDialog />
+    </StyledSection>
   );
 };
+
+export default Home;

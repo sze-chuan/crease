@@ -18,6 +18,9 @@ const cardSlice = createSlice({
     loadCards: (state, { payload }: PayloadAction<ICardDto[]>) => {
       state.cards = payload;
     },
+    addCard: (state, { payload }: PayloadAction<ICardDto>) => {
+      state.cards.push(payload);
+    },
     setIsAddCardDialogVisible: (state, { payload }: PayloadAction<boolean>) => {
       state.isAddCardDialogVisisble = payload;
     },
@@ -30,7 +33,7 @@ export const getCards = (state: RootState): ICardDto[] => state.cardState.cards;
 export const getIsAddCardDialogVisible = (state: RootState): boolean =>
   state.cardState.isAddCardDialogVisisble;
 
-export const { loadBankCards, loadCards, setIsAddCardDialogVisible } =
+export const { loadBankCards, loadCards, addCard, setIsAddCardDialogVisible } =
   cardSlice.actions;
 
 export default cardSlice.reducer;
