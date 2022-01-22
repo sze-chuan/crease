@@ -5,6 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
 import {
+  addCard,
   getBankCards,
   getIsAddCardDialogVisible,
   setIsAddCardDialogVisible,
@@ -21,7 +22,12 @@ import Slide from '@mui/material/Slide';
 import CardImage from '../shared/CardImage';
 import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
-import { IBankCardDto } from '../../web-api-client';
+import {
+  CardsClient,
+  CreateCardCommand,
+  IBankCardDto,
+  ICardDto,
+} from '../../web-api-client';
 
 interface AddCardFormData {
   cardName: string;
@@ -72,9 +78,32 @@ const CardDialog = (): JSX.Element => {
     formState: { errors },
   } = useForm<AddCardFormData>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      approvalDate: new Date(),
+    },
   });
 
-  const onSubmit = (data: AddCardFormData) => console.log(data);
+  const onSubmit = async (data: AddCardFormData) => {
+    const cardsClient = new CardsClient(process.env.PUBLIC_URL);
+    try {
+      const result = await cardsClient.create({
+        name: data.cardName,
+        cardNumber: data.cardNumber,
+        startDate: data.approvalDate,
+        bankCardId: selectedBankCard?.id,
+      } as CreateCardCommand);
+      dispatch(
+        addCard({
+          id: result,
+          name: data.cardName,
+          bankCardId: selectedBankCard?.id,
+        } as ICardDto)
+      );
+      handleClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleClose = () => {
     setSelectedBankCard(undefined);
