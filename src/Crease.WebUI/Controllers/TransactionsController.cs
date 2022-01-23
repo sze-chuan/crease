@@ -1,9 +1,7 @@
-﻿using System.Threading.Tasks;
-using Crease.Application.Transactions.Commands.CreateTransactionCommand;
+﻿using Crease.Application.Transactions.Commands.CreateTransactionCommand;
 using Crease.Application.Transactions.Commands.DeleteTransactionCommand;
 using Crease.Application.Transactions.Commands.UpdateTransactionCommand;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crease.WebUI.Controllers

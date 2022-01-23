@@ -1,5 +1,3 @@
-using System;
-
 namespace Crease.Domain.Common
 {
     public abstract class Entity

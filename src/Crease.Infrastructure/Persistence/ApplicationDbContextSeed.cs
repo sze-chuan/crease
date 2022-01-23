@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Crease.Application.Common.Interfaces;
+﻿using Crease.Application.Common.Interfaces;
 using Crease.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

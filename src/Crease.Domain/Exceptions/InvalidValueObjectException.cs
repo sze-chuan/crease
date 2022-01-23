@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Crease.Domain.Exceptions
+﻿namespace Crease.Domain.Exceptions
 {
     public class InvalidValueObjectException : Exception
     {

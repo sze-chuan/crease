@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Crease.Application.Common.Interfaces
+﻿namespace Crease.Application.Common.Interfaces
 {
     public interface IDateTime
     {

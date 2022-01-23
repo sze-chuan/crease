@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Crease.Application.BankCards.Queries
+﻿namespace Crease.Application.BankCards.Queries
 {
     public class BankCardsVm
     {

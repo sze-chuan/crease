@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Crease.Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
+﻿using Crease.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

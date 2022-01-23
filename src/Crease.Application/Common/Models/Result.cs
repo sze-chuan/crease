@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Crease.Application.Common.Models
+﻿namespace Crease.Application.Common.Models
 {
     public class Result
     {

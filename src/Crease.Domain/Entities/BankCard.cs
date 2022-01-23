@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using Crease.Domain.ValueObjects;
 
 namespace Crease.Domain.Entities

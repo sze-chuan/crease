@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Crease.Domain.Common
+﻿namespace Crease.Domain.Common
 {
     public interface IHasDomainEvent
     {

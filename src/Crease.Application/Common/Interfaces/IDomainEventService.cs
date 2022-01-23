@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Crease.Domain.Common;
+﻿using Crease.Domain.Common;
 
 namespace Crease.Application.Common.Interfaces
 {

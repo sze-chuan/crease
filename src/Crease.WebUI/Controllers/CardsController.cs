@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Crease.Application.Cards.Commands.CreateCard;
+﻿using Crease.Application.Cards.Commands.CreateCard;
 using Crease.Application.Cards.Commands.UpdateCard;
 using Crease.Application.Cards.Queries.GetCard;
 using Crease.Application.Cards.Queries.GetCards;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crease.WebUI.Controllers

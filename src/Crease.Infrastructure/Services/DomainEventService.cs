@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using Crease.Application.Common.Interfaces;
+﻿using Crease.Application.Common.Interfaces;
 using Crease.Application.Common.Models;
 using Crease.Domain.Common;
 using MediatR;

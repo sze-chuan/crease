@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Crease.Application.Common.Interfaces;
+﻿using Crease.Application.Common.Interfaces;
 using Crease.Domain.Entities;
 using MediatR;
 
@@ -9,7 +6,7 @@ namespace Crease.Application.Cards.Commands.CreateCard
 {
     public class CreateCardCommand : IRequest<string>
     {
-        public string BankCardId { get; set; }
+        public string? BankCardId { get; set; }
         
         public string Name { get; set; }
         

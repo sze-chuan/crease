@@ -1,5 +1,4 @@
-﻿using System;
-using Crease.Application.Common.Mappings;
+﻿using Crease.Application.Common.Mappings;
 using Crease.Domain.Entities;
 
 namespace Crease.Application.CardStatements.Queries.Dto

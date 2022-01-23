@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Crease.Application.CardStatements.Queries.Dto;
 using Crease.Application.Common.Interfaces;
 using Crease.Domain.Entities;

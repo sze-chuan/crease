@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Crease.Application.Common.Mappings;
+﻿using Crease.Application.Common.Mappings;
 using Crease.Domain.Entities;
 using Crease.Domain.ValueObjects;
 

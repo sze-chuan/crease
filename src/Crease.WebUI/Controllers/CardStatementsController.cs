@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using Crease.Application.CardStatements.Commands.CreateCardStatement;
+﻿using Crease.Application.CardStatements.Commands.CreateCardStatement;
 using Crease.Application.CardStatements.Queries.Dto;
 using Crease.Application.CardStatements.Queries.GetCardStatement;
 using Crease.Application.CardStatements.Queries.GetCardStatementByMonthYear;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crease.WebUI.Controllers

@@ -10,9 +10,10 @@
 
         <!-- Set this to true if you enable server-side prerendering -->
         <BuildServerSideRenderer>false</BuildServerSideRenderer>
-      <UserSecretsId>c111e361-9ca3-4804-af4a-9f8791d31f90</UserSecretsId>
-      <LangVersion>10</LangVersion>
-      <Nullable>enable</Nullable>
+        <UserSecretsId>c111e361-9ca3-4804-af4a-9f8791d31f90</UserSecretsId>
+        <LangVersion>10</LangVersion>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
     <ItemGroup>

@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Crease.Application.Common.Interfaces;
-using Microsoft.AspNetCore.Http;
 
 namespace Crease.WebUI.Services
 {

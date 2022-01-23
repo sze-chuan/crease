@@ -1,5 +1,4 @@
-﻿using System;
-using Crease.Application.Common.Interfaces;
+﻿using Crease.Application.Common.Interfaces;
 
 namespace Crease.Infrastructure.Services
 {

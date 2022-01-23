@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Crease.Domain.Common;
 
 namespace Crease.Domain.ValueObjects
