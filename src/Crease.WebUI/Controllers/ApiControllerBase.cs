@@ -1,14 +1,13 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Crease.WebUI.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public abstract class ApiControllerBase : ControllerBase
-    {
-        private ISender _mediator;
+namespace Crease.WebUI.Controllers;
 
-        protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
-    }
+[ApiController]
+[Route("api/[controller]")]
+public abstract class ApiControllerBase : ControllerBase
+{
+    private ISender _mediator;
+
+    protected ISender Mediator => _mediator ??= HttpContext.RequestServices.GetService<ISender>();
 }

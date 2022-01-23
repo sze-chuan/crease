@@ -5,35 +5,34 @@ using Crease.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crease.Application.CardStatements.Queries.GetCardStatementByMonthYear
-{
-    public class GetCardStatementByMonthYearQuery : IRequest<CardStatementDto>
-    {
-        public string CardId { get; set; }
+namespace Crease.Application.CardStatements.Queries.GetCardStatementByMonthYear;
 
-        public DateTime MonthYear { get; set; }
+public class GetCardStatementByMonthYearQuery : IRequest<CardStatementDto>
+{
+    public string CardId { get; set; }
+
+    public DateTime MonthYear { get; set; }
+}
+
+public class GetCardStatementByMonthYearQueryHandler : IRequestHandler<GetCardStatementByMonthYearQuery, CardStatementDto>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
+    private readonly ICurrentUserService _userService;
+
+    public GetCardStatementByMonthYearQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService userService)
+    {
+        _context = context;
+        _mapper = mapper;
+        _userService = userService;
     }
 
-    public class GetCardStatementByMonthYearQueryHandler : IRequestHandler<GetCardStatementByMonthYearQuery, CardStatementDto>
+    public async Task<CardStatementDto> Handle(GetCardStatementByMonthYearQuery request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly ICurrentUserService _userService;
-
-        public GetCardStatementByMonthYearQueryHandler(IApplicationDbContext context, IMapper mapper, ICurrentUserService userService)
-        {
-            _context = context;
-            _mapper = mapper;
-            _userService = userService;
-        }
-
-        public async Task<CardStatementDto> Handle(GetCardStatementByMonthYearQuery request, CancellationToken cancellationToken)
-        {
-            return await _context.CardStatements
-                .Where(x => x.CardId == request.CardId && x.MonthYear == request.MonthYear && x.UserId == _userService.UserId)
-                .AsNoTracking()
-                .ProjectTo<CardStatementDto>(_mapper.ConfigurationProvider)
-                .SingleOrDefaultAsync(cancellationToken);
-        }
+        return await _context.CardStatements
+            .Where(x => x.CardId == request.CardId && x.MonthYear == request.MonthYear && x.UserId == _userService.UserId)
+            .AsNoTracking()
+            .ProjectTo<CardStatementDto>(_mapper.ConfigurationProvider)
+            .SingleOrDefaultAsync(cancellationToken);
     }
 }

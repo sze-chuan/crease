@@ -2,46 +2,45 @@
 using Crease.Domain.Entities;
 using MediatR;
 
-namespace Crease.Application.Cards.Commands.CreateCard
+namespace Crease.Application.Cards.Commands.CreateCard;
+
+public class CreateCardCommand : IRequest<string>
 {
-    public class CreateCardCommand : IRequest<string>
+    public string? BankCardId { get; set; }
+        
+    public string Name { get; set; }
+        
+    public string CardNumber { get; set; }
+        
+    public DateTime StartDate { get; set; }
+}
+
+public class CreateCardCommandHandler : IRequestHandler<CreateCardCommand, string>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _userService;
+
+    public CreateCardCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
     {
-        public string? BankCardId { get; set; }
-        
-        public string Name { get; set; }
-        
-        public string CardNumber { get; set; }
-        
-        public DateTime StartDate { get; set; }
+        _context = context;
+        _userService = userService;
     }
 
-    public class CreateCardCommandHandler : IRequestHandler<CreateCardCommand, string>
+    public async Task<string> Handle(CreateCardCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly ICurrentUserService _userService;
-
-        public CreateCardCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
+        var entity = new Card
         {
-            _context = context;
-            _userService = userService;
-        }
-
-        public async Task<string> Handle(CreateCardCommand request, CancellationToken cancellationToken)
-        {
-            var entity = new Card
-            {
-                BankCardId = request.BankCardId,
-                Name = request.Name,
-                CardNumber = request.CardNumber,
-                StartDate = request.StartDate,
-                UserId = _userService.UserId
-            };
+            BankCardId = request.BankCardId,
+            Name = request.Name,
+            CardNumber = request.CardNumber,
+            StartDate = request.StartDate,
+            UserId = _userService.UserId
+        };
             
-            _context.Cards.Add(entity);
+        _context.Cards.Add(entity);
 
-            await _context.SaveChangesAsync(cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            return entity.Id.ToString();
-        }
+        return entity.Id.ToString();
     }
 }

@@ -1,35 +1,34 @@
 using Crease.Domain.Common;
 
-namespace Crease.Domain.ValueObjects
+namespace Crease.Domain.ValueObjects;
+
+public class StatementType : ValueObject
 {
-    public class StatementType : ValueObject
+    public string Value { get; }
+
+    private StatementType(string value)
     {
-        public string Value { get; }
-
-        private StatementType(string value)
-        {
-            Value = value;
-        }
+        Value = value;
+    }
         
-        public static StatementType From(string value)
-        {
-            var statementType = new StatementType(value);
+    public static StatementType From(string value)
+    {
+        var statementType = new StatementType(value);
 
-            return statementType;
-        }
+        return statementType;
+    }
 
-        public static StatementType Calendar => new(nameof(Calendar));
+    public static StatementType Calendar => new(nameof(Calendar));
 
-        public static StatementType Statement => new(nameof(Statement));
+    public static StatementType Statement => new(nameof(Statement));
         
-        public override string ToString()
-        {
-            return Value;
-        }
+    public override string ToString()
+    {
+        return Value;
+    }
 
-        protected override IEnumerable<object> GetEqualityComponents()
-        {
-            yield return Value;
-        }
+    protected override IEnumerable<object> GetEqualityComponents()
+    {
+        yield return Value;
     }
 }

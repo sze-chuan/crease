@@ -5,31 +5,30 @@ using Crease.Application.CardStatements.Queries.GetCardStatementByMonthYear;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Crease.WebUI.Controllers
+namespace Crease.WebUI.Controllers;
+
+[Authorize]
+public class CardStatementsController : ApiControllerBase
 {
-    [Authorize]
-    public class CardStatementsController : ApiControllerBase
+    [HttpGet("period")]
+    [ProducesResponseType(typeof(CardStatementDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<CardStatementDto>> GetByQuery([FromQuery] GetCardStatementByMonthYearQuery byMonthYearQuery)
     {
-        [HttpGet("period")]
-        [ProducesResponseType(typeof(CardStatementDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<CardStatementDto>> GetByQuery([FromQuery] GetCardStatementByMonthYearQuery byMonthYearQuery)
-        {
-            return Ok(await Mediator.Send(byMonthYearQuery));
-        }
+        return Ok(await Mediator.Send(byMonthYearQuery));
+    }
         
-        [HttpGet("{cardStatementId}")]
-        [ProducesResponseType(typeof(CardStatementDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult<CardStatementDto>> Get(string cardStatementId)
-        {
-            return Ok(await Mediator.Send(new GetCardStatementQuery(cardStatementId)));
-        }
+    [HttpGet("{cardStatementId}")]
+    [ProducesResponseType(typeof(CardStatementDto), StatusCodes.Status200OK)]
+    public async Task<ActionResult<CardStatementDto>> Get(string cardStatementId)
+    {
+        return Ok(await Mediator.Send(new GetCardStatementQuery(cardStatementId)));
+    }
         
-        [HttpPost]
-        [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
-        [ProducesDefaultResponseType]
-        public async Task<ActionResult<string>> Create(CreateCardStatementCommand command)
-        {
-            return Ok(await Mediator.Send(command));
-        }
+    [HttpPost]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesDefaultResponseType]
+    public async Task<ActionResult<string>> Create(CreateCardStatementCommand command)
+    {
+        return Ok(await Mediator.Send(command));
     }
 }

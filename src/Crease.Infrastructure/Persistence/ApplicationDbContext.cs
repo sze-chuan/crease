@@ -4,64 +4,63 @@ using Crease.Domain.Common;
 using Crease.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crease.Infrastructure.Persistence
+namespace Crease.Infrastructure.Persistence;
+
+public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
-    public class ApplicationDbContext : DbContext, IApplicationDbContext
+    private readonly IDateTime _dateTime;
+    private readonly IDomainEventService _domainEventService;
+
+    public ApplicationDbContext(
+        DbContextOptions options,
+        IDomainEventService domainEventService,
+        IDateTime dateTime) : base(options)
     {
-        private readonly IDateTime _dateTime;
-        private readonly IDomainEventService _domainEventService;
-
-        public ApplicationDbContext(
-            DbContextOptions options,
-            IDomainEventService domainEventService,
-            IDateTime dateTime) : base(options)
-        {
-            _domainEventService = domainEventService;
-            _dateTime = dateTime;
-        }
+        _domainEventService = domainEventService;
+        _dateTime = dateTime;
+    }
         
-        public DbSet<Card> Cards { get; set; }
+    public DbSet<Card> Cards { get; set; }
         
-        public DbSet<CardStatement> CardStatements { get; set; }
+    public DbSet<CardStatement> CardStatements { get; set; }
         
-        public DbSet<BankCard> BankCards { get; set; }
+    public DbSet<BankCard> BankCards { get; set; }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
-        {
-            var result = await base.SaveChangesAsync(cancellationToken);
+    public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new())
+    {
+        var result = await base.SaveChangesAsync(cancellationToken);
 
-            await DispatchEvents();
+        await DispatchEvents();
 
-            return result;
-        }
+        return result;
+    }
 
-        protected override void OnModelCreating(ModelBuilder builder)
-        {
-            base.OnModelCreating(builder);
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
 
-            builder.HasDefaultContainer("card");
+        builder.HasDefaultContainer("card");
             
-            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        }
+        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    }
 
-        private async Task DispatchEvents()
+    private async Task DispatchEvents()
+    {
+        while (true)
         {
-            while (true)
-            {
-                var domainEventEntity = ChangeTracker
-                    .Entries<IHasDomainEvent>()
-                    .Select(x => x.Entity.DomainEvents)
-                    .SelectMany(x => x)
-                    .FirstOrDefault(domainEvent => !domainEvent.IsPublished);
+            var domainEventEntity = ChangeTracker
+                .Entries<IHasDomainEvent>()
+                .Select(x => x.Entity.DomainEvents)
+                .SelectMany(x => x)
+                .FirstOrDefault(domainEvent => !domainEvent.IsPublished);
                 
-                if (domainEventEntity == null)
-                {
-                    break;
-                }
-
-                domainEventEntity.IsPublished = true;
-                await _domainEventService.Publish(domainEventEntity);
+            if (domainEventEntity == null)
+            {
+                break;
             }
+
+            domainEventEntity.IsPublished = true;
+            await _domainEventService.Publish(domainEventEntity);
         }
     }
 }

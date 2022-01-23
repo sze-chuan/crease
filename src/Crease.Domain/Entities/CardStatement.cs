@@ -1,81 +1,80 @@
 using Crease.Domain.Common;
 using Crease.Domain.ValueObjects;
 
-namespace Crease.Domain.Entities
+namespace Crease.Domain.Entities;
+
+public class CardStatement : Entity
 {
-    public class CardStatement : Entity
+    public DateTime MonthYear { get; set; }
+        
+    public string CardId { get; set; }
+        
+    public string BankCardId { get; set; }
+
+    public string UserId { get; set; }
+        
+    public List<Transaction> Transactions { get; private set; } = new();
+        
+    public CardStatementReward StatementReward { get; set; }
+
+    public void UpdateTransaction(Transaction updatedTransaction)
     {
-        public DateTime MonthYear { get; set; }
-        
-        public string CardId { get; set; }
-        
-        public string BankCardId { get; set; }
+        var transactionToBeUpdated = Transactions.FirstOrDefault(transaction => transaction.Id == updatedTransaction.Id);
 
-        public string UserId { get; set; }
-        
-        public List<Transaction> Transactions { get; private set; } = new();
-        
-        public CardStatementReward StatementReward { get; set; }
-
-        public void UpdateTransaction(Transaction updatedTransaction)
+        if (transactionToBeUpdated == null)
         {
-            var transactionToBeUpdated = Transactions.FirstOrDefault(transaction => transaction.Id == updatedTransaction.Id);
-
-            if (transactionToBeUpdated == null)
-            {
-                return;
-            }
+            return;
+        }
             
-            transactionToBeUpdated.Amount = updatedTransaction.Amount;
-            transactionToBeUpdated.Date = updatedTransaction.Date;
-            transactionToBeUpdated.Description = updatedTransaction.Description;
-            transactionToBeUpdated.PaymentType = updatedTransaction.PaymentType;
-            transactionToBeUpdated.TransactionCategory = updatedTransaction.TransactionCategory;
+        transactionToBeUpdated.Amount = updatedTransaction.Amount;
+        transactionToBeUpdated.Date = updatedTransaction.Date;
+        transactionToBeUpdated.Description = updatedTransaction.Description;
+        transactionToBeUpdated.PaymentType = updatedTransaction.PaymentType;
+        transactionToBeUpdated.TransactionCategory = updatedTransaction.TransactionCategory;
+    }
+
+    public void RemoveTransaction(Guid transactionId)
+    {
+        Transactions.RemoveAll(transaction => transaction.Id == transactionId);
+    }
+
+    public void UpdateStatementReward(RewardVersion rewardVersion)
+    {
+        if (rewardVersion == null)
+        {
+            return;
         }
 
-        public void RemoveTransaction(Guid transactionId)
-        {
-            Transactions.RemoveAll(transaction => transaction.Id == transactionId);
-        }
+        var rewardsDict = new Dictionary<Guid, CardStatementReward>();
 
-        public void UpdateStatementReward(RewardVersion rewardVersion)
+        foreach (var transaction in Transactions)
         {
-            if (rewardVersion == null)
+            var (computation, reward) = rewardVersion.ComputeReward(transaction, Transactions);
+
+            if (reward.Equals(CardStatementReward.NoRewards))
             {
-                return;
+                continue;
             }
 
-            var rewardsDict = new Dictionary<Guid, CardStatementReward>();
-
-            foreach (var transaction in Transactions)
+            if (rewardsDict.ContainsKey(computation.Id))
             {
-                var (computation, reward) = rewardVersion.ComputeReward(transaction, Transactions);
+                var totalReward = rewardsDict[computation.Id] + reward;
 
-                if (reward.Equals(CardStatementReward.NoRewards))
-                {
-                    continue;
-                }
-
-                if (rewardsDict.ContainsKey(computation.Id))
-                {
-                    var totalReward = rewardsDict[computation.Id] + reward;
-
-                    rewardsDict[computation.Id] = CalculateRewardWithCap(totalReward, computation);
-                }
-                else
-                {
-                    rewardsDict.Add(computation.Id, CalculateRewardWithCap(reward, computation));
-                }
+                rewardsDict[computation.Id] = CalculateRewardWithCap(totalReward, computation);
             }
-
-            StatementReward = rewardsDict.Aggregate(CardStatementReward.NoRewards, (current, reward) => current + reward.Value);
+            else
+            {
+                rewardsDict.Add(computation.Id, CalculateRewardWithCap(reward, computation));
+            }
         }
 
-        private static CardStatementReward CalculateRewardWithCap(CardStatementReward reward, RewardComputation computation)
-        {
-            return reward.GetRewardValue(computation.RewardType) > computation.RewardsCap
-                ? CardStatementReward.WithRewardType(computation.RewardType, computation.RewardsCap)  
-                : reward;
-        }
+        StatementReward = rewardsDict.Aggregate(CardStatementReward.NoRewards, (current, reward) => current + reward.Value);
+    }
+
+    private static CardStatementReward CalculateRewardWithCap(CardStatementReward reward, RewardComputation computation)
+    {
+        return reward.GetRewardValue(computation.RewardType) > computation.RewardsCap
+            ? CardStatementReward.WithRewardType(computation.RewardType, computation.RewardsCap)  
+            : reward;
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Crease.Application.Common.Interfaces
+﻿namespace Crease.Application.Common.Interfaces;
+
+public interface ICurrentUserService
 {
-    public interface ICurrentUserService
-    {
-        string UserId { get; }
-    }
+    string UserId { get; }
 }
