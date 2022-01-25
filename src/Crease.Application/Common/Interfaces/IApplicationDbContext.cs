@@ -1,18 +1,15 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using Crease.Domain.Entities;
+﻿using Crease.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Crease.Application.Common.Interfaces
-{
-    public interface IApplicationDbContext
-    {
-        DbSet<Card> Cards { get; }
-        
-        DbSet<CardStatement> CardStatements { get; }
-        
-        DbSet<BankCard> BankCards { get; }
+namespace Crease.Application.Common.Interfaces;
 
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
-    }
+public interface IApplicationDbContext
+{
+    DbSet<Card> Cards { get; }
+        
+    DbSet<CardStatement> CardStatements { get; }
+        
+    DbSet<BankCard> BankCards { get; }
+
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }

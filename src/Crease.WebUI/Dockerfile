@@ -1,17 +1,13 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # This stage is used for VS debugging on Docker
-FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 ENV ASPNETCORE_URLS=https://+:5001;http://+:5000
 WORKDIR /app
 EXPOSE 5000
 EXPOSE 5001
 
-FROM node:lts-buster-slim AS node_base
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-COPY --from=node_base . .
-RUN apt-get update -y && apt-get install python3 build-essential -y
-
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 COPY ["src/Crease.WebUI/Crease.WebUI.csproj", "src/Crease.WebUI/"]
 COPY ["src/Crease.Application/Crease.Application.csproj", "src/Crease.Application/"]

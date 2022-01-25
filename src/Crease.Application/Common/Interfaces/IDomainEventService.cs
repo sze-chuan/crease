@@ -1,10 +1,8 @@
-﻿using System.Threading.Tasks;
-using Crease.Domain.Common;
+﻿using Crease.Domain.Common;
 
-namespace Crease.Application.Common.Interfaces
+namespace Crease.Application.Common.Interfaces;
+
+public interface IDomainEventService
 {
-    public interface IDomainEventService
-    {
-        Task Publish(DomainEvent domainEvent);
-    }
+    Task Publish(DomainEvent domainEvent);
 }

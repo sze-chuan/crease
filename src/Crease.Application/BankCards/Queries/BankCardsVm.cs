@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
+﻿namespace Crease.Application.BankCards.Queries;
 
-namespace Crease.Application.BankCards.Queries
+public class BankCardsVm
 {
-    public class BankCardsVm
-    {
-        public IList<BankCardDto> BankCards { get; set; }
-    }
+    public IList<BankCardDto> BankCards { get; set; }
 }

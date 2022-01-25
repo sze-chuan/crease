@@ -1,47 +1,43 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Crease.Application.Common.Interfaces;
+﻿using Crease.Application.Common.Interfaces;
 using Crease.Domain.Entities;
 using MediatR;
 
-namespace Crease.Application.CardStatements.Commands.CreateCardStatement
+namespace Crease.Application.CardStatements.Commands.CreateCardStatement;
+
+public class CreateCardStatementCommand : IRequest<string>
 {
-    public class CreateCardStatementCommand : IRequest<string>
+    public string CardId { get; set; }
+        
+    public string BankCardId { get; set; }
+        
+    public DateTime MonthYear { get; set; }
+}
+
+public class CreateCardStatementCommandHandler : IRequestHandler<CreateCardStatementCommand, string>
+{
+    private readonly IApplicationDbContext _context;
+    private readonly ICurrentUserService _userService;
+
+    public CreateCardStatementCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
     {
-        public string CardId { get; set; }
-        
-        public string BankCardId { get; set; }
-        
-        public DateTime MonthYear { get; set; }
+        _context = context;
+        _userService = userService;
     }
 
-    public class CreateCardStatementCommandHandler : IRequestHandler<CreateCardStatementCommand, string>
+    public async Task<string> Handle(CreateCardStatementCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
-        private readonly ICurrentUserService _userService;
-
-        public CreateCardStatementCommandHandler(IApplicationDbContext context, ICurrentUserService userService)
+        var entity = new CardStatement
         {
-            _context = context;
-            _userService = userService;
-        }
+            CardId = request.CardId,
+            BankCardId = request.BankCardId,
+            MonthYear = request.MonthYear,
+            UserId = _userService.UserId
+        };
 
-        public async Task<string> Handle(CreateCardStatementCommand request, CancellationToken cancellationToken)
-        {
-            var entity = new CardStatement
-            {
-                CardId = request.CardId,
-                BankCardId = request.BankCardId,
-                MonthYear = request.MonthYear,
-                UserId = _userService.UserId
-            };
+        _context.CardStatements.Add(entity);
 
-            _context.CardStatements.Add(entity);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return entity.Id.ToString();
-        }
+        return entity.Id.ToString();
     }
 }

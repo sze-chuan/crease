@@ -7,18 +7,19 @@ services:
       - "SpaBaseUrl=http://clientapp:3000"
     volumes:
       - $APPDATA/Microsoft/UserSecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID:ro
-      - $HOME/.microsoft/usersecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID:ro
+      #- $HOME/.microsoft/usersecrets/$USER_SECRETS_ID:/root/.microsoft/usersecrets/$USER_SECRETS_ID:ro
 
-  clientapp:
-    image: ${DOCKER_REGISTRY-}clientapp
-    build:
-      context: src/Crease.WebUI/client-app
-      dockerfile: Dockerfile
-    depends_on:
-      - webui
-    restart: on-failure
-    ports:
-      - "3000:3000"
-      - "49153:49153"
-    volumes:
-      - ./src/Crease.WebUI/client-app:/usr/src/app
+# TODO: To work on FE docker file
+#  clientapp:
+#    image: ${DOCKER_REGISTRY-}clientapp
+#    build:
+#      context: src/Crease.WebUI/client-app
+#      dockerfile: Dockerfile
+#    depends_on:
+#      - webui
+#    restart: on-failure
+#    ports:
+#      - "3000:3000"
+#      - "49153:49153"
+#    volumes:
+#      - ./src/Crease.WebUI/client-app:/usr/src/app

@@ -1,68 +1,63 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Crease.Application.Common.Exceptions;
+﻿using Crease.Application.Common.Exceptions;
 using Crease.Application.Common.Interfaces;
 using Crease.Domain.Entities;
 using Crease.Domain.ValueObjects;
 using MediatR;
 
-namespace Crease.Application.Transactions.Commands.CreateTransactionCommand
+namespace Crease.Application.Transactions.Commands.CreateTransactionCommand;
+
+public class CreateTransactionCommand : IRequest<string>
 {
-    public class CreateTransactionCommand : IRequest<string>
+    public string CardStatementId { get; set; }
+        
+    public string PaymentType { get; set; }
+        
+    public string TransactionCategory { get; set; }
+        
+    public string Description { get; set; }
+        
+    public DateTime Date { get; set; }
+        
+    public decimal Amount { get; set; }
+}
+
+public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, string>
+{
+    private readonly IApplicationDbContext _context;
+
+    public CreateTransactionCommandHandler(IApplicationDbContext context)
     {
-        public string CardStatementId { get; set; }
-        
-        public string PaymentType { get; set; }
-        
-        public string TransactionCategory { get; set; }
-        
-        public string Description { get; set; }
-        
-        public DateTime Date { get; set; }
-        
-        public decimal Amount { get; set; }
+        _context = context;
     }
 
-    public class CreateTransactionCommandHandler : IRequestHandler<CreateTransactionCommand, string>
+    public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
     {
-        private readonly IApplicationDbContext _context;
+        var cardStatement =
+            await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
 
-        public CreateTransactionCommandHandler(IApplicationDbContext context)
+        if (cardStatement == null)
         {
-            _context = context;
+            throw new NotFoundException(nameof(CardStatement), request.CardStatementId);
         }
 
-        public async Task<string> Handle(CreateTransactionCommand request, CancellationToken cancellationToken)
+        var bankCard =
+            await _context.BankCards.FindAsync(new object[] { Guid.Parse(cardStatement.BankCardId) }, cancellationToken);
+
+        var transactionEntity = new Transaction
         {
-            var cardStatement =
-                await _context.CardStatements.FindAsync(new object[] { Guid.Parse(request.CardStatementId) }, cancellationToken);
+            Id = Guid.NewGuid(),
+            PaymentType = PaymentType.From(request.PaymentType),
+            TransactionCategory = TransactionCategory.From(request.TransactionCategory),
+            Description = request.Description,
+            Date = request.Date,
+            Amount = request.Amount
+        };
 
-            if (cardStatement == null)
-            {
-                throw new NotFoundException(nameof(CardStatement), request.CardStatementId);
-            }
+        cardStatement.Transactions.Add(transactionEntity);
+        cardStatement.UpdateStatementReward(bankCard.GetEffectiveRewardVersion(cardStatement.MonthYear));
 
-            var bankCard =
-                await _context.BankCards.FindAsync(new object[] { Guid.Parse(cardStatement.BankCardId) }, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
 
-            var transactionEntity = new Transaction
-            {
-                Id = Guid.NewGuid(),
-                PaymentType = PaymentType.From(request.PaymentType),
-                TransactionCategory = TransactionCategory.From(request.TransactionCategory),
-                Description = request.Description,
-                Date = request.Date,
-                Amount = request.Amount
-            };
-
-            cardStatement.Transactions.Add(transactionEntity);
-            cardStatement.UpdateStatementReward(bankCard.GetEffectiveRewardVersion(cardStatement.MonthYear));
-
-            await _context.SaveChangesAsync(cancellationToken);
-
-            return transactionEntity.Id.ToString();
-        }
+        return transactionEntity.Id.ToString();
     }
 }

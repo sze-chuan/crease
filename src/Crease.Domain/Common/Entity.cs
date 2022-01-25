@@ -1,9 +1,6 @@
-using System;
+namespace Crease.Domain.Common;
 
-namespace Crease.Domain.Common
+public abstract class Entity
 {
-    public abstract class Entity
-    {
-        public Guid Id { get; set; }
-    }
+    public Guid Id { get; set; }
 }

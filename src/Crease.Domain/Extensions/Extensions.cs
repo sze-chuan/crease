@@ -1,27 +1,23 @@
-using System.Collections.Generic;
-using System.Linq;
+namespace Crease.Domain.Extensions;
 
-namespace Crease.Domain.Extensions
+public static class Extensions
 {
-    public static class Extensions
+    public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
     {
-        public static bool IsNullOrEmpty<T>(this IEnumerable<T> enumerable)
+        return enumerable switch
         {
-            return enumerable switch
-            {
-                null => true,
-                ICollection<T> collection => collection.Count < 1,
-                _ => !enumerable.Any()
-            };
-        }
+            null => true,
+            ICollection<T> collection => collection.Count < 1,
+            _ => !enumerable.Any()
+        };
+    }
         
-        public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
+    public static bool IsNullOrEmpty<T>(this ICollection<T> collection)
+    {
+        if (collection == null)
         {
-            if (collection == null)
-            {
-                return true;
-            }
-            return collection.Count < 1;
+            return true;
         }
+        return collection.Count < 1;
     }
 }

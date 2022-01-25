@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace Crease.Application.Common.Interfaces;
 
-namespace Crease.Application.Common.Interfaces
+public interface IDateTime
 {
-    public interface IDateTime
-    {
-        DateTime Now { get; }
-    }
+    DateTime Now { get; }
 }
