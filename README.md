@@ -12,8 +12,8 @@ This is also a personal side project to pick up the following concepts:
 
 ## Tech stack
 - React 17
-- ASP.Net Core 5
-- Entity Framework Core 5
+- ASP.Net Core 6
+- Entity Framework Core 6
 - MediatR
 - AutoMapper
 - FluentValidation
@@ -23,7 +23,7 @@ This is also a personal side project to pick up the following concepts:
 ### Prerequisites
 Make sure the following is installed:
 
-- .Net 5 SDK
+- .Net 6 SDK
 - Node.js LTS
 
 ### Database Configuration
