@@ -37,7 +37,7 @@ public class Program
             {
                 if (context.HostingEnvironment.IsDevelopment())
                 {
-                    builder.AddUserSecrets<Program>();
+                    builder.AddUserSecrets<Program>(true);
                 }
             })
             .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
