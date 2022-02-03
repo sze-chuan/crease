@@ -46,7 +46,7 @@
     "prettier:fix": "prettier --write",
     "prettier:check": "prettier --check .",
     "postinstall": "cd ../../.. && husky install src/Crease.WebUI/client-app/.husky",
-    "gen-api": "nswag run ../nswag.json /runtime:Net50"
+    "gen-api": "nswag run ../nswag.json /runtime:Net60"
   },
   "browserslist": {
     "production": [
