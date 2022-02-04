@@ -7,6 +7,14 @@
 //----------------------
 // ReSharper disable InconsistentNaming
 
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CancelToken,
+} from 'axios';
+
 export class ApiClientBase {
   private authToken = '';
 
@@ -21,1249 +29,1605 @@ export class ApiClientBase {
 }
 
 export interface IBankCardsClient {
-    get(): Promise<BankCardDto[]>;
+  get(): Promise<BankCardDto[]>;
 }
 
 export class BankCardsClient extends ApiClientBase implements IBankCardsClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+  private instance: AxiosInstance;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
+    undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super();
-        this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
+  constructor(baseUrl?: string, instance?: AxiosInstance) {
+    super();
+    this.instance = instance ? instance : axios.create();
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
 
-    get(): Promise<BankCardDto[]> {
-        let url_ = this.baseUrl + "/api/bankcards";
-        url_ = url_.replace(/[?&]$/, "");
+  get(cancelToken?: CancelToken | undefined): Promise<BankCardDto[]> {
+    let url_ = this.baseUrl + '/api/bankcards';
+    url_ = url_.replace(/[?&]$/, '');
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
 
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: Response): Promise<BankCardDto[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(BankCardDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
         }
-        return Promise.resolve<BankCardDto[]>(<any>null);
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processGet(_response);
+      });
+  }
+
+  protected processGet(
+    response: AxiosResponse<string>
+  ): Promise<BankCardDto[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
     }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200)
+          result200!.push(BankCardDto.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return Promise.resolve<BankCardDto[]>(result200);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<BankCardDto[]>(<any>null);
+  }
 }
 
 export interface ICardsClient {
-    getAll(): Promise<CardDto[]>;
-    create(command: CreateCardCommand): Promise<string>;
-    get(cardId: string | null): Promise<CardDto>;
-    update(id: string | null, command: UpdateCardCommand): Promise<void>;
+  getAll(): Promise<CardDto[]>;
+  create(command: CreateCardCommand): Promise<string>;
+  get(cardId: string | null): Promise<CardDto>;
+  update(id: string | null, command: UpdateCardCommand): Promise<void>;
 }
 
 export class CardsClient extends ApiClientBase implements ICardsClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+  private instance: AxiosInstance;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
+    undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super();
-        this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
+  constructor(baseUrl?: string, instance?: AxiosInstance) {
+    super();
+    this.instance = instance ? instance : axios.create();
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
 
-    getAll(): Promise<CardDto[]> {
-        let url_ = this.baseUrl + "/api/cards";
-        url_ = url_.replace(/[?&]$/, "");
+  getAll(cancelToken?: CancelToken | undefined): Promise<CardDto[]> {
+    let url_ = this.baseUrl + '/api/cards';
+    url_ = url_.replace(/[?&]$/, '');
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
 
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGetAll(_response);
-        });
-    }
-
-    protected processGetAll(response: Response): Promise<CardDto[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(CardDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<CardDto[]>(<any>null);
-    }
-
-    create(command: CreateCardCommand): Promise<string> {
-        let url_ = this.baseUrl + "/api/cards";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processCreate(_response);
-        });
-    }
-
-    protected processCreate(response: Response): Promise<string> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return result200;
-            });
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
         } else {
-            return response.text().then((_responseText) => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = ProblemDetails.fromJS(resultDatadefault);
-            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
-            });
+          throw _error;
         }
-    }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processGetAll(_response);
+      });
+  }
 
-    get(cardId: string | null): Promise<CardDto> {
-        let url_ = this.baseUrl + "/api/cards/{cardId}";
-        if (cardId === undefined || cardId === null)
-            throw new Error("The parameter 'cardId' must be defined.");
-        url_ = url_.replace("{cardId}", encodeURIComponent("" + cardId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: Response): Promise<CardDto> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CardDto.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+  protected processGetAll(response: AxiosResponse<string>): Promise<CardDto[]> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
         }
-        return Promise.resolve<CardDto>(<any>null);
+      }
     }
-
-    update(id: string | null, command: UpdateCardCommand): Promise<void> {
-        let url_ = this.baseUrl + "/api/cards/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processUpdate(_response);
-        });
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      if (Array.isArray(resultData200)) {
+        result200 = [] as any;
+        for (let item of resultData200) result200!.push(CardDto.fromJS(item));
+      } else {
+        result200 = <any>null;
+      }
+      return Promise.resolve<CardDto[]>(result200);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers
+      );
     }
+    return Promise.resolve<CardDto[]>(<any>null);
+  }
 
-    protected processUpdate(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+  create(
+    command: CreateCardCommand,
+    cancelToken?: CancelToken | undefined
+  ): Promise<string> {
+    let url_ = this.baseUrl + '/api/cards';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'POST',
+      url: url_,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
         }
-        return Promise.resolve<void>(<any>null);
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processCreate(_response);
+      });
+  }
+
+  protected processCreate(response: AxiosResponse<string>): Promise<string> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
     }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = resultData200 !== undefined ? resultData200 : <any>null;
+      return Promise.resolve<string>(result200);
+    } else {
+      const _responseText = response.data;
+      let resultdefault: any = null;
+      let resultDatadefault = _responseText;
+      resultdefault = ProblemDetails.fromJS(resultDatadefault);
+      return throwException(
+        'A server side error occurred.',
+        status,
+        _responseText,
+        _headers,
+        resultdefault
+      );
+    }
+  }
+
+  get(
+    cardId: string | null,
+    cancelToken?: CancelToken | undefined
+  ): Promise<CardDto> {
+    let url_ = this.baseUrl + '/api/cards/{cardId}';
+    if (cardId === undefined || cardId === null)
+      throw new Error("The parameter 'cardId' must be defined.");
+    url_ = url_.replace('{cardId}', encodeURIComponent('' + cardId));
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processGet(_response);
+      });
+  }
+
+  protected processGet(response: AxiosResponse<string>): Promise<CardDto> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = CardDto.fromJS(resultData200);
+      return Promise.resolve<CardDto>(result200);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<CardDto>(<any>null);
+  }
+
+  update(
+    id: string | null,
+    command: UpdateCardCommand,
+    cancelToken?: CancelToken | undefined
+  ): Promise<void> {
+    let url_ = this.baseUrl + '/api/cards/{id}';
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace('{id}', encodeURIComponent('' + id));
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'PUT',
+      url: url_,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processUpdate(_response);
+      });
+  }
+
+  protected processUpdate(response: AxiosResponse<string>): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 204) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(<any>null);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<void>(<any>null);
+  }
 }
 
 export interface ICardStatementsClient {
-    getByQuery(cardId: string | null | undefined, monthYear: Date | undefined): Promise<CardStatementDto>;
-    get(cardStatementId: string | null): Promise<CardStatementDto>;
-    create(command: CreateCardStatementCommand): Promise<string>;
+  getByQuery(
+    cardId: string | null | undefined,
+    monthYear: Date | undefined
+  ): Promise<CardStatementDto>;
+  get(cardStatementId: string | null): Promise<CardStatementDto>;
+  create(command: CreateCardStatementCommand): Promise<string>;
 }
 
-export class CardStatementsClient extends ApiClientBase implements ICardStatementsClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+export class CardStatementsClient
+  extends ApiClientBase
+  implements ICardStatementsClient
+{
+  private instance: AxiosInstance;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
+    undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super();
-        this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
+  constructor(baseUrl?: string, instance?: AxiosInstance) {
+    super();
+    this.instance = instance ? instance : axios.create();
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
 
-    getByQuery(cardId: string | null | undefined, monthYear: Date | undefined): Promise<CardStatementDto> {
-        let url_ = this.baseUrl + "/api/cardstatements/period?";
-        if (cardId !== undefined && cardId !== null)
-            url_ += "CardId=" + encodeURIComponent("" + cardId) + "&";
-        if (monthYear === null)
-            throw new Error("The parameter 'monthYear' cannot be null.");
-        else if (monthYear !== undefined)
-            url_ += "MonthYear=" + encodeURIComponent(monthYear ? "" + monthYear.toISOString() : "") + "&";
-        url_ = url_.replace(/[?&]$/, "");
+  getByQuery(
+    cardId: string | null | undefined,
+    monthYear: Date | undefined,
+    cancelToken?: CancelToken | undefined
+  ): Promise<CardStatementDto> {
+    let url_ = this.baseUrl + '/api/cardstatements/period?';
+    if (cardId !== undefined && cardId !== null)
+      url_ += 'CardId=' + encodeURIComponent('' + cardId) + '&';
+    if (monthYear === null)
+      throw new Error("The parameter 'monthYear' cannot be null.");
+    else if (monthYear !== undefined)
+      url_ +=
+        'MonthYear=' +
+        encodeURIComponent(monthYear ? '' + monthYear.toISOString() : '') +
+        '&';
+    url_ = url_.replace(/[?&]$/, '');
 
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
 
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGetByQuery(_response);
-        });
-    }
-
-    protected processGetByQuery(response: Response): Promise<CardStatementDto> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CardStatementDto.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<CardStatementDto>(<any>null);
-    }
-
-    get(cardStatementId: string | null): Promise<CardStatementDto> {
-        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}";
-        if (cardStatementId === undefined || cardStatementId === null)
-            throw new Error("The parameter 'cardStatementId' must be defined.");
-        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processGet(_response);
-        });
-    }
-
-    protected processGet(response: Response): Promise<CardStatementDto> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CardStatementDto.fromJS(resultData200);
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<CardStatementDto>(<any>null);
-    }
-
-    create(command: CreateCardStatementCommand): Promise<string> {
-        let url_ = this.baseUrl + "/api/cardstatements";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processCreate(_response);
-        });
-    }
-
-    protected processCreate(response: Response): Promise<string> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return result200;
-            });
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
         } else {
-            return response.text().then((_responseText) => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = ProblemDetails.fromJS(resultDatadefault);
-            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
-            });
+          throw _error;
         }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processGetByQuery(_response);
+      });
+  }
+
+  protected processGetByQuery(
+    response: AxiosResponse<string>
+  ): Promise<CardStatementDto> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
     }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = CardStatementDto.fromJS(resultData200);
+      return Promise.resolve<CardStatementDto>(result200);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<CardStatementDto>(<any>null);
+  }
+
+  get(
+    cardStatementId: string | null,
+    cancelToken?: CancelToken | undefined
+  ): Promise<CardStatementDto> {
+    let url_ = this.baseUrl + '/api/cardstatements/{cardStatementId}';
+    if (cardStatementId === undefined || cardStatementId === null)
+      throw new Error("The parameter 'cardStatementId' must be defined.");
+    url_ = url_.replace(
+      '{cardStatementId}',
+      encodeURIComponent('' + cardStatementId)
+    );
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_ = <AxiosRequestConfig>{
+      method: 'GET',
+      url: url_,
+      headers: {
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processGet(_response);
+      });
+  }
+
+  protected processGet(
+    response: AxiosResponse<string>
+  ): Promise<CardStatementDto> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = CardStatementDto.fromJS(resultData200);
+      return Promise.resolve<CardStatementDto>(result200);
+    } else if (status !== 200 && status !== 204) {
+      const _responseText = response.data;
+      return throwException(
+        'An unexpected server error occurred.',
+        status,
+        _responseText,
+        _headers
+      );
+    }
+    return Promise.resolve<CardStatementDto>(<any>null);
+  }
+
+  create(
+    command: CreateCardStatementCommand,
+    cancelToken?: CancelToken | undefined
+  ): Promise<string> {
+    let url_ = this.baseUrl + '/api/cardstatements';
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'POST',
+      url: url_,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
+        } else {
+          throw _error;
+        }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processCreate(_response);
+      });
+  }
+
+  protected processCreate(response: AxiosResponse<string>): Promise<string> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
+    }
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = resultData200 !== undefined ? resultData200 : <any>null;
+      return Promise.resolve<string>(result200);
+    } else {
+      const _responseText = response.data;
+      let resultdefault: any = null;
+      let resultDatadefault = _responseText;
+      resultdefault = ProblemDetails.fromJS(resultDatadefault);
+      return throwException(
+        'A server side error occurred.',
+        status,
+        _responseText,
+        _headers,
+        resultdefault
+      );
+    }
+  }
 }
 
 export interface ITransactionsClient {
-    create(cardStatementId: string | null, command: CreateTransactionCommand): Promise<string>;
-    update(id: string | null, cardStatementId: string | null, command: UpdateTransactionCommand): Promise<void>;
-    delete(id: string | null, cardStatementId: string | null): Promise<void>;
+  create(
+    cardStatementId: string | null,
+    command: CreateTransactionCommand
+  ): Promise<string>;
+  update(
+    id: string | null,
+    cardStatementId: string | null,
+    command: UpdateTransactionCommand
+  ): Promise<void>;
+  delete(id: string | null, cardStatementId: string | null): Promise<void>;
 }
 
-export class TransactionsClient extends ApiClientBase implements ITransactionsClient {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
-    private baseUrl: string;
-    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+export class TransactionsClient
+  extends ApiClientBase
+  implements ITransactionsClient
+{
+  private instance: AxiosInstance;
+  private baseUrl: string;
+  protected jsonParseReviver: ((key: string, value: any) => any) | undefined =
+    undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        super();
-        this.http = http ? http : <any>window;
-        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
-    }
+  constructor(baseUrl?: string, instance?: AxiosInstance) {
+    super();
+    this.instance = instance ? instance : axios.create();
+    this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : '';
+  }
 
-    create(cardStatementId: string | null, command: CreateTransactionCommand): Promise<string> {
-        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}/transactions";
-        if (cardStatementId === undefined || cardStatementId === null)
-            throw new Error("The parameter 'cardStatementId' must be defined.");
-        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
-        url_ = url_.replace(/[?&]$/, "");
+  create(
+    cardStatementId: string | null,
+    command: CreateTransactionCommand,
+    cancelToken?: CancelToken | undefined
+  ): Promise<string> {
+    let url_ =
+      this.baseUrl + '/api/cardstatements/{cardStatementId}/transactions';
+    if (cardStatementId === undefined || cardStatementId === null)
+      throw new Error("The parameter 'cardStatementId' must be defined.");
+    url_ = url_.replace(
+      '{cardStatementId}',
+      encodeURIComponent('' + cardStatementId)
+    );
+    url_ = url_.replace(/[?&]$/, '');
 
-        const content_ = JSON.stringify(command);
+    const content_ = JSON.stringify(command);
 
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            }
-        };
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'POST',
+      url: url_,
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      cancelToken,
+    };
 
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processCreate(_response);
-        });
-    }
-
-    protected processCreate(response: Response): Promise<string> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = resultData200 !== undefined ? resultData200 : <any>null;
-            return result200;
-            });
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
         } else {
-            return response.text().then((_responseText) => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = ProblemDetails.fromJS(resultDatadefault);
-            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
-            });
+          throw _error;
         }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processCreate(_response);
+      });
+  }
+
+  protected processCreate(response: AxiosResponse<string>): Promise<string> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
     }
-
-    update(id: string | null, cardStatementId: string | null, command: UpdateTransactionCommand): Promise<void> {
-        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}/transactions/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (cardStatementId === undefined || cardStatementId === null)
-            throw new Error("The parameter 'cardStatementId' must be defined.");
-        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(command);
-
-        let options_ = <RequestInit>{
-            body: content_,
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processUpdate(_response);
-        });
+    if (status === 200) {
+      const _responseText = response.data;
+      let result200: any = null;
+      let resultData200 = _responseText;
+      result200 = resultData200 !== undefined ? resultData200 : <any>null;
+      return Promise.resolve<string>(result200);
+    } else {
+      const _responseText = response.data;
+      let resultdefault: any = null;
+      let resultDatadefault = _responseText;
+      resultdefault = ProblemDetails.fromJS(resultDatadefault);
+      return throwException(
+        'A server side error occurred.',
+        status,
+        _responseText,
+        _headers,
+        resultdefault
+      );
     }
+  }
 
-    protected processUpdate(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+  update(
+    id: string | null,
+    cardStatementId: string | null,
+    command: UpdateTransactionCommand,
+    cancelToken?: CancelToken | undefined
+  ): Promise<void> {
+    let url_ =
+      this.baseUrl + '/api/cardstatements/{cardStatementId}/transactions/{id}';
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace('{id}', encodeURIComponent('' + id));
+    if (cardStatementId === undefined || cardStatementId === null)
+      throw new Error("The parameter 'cardStatementId' must be defined.");
+    url_ = url_.replace(
+      '{cardStatementId}',
+      encodeURIComponent('' + cardStatementId)
+    );
+    url_ = url_.replace(/[?&]$/, '');
+
+    const content_ = JSON.stringify(command);
+
+    let options_ = <AxiosRequestConfig>{
+      data: content_,
+      method: 'PUT',
+      url: url_,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
         } else {
-            return response.text().then((_responseText) => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = ProblemDetails.fromJS(resultDatadefault);
-            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
-            });
+          throw _error;
         }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processUpdate(_response);
+      });
+  }
+
+  protected processUpdate(response: AxiosResponse<string>): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
     }
-
-    delete(id: string | null, cardStatementId: string | null): Promise<void> {
-        let url_ = this.baseUrl + "/api/cardstatements/{cardStatementId}/transactions/{id}";
-        if (id === undefined || id === null)
-            throw new Error("The parameter 'id' must be defined.");
-        url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (cardStatementId === undefined || cardStatementId === null)
-            throw new Error("The parameter 'cardStatementId' must be defined.");
-        url_ = url_.replace("{cardStatementId}", encodeURIComponent("" + cardStatementId));
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ = <RequestInit>{
-            method: "DELETE",
-            headers: {
-            }
-        };
-
-        return this.transformOptions(options_).then(transformedOptions_ => {
-            return this.http.fetch(url_, transformedOptions_);
-        }).then((_response: Response) => {
-            return this.processDelete(_response);
-        });
+    if (status === 204) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(<any>null);
+    } else {
+      const _responseText = response.data;
+      let resultdefault: any = null;
+      let resultDatadefault = _responseText;
+      resultdefault = ProblemDetails.fromJS(resultDatadefault);
+      return throwException(
+        'A server side error occurred.',
+        status,
+        _responseText,
+        _headers,
+        resultdefault
+      );
     }
+  }
 
-    protected processDelete(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 204) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+  delete(
+    id: string | null,
+    cardStatementId: string | null,
+    cancelToken?: CancelToken | undefined
+  ): Promise<void> {
+    let url_ =
+      this.baseUrl + '/api/cardstatements/{cardStatementId}/transactions/{id}';
+    if (id === undefined || id === null)
+      throw new Error("The parameter 'id' must be defined.");
+    url_ = url_.replace('{id}', encodeURIComponent('' + id));
+    if (cardStatementId === undefined || cardStatementId === null)
+      throw new Error("The parameter 'cardStatementId' must be defined.");
+    url_ = url_.replace(
+      '{cardStatementId}',
+      encodeURIComponent('' + cardStatementId)
+    );
+    url_ = url_.replace(/[?&]$/, '');
+
+    let options_ = <AxiosRequestConfig>{
+      method: 'DELETE',
+      url: url_,
+      headers: {},
+      cancelToken,
+    };
+
+    return this.transformOptions(options_)
+      .then((transformedOptions_) => {
+        return this.instance.request(transformedOptions_);
+      })
+      .catch((_error: any) => {
+        if (isAxiosError(_error) && _error.response) {
+          return _error.response;
         } else {
-            return response.text().then((_responseText) => {
-            let resultdefault: any = null;
-            let resultDatadefault = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            resultdefault = ProblemDetails.fromJS(resultDatadefault);
-            return throwException("A server side error occurred.", status, _responseText, _headers, resultdefault);
-            });
+          throw _error;
         }
+      })
+      .then((_response: AxiosResponse<string>) => {
+        return this.processDelete(_response);
+      });
+  }
+
+  protected processDelete(response: AxiosResponse<string>): Promise<void> {
+    const status = response.status;
+    let _headers: any = {};
+    if (response.headers && typeof response.headers === 'object') {
+      for (let k in response.headers) {
+        if (response.headers.hasOwnProperty(k)) {
+          _headers[k] = response.headers[k];
+        }
+      }
     }
+    if (status === 204) {
+      const _responseText = response.data;
+      return Promise.resolve<void>(<any>null);
+    } else {
+      const _responseText = response.data;
+      let resultdefault: any = null;
+      let resultDatadefault = _responseText;
+      resultdefault = ProblemDetails.fromJS(resultDatadefault);
+      return throwException(
+        'A server side error occurred.',
+        status,
+        _responseText,
+        _headers,
+        resultdefault
+      );
+    }
+  }
 }
 
 export class BankCardDto implements IBankCardDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    bank?: Bank | undefined;
-    statementType?: StatementType | undefined;
-    transactionDateType?: TransactionDateType | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+  bank?: Bank | undefined;
+  statementType?: StatementType | undefined;
+  transactionDateType?: TransactionDateType | undefined;
 
-    constructor(data?: IBankCardDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IBankCardDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.bank = _data["bank"] ? Bank.fromJS(_data["bank"]) : <any>undefined;
-            this.statementType = _data["statementType"] ? StatementType.fromJS(_data["statementType"]) : <any>undefined;
-            this.transactionDateType = _data["transactionDateType"] ? TransactionDateType.fromJS(_data["transactionDateType"]) : <any>undefined;
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.name = _data['name'];
+      this.bank = _data['bank'] ? Bank.fromJS(_data['bank']) : <any>undefined;
+      this.statementType = _data['statementType']
+        ? StatementType.fromJS(_data['statementType'])
+        : <any>undefined;
+      this.transactionDateType = _data['transactionDateType']
+        ? TransactionDateType.fromJS(_data['transactionDateType'])
+        : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): BankCardDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new BankCardDto();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): BankCardDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new BankCardDto();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["bank"] = this.bank ? this.bank.toJSON() : <any>undefined;
-        data["statementType"] = this.statementType ? this.statementType.toJSON() : <any>undefined;
-        data["transactionDateType"] = this.transactionDateType ? this.transactionDateType.toJSON() : <any>undefined;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['bank'] = this.bank ? this.bank.toJSON() : <any>undefined;
+    data['statementType'] = this.statementType
+      ? this.statementType.toJSON()
+      : <any>undefined;
+    data['transactionDateType'] = this.transactionDateType
+      ? this.transactionDateType.toJSON()
+      : <any>undefined;
+    return data;
+  }
 }
 
 export interface IBankCardDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    bank?: Bank | undefined;
-    statementType?: StatementType | undefined;
-    transactionDateType?: TransactionDateType | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+  bank?: Bank | undefined;
+  statementType?: StatementType | undefined;
+  transactionDateType?: TransactionDateType | undefined;
 }
 
 export abstract class ValueObject implements IValueObject {
-
-    constructor(data?: IValueObject) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IValueObject) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-    }
+  init(_data?: any) {}
 
-    static fromJS(data: any): ValueObject {
-        data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'ValueObject' cannot be instantiated.");
-    }
+  static fromJS(data: any): ValueObject {
+    data = typeof data === 'object' ? data : {};
+    throw new Error("The abstract class 'ValueObject' cannot be instantiated.");
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    return data;
+  }
 }
 
-export interface IValueObject {
-}
+export interface IValueObject {}
 
 export class Bank extends ValueObject implements IBank {
-    name?: string | undefined;
+  name?: string | undefined;
 
-    constructor(data?: IBank) {
-        super(data);
-    }
+  constructor(data?: IBank) {
+    super(data);
+  }
 
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.name = _data["name"];
-        }
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.name = _data['name'];
     }
+  }
 
-    static fromJS(data: any): Bank {
-        data = typeof data === 'object' ? data : {};
-        let result = new Bank();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): Bank {
+    data = typeof data === 'object' ? data : {};
+    let result = new Bank();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        super.toJSON(data);
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['name'] = this.name;
+    super.toJSON(data);
+    return data;
+  }
 }
 
 export interface IBank extends IValueObject {
-    name?: string | undefined;
+  name?: string | undefined;
 }
 
 export class StatementType extends ValueObject implements IStatementType {
-    value?: string | undefined;
+  value?: string | undefined;
 
-    constructor(data?: IStatementType) {
-        super(data);
-    }
+  constructor(data?: IStatementType) {
+    super(data);
+  }
 
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.value = _data["value"];
-        }
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.value = _data['value'];
     }
+  }
 
-    static fromJS(data: any): StatementType {
-        data = typeof data === 'object' ? data : {};
-        let result = new StatementType();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): StatementType {
+    data = typeof data === 'object' ? data : {};
+    let result = new StatementType();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value;
-        super.toJSON(data);
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['value'] = this.value;
+    super.toJSON(data);
+    return data;
+  }
 }
 
 export interface IStatementType extends IValueObject {
-    value?: string | undefined;
+  value?: string | undefined;
 }
 
-export class TransactionDateType extends ValueObject implements ITransactionDateType {
-    value?: string | undefined;
+export class TransactionDateType
+  extends ValueObject
+  implements ITransactionDateType
+{
+  value?: string | undefined;
 
-    constructor(data?: ITransactionDateType) {
-        super(data);
-    }
+  constructor(data?: ITransactionDateType) {
+    super(data);
+  }
 
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.value = _data["value"];
-        }
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.value = _data['value'];
     }
+  }
 
-    static fromJS(data: any): TransactionDateType {
-        data = typeof data === 'object' ? data : {};
-        let result = new TransactionDateType();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): TransactionDateType {
+    data = typeof data === 'object' ? data : {};
+    let result = new TransactionDateType();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value;
-        super.toJSON(data);
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['value'] = this.value;
+    super.toJSON(data);
+    return data;
+  }
 }
 
 export interface ITransactionDateType extends IValueObject {
-    value?: string | undefined;
+  value?: string | undefined;
 }
 
 export class CardDto implements ICardDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    bankCardId?: string | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+  bankCardId?: string | undefined;
 
-    constructor(data?: ICardDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ICardDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.bankCardId = _data["bankCardId"];
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.name = _data['name'];
+      this.bankCardId = _data['bankCardId'];
     }
+  }
 
-    static fromJS(data: any): CardDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CardDto();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): CardDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CardDto();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["bankCardId"] = this.bankCardId;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['bankCardId'] = this.bankCardId;
+    return data;
+  }
 }
 
 export interface ICardDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    bankCardId?: string | undefined;
+  id?: string | undefined;
+  name?: string | undefined;
+  bankCardId?: string | undefined;
 }
 
 export class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
+  type?: string | undefined;
+  title?: string | undefined;
+  status?: number | undefined;
+  detail?: string | undefined;
+  instance?: string | undefined;
 
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IProblemDetails) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.type = _data["type"];
-            this.title = _data["title"];
-            this.status = _data["status"];
-            this.detail = _data["detail"];
-            this.instance = _data["instance"];
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.type = _data['type'];
+      this.title = _data['title'];
+      this.status = _data['status'];
+      this.detail = _data['detail'];
+      this.instance = _data['instance'];
     }
+  }
 
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): ProblemDetails {
+    data = typeof data === 'object' ? data : {};
+    let result = new ProblemDetails();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["type"] = this.type;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["detail"] = this.detail;
-        data["instance"] = this.instance;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['type'] = this.type;
+    data['title'] = this.title;
+    data['status'] = this.status;
+    data['detail'] = this.detail;
+    data['instance'] = this.instance;
+    return data;
+  }
 }
 
 export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
+  type?: string | undefined;
+  title?: string | undefined;
+  status?: number | undefined;
+  detail?: string | undefined;
+  instance?: string | undefined;
 }
 
 export class CreateCardCommand implements ICreateCardCommand {
-    bankCardId?: string | undefined;
-    name?: string | undefined;
-    cardNumber?: string | undefined;
-    startDate?: Date;
+  bankCardId?: string | undefined;
+  name?: string | undefined;
+  cardNumber?: string | undefined;
+  startDate?: Date;
 
-    constructor(data?: ICreateCardCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ICreateCardCommand) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.bankCardId = _data["bankCardId"];
-            this.name = _data["name"];
-            this.cardNumber = _data["cardNumber"];
-            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>undefined;
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.bankCardId = _data['bankCardId'];
+      this.name = _data['name'];
+      this.cardNumber = _data['cardNumber'];
+      this.startDate = _data['startDate']
+        ? new Date(_data['startDate'].toString())
+        : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): CreateCardCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateCardCommand();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): CreateCardCommand {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateCardCommand();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["bankCardId"] = this.bankCardId;
-        data["name"] = this.name;
-        data["cardNumber"] = this.cardNumber;
-        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['bankCardId'] = this.bankCardId;
+    data['name'] = this.name;
+    data['cardNumber'] = this.cardNumber;
+    data['startDate'] = this.startDate
+      ? this.startDate.toISOString()
+      : <any>undefined;
+    return data;
+  }
 }
 
 export interface ICreateCardCommand {
-    bankCardId?: string | undefined;
-    name?: string | undefined;
-    cardNumber?: string | undefined;
-    startDate?: Date;
+  bankCardId?: string | undefined;
+  name?: string | undefined;
+  cardNumber?: string | undefined;
+  startDate?: Date;
 }
 
 export class UpdateCardCommand implements IUpdateCardCommand {
-    id?: string | undefined;
-    name?: string | undefined;
-    cardNumber?: string | undefined;
-    startDate?: Date;
+  id?: string | undefined;
+  name?: string | undefined;
+  cardNumber?: string | undefined;
+  startDate?: Date;
 
-    constructor(data?: IUpdateCardCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IUpdateCardCommand) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.cardNumber = _data["cardNumber"];
-            this.startDate = _data["startDate"] ? new Date(_data["startDate"].toString()) : <any>undefined;
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.name = _data['name'];
+      this.cardNumber = _data['cardNumber'];
+      this.startDate = _data['startDate']
+        ? new Date(_data['startDate'].toString())
+        : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): UpdateCardCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateCardCommand();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): UpdateCardCommand {
+    data = typeof data === 'object' ? data : {};
+    let result = new UpdateCardCommand();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["cardNumber"] = this.cardNumber;
-        data["startDate"] = this.startDate ? this.startDate.toISOString() : <any>undefined;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['cardNumber'] = this.cardNumber;
+    data['startDate'] = this.startDate
+      ? this.startDate.toISOString()
+      : <any>undefined;
+    return data;
+  }
 }
 
 export interface IUpdateCardCommand {
-    id?: string | undefined;
-    name?: string | undefined;
-    cardNumber?: string | undefined;
-    startDate?: Date;
+  id?: string | undefined;
+  name?: string | undefined;
+  cardNumber?: string | undefined;
+  startDate?: Date;
 }
 
 export class CardStatementDto implements ICardStatementDto {
-    id?: string | undefined;
-    monthYear?: string | undefined;
-    statementReward?: CardStatementReward | undefined;
-    transactions?: TransactionDto[] | undefined;
+  id?: string | undefined;
+  monthYear?: string | undefined;
+  statementReward?: CardStatementReward | undefined;
+  transactions?: TransactionDto[] | undefined;
 
-    constructor(data?: ICardStatementDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ICardStatementDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.monthYear = _data["monthYear"];
-            this.statementReward = _data["statementReward"] ? CardStatementReward.fromJS(_data["statementReward"]) : <any>undefined;
-            if (Array.isArray(_data["transactions"])) {
-                this.transactions = [] as any;
-                for (let item of _data["transactions"])
-                    this.transactions!.push(TransactionDto.fromJS(item));
-            }
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.monthYear = _data['monthYear'];
+      this.statementReward = _data['statementReward']
+        ? CardStatementReward.fromJS(_data['statementReward'])
+        : <any>undefined;
+      if (Array.isArray(_data['transactions'])) {
+        this.transactions = [] as any;
+        for (let item of _data['transactions'])
+          this.transactions!.push(TransactionDto.fromJS(item));
+      }
     }
+  }
 
-    static fromJS(data: any): CardStatementDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CardStatementDto();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): CardStatementDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new CardStatementDto();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["monthYear"] = this.monthYear;
-        data["statementReward"] = this.statementReward ? this.statementReward.toJSON() : <any>undefined;
-        if (Array.isArray(this.transactions)) {
-            data["transactions"] = [];
-            for (let item of this.transactions)
-                data["transactions"].push(item.toJSON());
-        }
-        return data; 
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['monthYear'] = this.monthYear;
+    data['statementReward'] = this.statementReward
+      ? this.statementReward.toJSON()
+      : <any>undefined;
+    if (Array.isArray(this.transactions)) {
+      data['transactions'] = [];
+      for (let item of this.transactions)
+        data['transactions'].push(item.toJSON());
     }
+    return data;
+  }
 }
 
 export interface ICardStatementDto {
-    id?: string | undefined;
-    monthYear?: string | undefined;
-    statementReward?: CardStatementReward | undefined;
-    transactions?: TransactionDto[] | undefined;
+  id?: string | undefined;
+  monthYear?: string | undefined;
+  statementReward?: CardStatementReward | undefined;
+  transactions?: TransactionDto[] | undefined;
 }
 
-export class CardStatementReward extends ValueObject implements ICardStatementReward {
-    miles?: number | undefined;
-    cashback?: number | undefined;
-    points?: number | undefined;
+export class CardStatementReward
+  extends ValueObject
+  implements ICardStatementReward
+{
+  miles?: number | undefined;
+  cashback?: number | undefined;
+  points?: number | undefined;
 
-    constructor(data?: ICardStatementReward) {
-        super(data);
-    }
+  constructor(data?: ICardStatementReward) {
+    super(data);
+  }
 
-    init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.miles = _data["miles"];
-            this.cashback = _data["cashback"];
-            this.points = _data["points"];
-        }
+  init(_data?: any) {
+    super.init(_data);
+    if (_data) {
+      this.miles = _data['miles'];
+      this.cashback = _data['cashback'];
+      this.points = _data['points'];
     }
+  }
 
-    static fromJS(data: any): CardStatementReward {
-        data = typeof data === 'object' ? data : {};
-        let result = new CardStatementReward();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): CardStatementReward {
+    data = typeof data === 'object' ? data : {};
+    let result = new CardStatementReward();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["miles"] = this.miles;
-        data["cashback"] = this.cashback;
-        data["points"] = this.points;
-        super.toJSON(data);
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['miles'] = this.miles;
+    data['cashback'] = this.cashback;
+    data['points'] = this.points;
+    super.toJSON(data);
+    return data;
+  }
 }
 
 export interface ICardStatementReward extends IValueObject {
-    miles?: number | undefined;
-    cashback?: number | undefined;
-    points?: number | undefined;
+  miles?: number | undefined;
+  cashback?: number | undefined;
+  points?: number | undefined;
 }
 
 export class TransactionDto implements ITransactionDto {
-    id?: string | undefined;
-    cardStatementId?: string | undefined;
-    paymentType?: string | undefined;
-    transactionCategory?: string | undefined;
-    description?: string | undefined;
-    date?: Date;
-    amount?: number;
+  id?: string | undefined;
+  cardStatementId?: string | undefined;
+  paymentType?: string | undefined;
+  transactionCategory?: string | undefined;
+  description?: string | undefined;
+  date?: Date;
+  amount?: number;
 
-    constructor(data?: ITransactionDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ITransactionDto) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.cardStatementId = _data["cardStatementId"];
-            this.paymentType = _data["paymentType"];
-            this.transactionCategory = _data["transactionCategory"];
-            this.description = _data["description"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.amount = _data["amount"];
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.cardStatementId = _data['cardStatementId'];
+      this.paymentType = _data['paymentType'];
+      this.transactionCategory = _data['transactionCategory'];
+      this.description = _data['description'];
+      this.date = _data['date']
+        ? new Date(_data['date'].toString())
+        : <any>undefined;
+      this.amount = _data['amount'];
     }
+  }
 
-    static fromJS(data: any): TransactionDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TransactionDto();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): TransactionDto {
+    data = typeof data === 'object' ? data : {};
+    let result = new TransactionDto();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["cardStatementId"] = this.cardStatementId;
-        data["paymentType"] = this.paymentType;
-        data["transactionCategory"] = this.transactionCategory;
-        data["description"] = this.description;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["amount"] = this.amount;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['cardStatementId'] = this.cardStatementId;
+    data['paymentType'] = this.paymentType;
+    data['transactionCategory'] = this.transactionCategory;
+    data['description'] = this.description;
+    data['date'] = this.date ? this.date.toISOString() : <any>undefined;
+    data['amount'] = this.amount;
+    return data;
+  }
 }
 
 export interface ITransactionDto {
-    id?: string | undefined;
-    cardStatementId?: string | undefined;
-    paymentType?: string | undefined;
-    transactionCategory?: string | undefined;
-    description?: string | undefined;
-    date?: Date;
-    amount?: number;
+  id?: string | undefined;
+  cardStatementId?: string | undefined;
+  paymentType?: string | undefined;
+  transactionCategory?: string | undefined;
+  description?: string | undefined;
+  date?: Date;
+  amount?: number;
 }
 
 export class CreateCardStatementCommand implements ICreateCardStatementCommand {
-    cardId?: string | undefined;
-    bankCardId?: string | undefined;
-    monthYear?: Date;
+  cardId?: string | undefined;
+  bankCardId?: string | undefined;
+  monthYear?: Date;
 
-    constructor(data?: ICreateCardStatementCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ICreateCardStatementCommand) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.cardId = _data["cardId"];
-            this.bankCardId = _data["bankCardId"];
-            this.monthYear = _data["monthYear"] ? new Date(_data["monthYear"].toString()) : <any>undefined;
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.cardId = _data['cardId'];
+      this.bankCardId = _data['bankCardId'];
+      this.monthYear = _data['monthYear']
+        ? new Date(_data['monthYear'].toString())
+        : <any>undefined;
     }
+  }
 
-    static fromJS(data: any): CreateCardStatementCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateCardStatementCommand();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): CreateCardStatementCommand {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateCardStatementCommand();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["cardId"] = this.cardId;
-        data["bankCardId"] = this.bankCardId;
-        data["monthYear"] = this.monthYear ? this.monthYear.toISOString() : <any>undefined;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['cardId'] = this.cardId;
+    data['bankCardId'] = this.bankCardId;
+    data['monthYear'] = this.monthYear
+      ? this.monthYear.toISOString()
+      : <any>undefined;
+    return data;
+  }
 }
 
 export interface ICreateCardStatementCommand {
-    cardId?: string | undefined;
-    bankCardId?: string | undefined;
-    monthYear?: Date;
+  cardId?: string | undefined;
+  bankCardId?: string | undefined;
+  monthYear?: Date;
 }
 
 export class CreateTransactionCommand implements ICreateTransactionCommand {
-    cardStatementId?: string | undefined;
-    paymentType?: string | undefined;
-    transactionCategory?: string | undefined;
-    description?: string | undefined;
-    date?: Date;
-    amount?: number;
+  cardStatementId?: string | undefined;
+  paymentType?: string | undefined;
+  transactionCategory?: string | undefined;
+  description?: string | undefined;
+  date?: Date;
+  amount?: number;
 
-    constructor(data?: ICreateTransactionCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: ICreateTransactionCommand) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.cardStatementId = _data["cardStatementId"];
-            this.paymentType = _data["paymentType"];
-            this.transactionCategory = _data["transactionCategory"];
-            this.description = _data["description"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.amount = _data["amount"];
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.cardStatementId = _data['cardStatementId'];
+      this.paymentType = _data['paymentType'];
+      this.transactionCategory = _data['transactionCategory'];
+      this.description = _data['description'];
+      this.date = _data['date']
+        ? new Date(_data['date'].toString())
+        : <any>undefined;
+      this.amount = _data['amount'];
     }
+  }
 
-    static fromJS(data: any): CreateTransactionCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateTransactionCommand();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): CreateTransactionCommand {
+    data = typeof data === 'object' ? data : {};
+    let result = new CreateTransactionCommand();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["cardStatementId"] = this.cardStatementId;
-        data["paymentType"] = this.paymentType;
-        data["transactionCategory"] = this.transactionCategory;
-        data["description"] = this.description;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["amount"] = this.amount;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['cardStatementId'] = this.cardStatementId;
+    data['paymentType'] = this.paymentType;
+    data['transactionCategory'] = this.transactionCategory;
+    data['description'] = this.description;
+    data['date'] = this.date ? this.date.toISOString() : <any>undefined;
+    data['amount'] = this.amount;
+    return data;
+  }
 }
 
 export interface ICreateTransactionCommand {
-    cardStatementId?: string | undefined;
-    paymentType?: string | undefined;
-    transactionCategory?: string | undefined;
-    description?: string | undefined;
-    date?: Date;
-    amount?: number;
+  cardStatementId?: string | undefined;
+  paymentType?: string | undefined;
+  transactionCategory?: string | undefined;
+  description?: string | undefined;
+  date?: Date;
+  amount?: number;
 }
 
 export class UpdateTransactionCommand implements IUpdateTransactionCommand {
-    id?: string | undefined;
-    cardStatementId?: string | undefined;
-    paymentType?: string | undefined;
-    transactionCategory?: string | undefined;
-    description?: string | undefined;
-    date?: Date;
-    amount?: number;
+  id?: string | undefined;
+  cardStatementId?: string | undefined;
+  paymentType?: string | undefined;
+  transactionCategory?: string | undefined;
+  description?: string | undefined;
+  date?: Date;
+  amount?: number;
 
-    constructor(data?: IUpdateTransactionCommand) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
+  constructor(data?: IUpdateTransactionCommand) {
+    if (data) {
+      for (var property in data) {
+        if (data.hasOwnProperty(property))
+          (<any>this)[property] = (<any>data)[property];
+      }
     }
+  }
 
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.cardStatementId = _data["cardStatementId"];
-            this.paymentType = _data["paymentType"];
-            this.transactionCategory = _data["transactionCategory"];
-            this.description = _data["description"];
-            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
-            this.amount = _data["amount"];
-        }
+  init(_data?: any) {
+    if (_data) {
+      this.id = _data['id'];
+      this.cardStatementId = _data['cardStatementId'];
+      this.paymentType = _data['paymentType'];
+      this.transactionCategory = _data['transactionCategory'];
+      this.description = _data['description'];
+      this.date = _data['date']
+        ? new Date(_data['date'].toString())
+        : <any>undefined;
+      this.amount = _data['amount'];
     }
+  }
 
-    static fromJS(data: any): UpdateTransactionCommand {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateTransactionCommand();
-        result.init(data);
-        return result;
-    }
+  static fromJS(data: any): UpdateTransactionCommand {
+    data = typeof data === 'object' ? data : {};
+    let result = new UpdateTransactionCommand();
+    result.init(data);
+    return result;
+  }
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["cardStatementId"] = this.cardStatementId;
-        data["paymentType"] = this.paymentType;
-        data["transactionCategory"] = this.transactionCategory;
-        data["description"] = this.description;
-        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
-        data["amount"] = this.amount;
-        return data; 
-    }
+  toJSON(data?: any) {
+    data = typeof data === 'object' ? data : {};
+    data['id'] = this.id;
+    data['cardStatementId'] = this.cardStatementId;
+    data['paymentType'] = this.paymentType;
+    data['transactionCategory'] = this.transactionCategory;
+    data['description'] = this.description;
+    data['date'] = this.date ? this.date.toISOString() : <any>undefined;
+    data['amount'] = this.amount;
+    return data;
+  }
 }
 
 export interface IUpdateTransactionCommand {
-    id?: string | undefined;
-    cardStatementId?: string | undefined;
-    paymentType?: string | undefined;
-    transactionCategory?: string | undefined;
-    description?: string | undefined;
-    date?: Date;
-    amount?: number;
+  id?: string | undefined;
+  cardStatementId?: string | undefined;
+  paymentType?: string | undefined;
+  transactionCategory?: string | undefined;
+  description?: string | undefined;
+  date?: Date;
+  amount?: number;
 }
 
 export class SwaggerException extends Error {
-    message: string;
-    status: number;
-    response: string;
-    headers: { [key: string]: any; };
-    result: any;
+  message: string;
+  status: number;
+  response: string;
+  headers: { [key: string]: any };
+  result: any;
 
-    constructor(message: string, status: number, response: string, headers: { [key: string]: any; }, result: any) {
-        super();
+  constructor(
+    message: string,
+    status: number,
+    response: string,
+    headers: { [key: string]: any },
+    result: any
+  ) {
+    super();
 
-        this.message = message;
-        this.status = status;
-        this.response = response;
-        this.headers = headers;
-        this.result = result;
-    }
+    this.message = message;
+    this.status = status;
+    this.response = response;
+    this.headers = headers;
+    this.result = result;
+  }
 
-    protected isSwaggerException = true;
+  protected isSwaggerException = true;
 
-    static isSwaggerException(obj: any): obj is SwaggerException {
-        return obj.isSwaggerException === true;
-    }
+  static isSwaggerException(obj: any): obj is SwaggerException {
+    return obj.isSwaggerException === true;
+  }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
-    if (result !== null && result !== undefined)
-        throw result;
-    else
-        throw new SwaggerException(message, status, response, headers, null);
+function throwException(
+  message: string,
+  status: number,
+  response: string,
+  headers: { [key: string]: any },
+  result?: any
+): any {
+  if (result !== null && result !== undefined) throw result;
+  else throw new SwaggerException(message, status, response, headers, null);
+}
+
+function isAxiosError(obj: any | undefined): obj is AxiosError {
+  return obj && obj.isAxiosError === true;
 }

@@ -9,12 +9,13 @@ import { useAuth } from '../../authContext';
 
 const Header = (): JSX.Element => {
   const { login, user } = useAuth();
+  const homePageLink = user ? '/home' : '/';
 
   return (
     <header>
       <AppBar position="static">
         <S.StyledToolBar>
-          <Link to="/">
+          <Link to={homePageLink}>
             <CreditCardIcon sx={{ color: 'white' }} />
           </Link>
           <Box sx={{ flexGrow: 1 }} />

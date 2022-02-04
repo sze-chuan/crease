@@ -3,6 +3,7 @@ import {
   LogLevel,
   BrowserCacheLocation,
   PopupRequest,
+  SilentRequest,
 } from '@azure/msal-browser';
 
 const isIE =
@@ -76,4 +77,10 @@ export const protectedResources = {
 // Add here scopes for id token to be used at MS Identity Platform endpoints.
 export const loginRequest: PopupRequest = {
   scopes: [],
+};
+
+export const tokenRequest: SilentRequest = {
+  scopes: [
+    'https://creasead.onmicrosoft.com/f2eb91dd-d222-4d0a-8824-f92a16575f50/crease.user',
+  ],
 };
