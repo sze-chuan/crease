@@ -7,7 +7,7 @@ import CardDialog from '../../components/CardDialog';
 import { CardsClient, BankCardsClient } from '../../web-api-client';
 import { loadBankCards, loadCards, getCards } from '../../slices/cardSlice';
 import StyledSection from './styles';
-import { useAuth } from '../../authContext';
+import { useAuth } from '../../auth/authContext';
 
 const Home = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -17,6 +17,8 @@ const Home = (): JSX.Element => {
   useEffect(() => {
     const fetchBankCardsData = async () => {
       const bankCardsClient = new BankCardsClient(process.env.PUBLIC_URL);
+      const token = await acquireToken();
+      bankCardsClient.setAuthToken(token);
       const result = await bankCardsClient.get();
 
       dispatch(loadBankCards(result));

@@ -6,7 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
-import { AuthProvider } from './authContext';
+import { AuthProvider } from './auth/authContext';
 
 import App from './containers/App';
 import theme from './styles/theme';

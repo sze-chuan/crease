@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 import * as S from './styles';
-import { useAuth } from '../../authContext';
+import { useAuth } from '../../auth/authContext';
 
 const Header = (): JSX.Element => {
   const { login, logout, user } = useAuth();
