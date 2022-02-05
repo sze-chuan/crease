@@ -13,10 +13,10 @@ const Header = (): JSX.Element => {
   const { login, logout, user } = useAuth();
   const homePageLink = user ? '/home' : '/';
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget as Element);
   };
   const handleClose = () => {
     setAnchorEl(null);
