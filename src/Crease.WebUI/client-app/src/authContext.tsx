@@ -6,6 +6,7 @@ interface AuthContextInterface {
   user: AccountInfo | null;
   token: string;
   login: () => Promise<void>;
+  logout: () => Promise<void>;
   acquireToken: () => Promise<string>;
 }
 
@@ -21,6 +22,7 @@ const initialContextValue = {
   user: null,
   token: '',
   login: async (): Promise<void> => void 0,
+  logout: async (): Promise<void> => void 0,
   acquireToken: async (): Promise<string> => '',
 };
 
@@ -77,6 +79,16 @@ export const AuthProvider = ({
     }
   };
 
+  const logout = async (): Promise<void> => {
+    try {
+      await publicClient?.logoutRedirect();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      console.log('Logout completed');
+    }
+  };
+
   const acquireToken = async (): Promise<string> => {
     let token = '';
 
@@ -98,7 +110,7 @@ export const AuthProvider = ({
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, acquireToken }}>
+    <AuthContext.Provider value={{ user, token, login, logout, acquireToken }}>
       {children}
     </AuthContext.Provider>
   );

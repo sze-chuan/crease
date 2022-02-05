@@ -3,13 +3,24 @@ import { Link } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Box from '@mui/material/Box';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import * as S from './styles';
 import { useAuth } from '../../authContext';
 
 const Header = (): JSX.Element => {
-  const { login, user } = useAuth();
+  const { login, logout, user } = useAuth();
   const homePageLink = user ? '/home' : '/';
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <header>
@@ -20,11 +31,16 @@ const Header = (): JSX.Element => {
           </Link>
           <Box sx={{ flexGrow: 1 }} />
           {user ? (
-            <S.LoginButton variant="contained">{user.name}</S.LoginButton>
+            <React.Fragment>
+              <S.HeaderButton onClick={handleClick}>{user.name}</S.HeaderButton>
+              <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={() => logout()}>Logout</MenuItem>
+              </Menu>
+            </React.Fragment>
           ) : (
-            <S.LoginButton variant="contained" onClick={() => login()}>
+            <S.HeaderButton variant="contained" onClick={() => login()}>
               Login
-            </S.LoginButton>
+            </S.HeaderButton>
           )}
         </S.StyledToolBar>
       </AppBar>

@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import ToolBar from '@mui/material/Toolbar';
 
-const LoginButton = styled(Button)({
+const HeaderButton = styled(Button)({
   color: 'white',
 });
 
@@ -11,4 +11,4 @@ const StyledToolBar = styled(ToolBar)({
   flex: '0 1 auto',
 });
 
-export { LoginButton, StyledToolBar };
+export { HeaderButton, StyledToolBar };
