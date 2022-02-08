@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@azure/msal-browser": "^2.21.0",
+    "@azure/msal-react": "^1.2.0",
     "@hookform/resolvers": "^2.8.5",
     "@mui/icons-material": "^5.1.0",
     "@mui/lab": "^5.0.0-alpha.61",
@@ -18,6 +20,7 @@
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-redux": "^7.1.20",
+    "axios": "^0.25.0",
     "date-fns": "^2.28.0",
     "node-sass": "^6.0.1",
     "react": "^17.0.2",
@@ -44,7 +47,7 @@
     "prettier:fix": "prettier --write",
     "prettier:check": "prettier --check .",
     "postinstall": "cd ../../.. && husky install src/Crease.WebUI/client-app/.husky",
-    "gen-api": "nswag run ../nswag.json /runtime:Net50"
+    "gen-api": "nswag run ../nswag.json /runtime:Net60"
   },
   "browserslist": {
     "production": [

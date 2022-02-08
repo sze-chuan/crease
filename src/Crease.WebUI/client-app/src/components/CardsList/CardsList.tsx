@@ -1,11 +1,11 @@
 import React from 'react';
-import Card from './Card';
-import { ICardDto } from '../web-api-client';
+import Card from '../Card';
+import { ICardDto } from '../../web-api-client';
 export interface CardsListProps {
   cards: ICardDto[] | null;
 }
 
-export const CardsList = ({ cards }: CardsListProps): JSX.Element => {
+const CardsList = ({ cards }: CardsListProps): JSX.Element => {
   const cardsComponents = cards
     ? cards.map((card) => {
         return <Card key={card.id} card={card} />;
@@ -19,3 +19,5 @@ export const CardsList = ({ cards }: CardsListProps): JSX.Element => {
     </React.Fragment>
   );
 };
+
+export default CardsList;

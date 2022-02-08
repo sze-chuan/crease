@@ -6,6 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
+import { AuthProvider } from './auth/authContext';
 
 import App from './containers/App';
 import theme from './styles/theme';
@@ -23,10 +24,12 @@ const store = configureStore({
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <App />
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <App />
+        </ThemeProvider>
+      </AuthProvider>
     </Router>
   </Provider>,
   document.getElementById('root')

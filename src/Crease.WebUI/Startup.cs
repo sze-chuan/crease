@@ -95,10 +95,10 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-            
+        
         app.UseEndpoints(endpoints =>
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() && Configuration.GetValue<bool>("AllowAnonymousAttribute"))
             {
                 endpoints.MapControllers().WithMetadata(new AllowAnonymousAttribute());
             }

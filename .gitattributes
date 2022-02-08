@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Declare files that will always have LF line endings on checkout.
+*.json text eol=LF
+*.ts text eol=LF
+*.tsx text eol=LF
+*.json text eol=LF
