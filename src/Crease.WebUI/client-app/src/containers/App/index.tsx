@@ -7,6 +7,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import Header from '../../components/Header';
 import LandingPage from '../../components/LandpingPage';
 import Home from '../Home';
+import RequiredAuth from '../../auth/requiredAuth';
 import StyledContainer from './styles';
 
 const App = (): JSX.Element => {
@@ -16,7 +17,14 @@ const App = (): JSX.Element => {
         <Header />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="home" element={<Home />} />
+          <Route
+            path="home"
+            element={
+              <RequiredAuth>
+                <Home />
+              </RequiredAuth>
+            }
+          />
         </Routes>
       </StyledContainer>
     </LocalizationProvider>
