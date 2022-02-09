@@ -16,7 +16,9 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     const fetchBankCardsData = async () => {
-      const bankCardsClient = new BankCardsClient(process.env.PUBLIC_URL);
+      const bankCardsClient = new BankCardsClient(
+        process.env.REACT_APP_API_URL
+      );
       const token = await acquireToken();
       bankCardsClient.setAuthToken(token);
       const result = await bankCardsClient.get();
@@ -25,7 +27,7 @@ const Home = (): JSX.Element => {
     };
 
     const fetchCardsData = async () => {
-      const cardsClient = new CardsClient(process.env.PUBLIC_URL);
+      const cardsClient = new CardsClient(process.env.REACT_APP_API_URL);
       const token = await acquireToken();
       cardsClient.setAuthToken(token);
       const result = await cardsClient.getAll();
