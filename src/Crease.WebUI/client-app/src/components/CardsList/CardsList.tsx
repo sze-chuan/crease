@@ -1,5 +1,5 @@
 import React from 'react';
-import Card from '../Card';
+import Card from './Card';
 import { ICardDto } from '../../web-api-client';
 export interface CardsListProps {
   cards: ICardDto[] | null;
