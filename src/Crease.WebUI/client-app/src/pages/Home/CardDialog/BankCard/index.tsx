@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography } from '@mui/material';
 import CardImage from '../../../../components/CardImage';
 
-import { IBankCardDto } from '../../../../api/web-api-client';
+import { IBankCardDto } from '../../../../api/apiClient';
 
 import * as S from './styles';
 

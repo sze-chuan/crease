@@ -27,7 +27,7 @@ import {
   CreateCardCommand,
   IBankCardDto,
   ICardDto,
-} from '../../../api/web-api-client';
+} from '../../../api/apiClient';
 
 interface AddCardFormData {
   cardName: string;

@@ -1,4 +1,4 @@
-import { IBankCardDto, ICardDto } from '../api/web-api-client';
+import { IBankCardDto, ICardDto } from '../api/apiClient';
 
 export interface CardState {
   bankCards: IBankCardDto[];

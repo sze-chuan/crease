@@ -91,7 +91,7 @@
       "typeStyle": "Class",
       "classTypes": [],
       "extendedClasses": [],
-      "extensionCode": "client-app/src/apiClientBase.ts",
+      "extensionCode": "client-app/src/api/apiClientBase.ts",
       "generateDefaultValues": true,
       "excludedTypeNames": [],
       "excludedParameterNames": [],
@@ -110,7 +110,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "client-app/src/web-api-client.ts"
+      "output": "client-app/src/api/apiClient.ts"
     }
   }
 }

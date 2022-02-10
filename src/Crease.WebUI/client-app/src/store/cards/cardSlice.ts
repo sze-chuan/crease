@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CardState, RootState } from '../../types';
-import { IBankCardDto, ICardDto } from '../../api/web-api-client';
+import { IBankCardDto, ICardDto } from '../../api/apiClient';
 
 export const initialState: CardState = {
   bankCards: [],

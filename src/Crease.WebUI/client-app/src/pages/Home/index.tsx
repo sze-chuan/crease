@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Layout from '../../components/Layout';
 import CardsList from './CardsList';
 import CardDialog from './CardDialog';
-import { CardsClient, BankCardsClient } from '../../api/web-api-client';
+import { CardsClient, BankCardsClient } from '../../api/apiClient';
 import {
   loadBankCards,
   loadCards,

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Typography from '@mui/material/Typography';
 
-import { IBankCardDto, ICardDto } from '../../../../api/web-api-client';
+import { IBankCardDto, ICardDto } from '../../../../api/apiClient';
 import {
   getBankCards,
   setIsAddCardDialogVisible,
