@@ -1,6 +1,6 @@
 import React from 'react';
-import Card from './Card';
-import { ICardDto } from '../../web-api-client';
+import Card from './Cards';
+import { ICardDto } from '../../../api/web-api-client';
 export interface CardsListProps {
   cards: ICardDto[] | null;
 }

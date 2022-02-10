@@ -13,7 +13,7 @@ const CardImage = ({ cardName }: CardImageProps): JSX.Element => {
 
   useEffect(() => {
     if (cardName) {
-      import(`../../../resources/cards/${replaceCardName(cardName)}.png`).then(
+      import(`../../assets/cards/${replaceCardName(cardName)}.png`).then(
         (image) => {
           setCardImage(image.default);
         }

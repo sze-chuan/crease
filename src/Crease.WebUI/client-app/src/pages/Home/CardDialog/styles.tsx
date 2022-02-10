@@ -1,6 +1,6 @@
 import { DialogContent, IconButton, TextField, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import theme from '../../styles/theme';
+import theme from '../../../styles/theme';
 
 const StyledDialogContent = styled(DialogContent)`
   padding-top: 10px !important;

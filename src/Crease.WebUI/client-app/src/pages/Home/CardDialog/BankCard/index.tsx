@@ -1,8 +1,8 @@
 import React from 'react';
 import { Typography } from '@mui/material';
-import CardImage from '../../shared/CardImage';
+import CardImage from '../../../../components/CardImage';
 
-import { IBankCardDto } from '../../../web-api-client';
+import { IBankCardDto } from '../../../../api/web-api-client';
 
 import * as S from './styles';
 

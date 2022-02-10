@@ -1,5 +1,5 @@
 import { styled } from '@mui/material/styles';
-import landingImage from '../../resources/landing.jpg';
+import landingImage from '../../assets/landing.jpg';
 import Button from '@mui/material/Button';
 import { Typography } from '@mui/material';
 

@@ -36,7 +36,6 @@ export const msalConfig: Configuration = {
     knownAuthorities: [b2cPolicies.authorityDomain],
     redirectUri: `${process.env.REACT_APP_PUBLIC_URL}/home`,
     postLogoutRedirectUri: process.env.REACT_APP_PUBLIC_URL,
-    navigateToLoginRequestUrl: true,
   },
   cache: {
     cacheLocation: BrowserCacheLocation.LocalStorage,

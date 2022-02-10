@@ -9,7 +9,7 @@ import {
   getBankCards,
   getIsAddCardDialogVisible,
   setIsAddCardDialogVisible,
-} from '../../slices/cardSlice';
+} from '../../../store/cards/cardSlice';
 
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -19,7 +19,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { TransitionProps } from '@mui/material/transitions';
 import Slide from '@mui/material/Slide';
 
-import CardImage from '../shared/CardImage';
+import CardImage from '../../../components/CardImage';
 import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
 import {
@@ -27,7 +27,7 @@ import {
   CreateCardCommand,
   IBankCardDto,
   ICardDto,
-} from '../../web-api-client';
+} from '../../../api/web-api-client';
 
 interface AddCardFormData {
   cardName: string;

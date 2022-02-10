@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import AddIcon from '@mui/icons-material/Add';
-import theme from '../../../styles/theme';
+import theme from '../../../../styles/theme';
 
 const StyledCardDiv = styled.div<{ $isBankCard: boolean }>`
   display: flex;

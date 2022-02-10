@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Typography from '@mui/material/Typography';
 
-import { IBankCardDto, ICardDto } from '../../../web-api-client';
+import { IBankCardDto, ICardDto } from '../../../../api/web-api-client';
 import {
   getBankCards,
   setIsAddCardDialogVisible,
-} from '../../../slices/cardSlice';
+} from '../../../../store/cards/cardSlice';
 
-import CardImage from '../../shared/CardImage';
+import CardImage from '../../../../components/CardImage';
 import * as S from './styles';
 
 export interface CardProps {

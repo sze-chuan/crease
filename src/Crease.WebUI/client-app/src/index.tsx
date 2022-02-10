@@ -8,10 +8,10 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider } from '@mui/material/styles';
 import { AuthProvider } from './auth/authContext';
 
-import App from './containers/App';
+import App from './app';
 import theme from './styles/theme';
 import reportWebVitals from './reportWebVitals';
-import rootReducer from './slices';
+import rootReducer from './store';
 
 const store = configureStore({
   reducer: rootReducer,

@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import BankCard from '../BankCard';
 
-import { IBankCardDto } from '../../../web-api-client';
+import { IBankCardDto } from '../../../../api/web-api-client';
 
 import * as S from './styles';
 
