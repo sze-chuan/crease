@@ -28,6 +28,8 @@ import {
   IBankCardDto,
   ICardDto,
 } from '../../../api/apiClient';
+import { useToast } from '../../../contexts/toastContext';
+import { useAuth } from '../../../auth/authContext';
 
 interface AddCardFormData {
   cardName: string;
@@ -82,9 +84,14 @@ const CardDialog = (): JSX.Element => {
       approvalDate: new Date(),
     },
   });
+  const { acquireToken } = useAuth();
+  const { setToast } = useToast();
 
   const onSubmit = async (data: AddCardFormData) => {
-    const cardsClient = new CardsClient(process.env.PUBLIC_URL);
+    const cardsClient = new CardsClient(process.env.REACT_APP_API_URL);
+    const token = await acquireToken();
+    cardsClient.setAuthToken(token);
+
     try {
       const result = await cardsClient.create({
         name: data.cardName,
@@ -100,6 +107,7 @@ const CardDialog = (): JSX.Element => {
         } as ICardDto)
       );
       handleClose();
+      setToast('Card added succesfully.', 'success');
     } catch (error) {
       console.log(error);
     }
