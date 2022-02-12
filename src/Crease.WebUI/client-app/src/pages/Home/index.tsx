@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Typography from '@mui/material/Typography';
 import Layout from '../../components/Layout';
 import CardsList from './CardsList';
 import CardDialog from './CardDialog';
@@ -46,6 +47,11 @@ const Home = (): JSX.Element => {
   return (
     <Layout>
       <StyledSection>
+        <div>
+          <Typography variant="h6" fontWeight="bolder" paragraph={true}>
+            Your credit cards
+          </Typography>
+        </div>
         <CardsList cards={cards} />
         <CardDialog />
       </StyledSection>

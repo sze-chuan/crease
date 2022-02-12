@@ -1,6 +1,9 @@
 import React from 'react';
-import Card from './Cards';
+import Card from './Card';
+import AddCard from './AddCard';
 import { ICardDto } from '../../../api/apiClient';
+
+import { StyledDiv } from './styles';
 export interface CardsListProps {
   cards: ICardDto[] | null;
 }
@@ -8,15 +11,15 @@ export interface CardsListProps {
 const CardsList = ({ cards }: CardsListProps): JSX.Element => {
   const cardsComponents = cards
     ? cards.map((card) => {
-        return <Card key={card.id} card={card} />;
+        return <Card card={card} key={card.id} />;
       })
     : null;
 
   return (
-    <React.Fragment>
+    <StyledDiv>
       {cardsComponents}
-      <Card key="addCard" />
-    </React.Fragment>
+      <AddCard />
+    </StyledDiv>
   );
 };
 
