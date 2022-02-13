@@ -12,6 +12,8 @@ import {
   getCards,
 } from '../../store/cards/cardSlice';
 import { useAuth } from '../../auth/authContext';
+import * as S from './styles';
+import homeImage from '../../assets/home.png';
 
 const Home = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -44,13 +46,14 @@ const Home = (): JSX.Element => {
   }, []);
 
   return (
-    <Layout>
-      <div>
+    <Layout isLandingPage={true}>
+      <img src={homeImage} />
+      <S.StyledContainerDiv>
         <Typography variant="h6" fontWeight="bolder" paragraph={true}>
           Your credit cards
         </Typography>
-      </div>
-      <CardsList cards={cards} />
+        <CardsList cards={cards} />
+      </S.StyledContainerDiv>
       <CardDialog />
     </Layout>
   );
