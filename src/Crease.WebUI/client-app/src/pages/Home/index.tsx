@@ -11,7 +11,6 @@ import {
   loadCards,
   getCards,
 } from '../../store/cards/cardSlice';
-import StyledSection from './styles';
 import { useAuth } from '../../auth/authContext';
 
 const Home = (): JSX.Element => {
@@ -46,15 +45,13 @@ const Home = (): JSX.Element => {
 
   return (
     <Layout>
-      <StyledSection>
-        <div>
-          <Typography variant="h6" fontWeight="bolder" paragraph={true}>
-            Your credit cards
-          </Typography>
-        </div>
-        <CardsList cards={cards} />
-        <CardDialog />
-      </StyledSection>
+      <div>
+        <Typography variant="h6" fontWeight="bolder" paragraph={true}>
+          Your credit cards
+        </Typography>
+      </div>
+      <CardsList cards={cards} />
+      <CardDialog />
     </Layout>
   );
 };

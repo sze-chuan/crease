@@ -4,7 +4,7 @@ import * as S from './styles';
 
 const LandingPage = (): JSX.Element => {
   return (
-    <Layout>
+    <Layout isLandingPage={true}>
       <S.StyledSection>
         <S.StyledH1>Maximise your rewards</S.StyledH1>
         <S.StyledTypography variant="body1">

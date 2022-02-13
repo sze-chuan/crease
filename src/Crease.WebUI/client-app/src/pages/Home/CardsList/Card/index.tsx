@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 import Typography from '@mui/material/Typography';
 
@@ -15,6 +16,7 @@ export interface CardProps {
 
 const Card = ({ card }: CardProps): JSX.Element => {
   const bankCards: IBankCardDto[] = useSelector(getBankCards);
+  const navigate = useNavigate();
   let bankCard: IBankCardDto | undefined;
 
   if (card) {
@@ -22,6 +24,7 @@ const Card = ({ card }: CardProps): JSX.Element => {
   }
 
   const onCardClick = () => {
+    navigate(`/card/${card?.id}`);
     return;
   };
 
