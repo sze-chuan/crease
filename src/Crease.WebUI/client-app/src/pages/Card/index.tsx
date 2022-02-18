@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Stack from '@mui/material/Stack';
 import Layout from '../../components/Layout';
 import CardDetails from './CardDetails';
+import CardStatement from './CardStatement';
 import { getBankCards, getCards } from '../../store/cards/cardSlice';
 
 const Card = (): JSX.Element => {
@@ -18,7 +19,10 @@ const Card = (): JSX.Element => {
     <Layout>
       <Stack>
         {card && bankCard ? (
-          <CardDetails card={card} bankCard={bankCard}></CardDetails>
+          <React.Fragment>
+            <CardDetails card={card} bankCard={bankCard}></CardDetails>
+            <CardStatement />
+          </React.Fragment>
         ) : (
           <React.Fragment></React.Fragment>
         )}
