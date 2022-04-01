@@ -1,18 +1,20 @@
 import React from 'react';
 
 import Typography from '@mui/material/Typography';
-import { TransactionsDiv } from './styles';
+import Transactions from './Transactions';
+import { CardStatementDiv } from './styles';
 
 const CardStatement = (): JSX.Element => {
   return (
-    <TransactionsDiv>
+    <CardStatementDiv>
       <Typography variant="h5" fontWeight="bold">
         Transactions
       </Typography>
-      <Typography variant="body1" fontWeight="bold">
+      <Typography variant="body2" fontWeight="bold">
         FEB 22
       </Typography>
-    </TransactionsDiv>
+      <Transactions></Transactions>
+    </CardStatementDiv>
   );
 };
 
