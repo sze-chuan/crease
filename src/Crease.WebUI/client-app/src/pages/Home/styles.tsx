@@ -1,9 +1,7 @@
-import styled from 'styled-components';
+import { styled } from '@mui/material/styles';
 
-const StyledSection = styled.section`
-  display: flex;
-  flex-wrap: wrap;
-  padding: 12px;
+const StyledContainerDiv = styled('div')`
+  padding: 16px;
 `;
 
-export default StyledSection;
+export { StyledContainerDiv };

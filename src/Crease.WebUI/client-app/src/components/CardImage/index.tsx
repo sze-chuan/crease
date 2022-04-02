@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import StyledCardImage from './styles';
 
 export interface CardImageProps {
@@ -11,17 +11,13 @@ const CardImage = ({ cardName }: CardImageProps): JSX.Element => {
   const replaceCardName = (name: string) =>
     name.toLowerCase().replace(' ', '-');
 
-  useEffect(() => {
-    if (cardName) {
-      import(`../../assets/cards/${replaceCardName(cardName)}.png`).then(
-        (image) => {
-          setCardImage(image.default);
-        }
-      );
-    }
-  }, []);
+  if (cardName) {
+    import(`../../assets/cards/${replaceCardName(cardName)}.png`).then(
+      (image) => setCardImage(image.default)
+    );
+  }
 
-  return <StyledCardImage src={`${cardImage}`} />;
+  return <StyledCardImage src={cardImage} />;
 };
 
 export default CardImage;

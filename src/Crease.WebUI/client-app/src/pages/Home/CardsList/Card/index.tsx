@@ -1,13 +1,11 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router';
 
 import Typography from '@mui/material/Typography';
 
 import { IBankCardDto, ICardDto } from '../../../../api/apiClient';
-import {
-  getBankCards,
-  setIsAddCardDialogVisible,
-} from '../../../../store/cards/cardSlice';
+import { getBankCards } from '../../../../store/cards/cardSlice';
 
 import CardImage from '../../../../components/CardImage';
 import * as S from './styles';
@@ -17,8 +15,8 @@ export interface CardProps {
 }
 
 const Card = ({ card }: CardProps): JSX.Element => {
-  const dispatch = useDispatch();
   const bankCards: IBankCardDto[] = useSelector(getBankCards);
+  const navigate = useNavigate();
   let bankCard: IBankCardDto | undefined;
 
   if (card) {
@@ -26,23 +24,16 @@ const Card = ({ card }: CardProps): JSX.Element => {
   }
 
   const onCardClick = () => {
-    if (!card) {
-      dispatch(setIsAddCardDialogVisible(true));
-    }
+    navigate(`/card/${card?.id}`);
+    return;
   };
 
   return (
-    <S.StyledCardDiv $isBankCard={card != null} onClick={onCardClick}>
-      {card ? (
-        <CardImage cardName={bankCard?.name} />
-      ) : (
-        <React.Fragment>
-          <S.StyledAddIcon />
-          <Typography variant="body1" sx={{ color: 'primary.main' }}>
-            ADD A CARD
-          </Typography>
-        </React.Fragment>
-      )}
+    <S.StyledCardDiv onClick={onCardClick}>
+      <CardImage cardName={bankCard?.name} />
+      <Typography variant="body2" fontWeight="bolder">
+        {card?.name}
+      </Typography>
     </S.StyledCardDiv>
   );
 };

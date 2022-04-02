@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
+import Typography from '@mui/material/Typography';
 import Layout from '../../components/Layout';
 import CardsList from './CardsList';
 import CardDialog from './CardDialog';
@@ -10,8 +11,9 @@ import {
   loadCards,
   getCards,
 } from '../../store/cards/cardSlice';
-import StyledSection from './styles';
 import { useAuth } from '../../auth/authContext';
+import * as S from './styles';
+import homeImage from '../../assets/home.png';
 
 const Home = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -44,11 +46,15 @@ const Home = (): JSX.Element => {
   }, []);
 
   return (
-    <Layout>
-      <StyledSection>
+    <Layout isLandingPage={true}>
+      <img src={homeImage} />
+      <S.StyledContainerDiv>
+        <Typography variant="h6" fontWeight="bolder" paragraph={true}>
+          Your credit cards
+        </Typography>
         <CardsList cards={cards} />
-        <CardDialog />
-      </StyledSection>
+      </S.StyledContainerDiv>
+      <CardDialog />
     </Layout>
   );
 };

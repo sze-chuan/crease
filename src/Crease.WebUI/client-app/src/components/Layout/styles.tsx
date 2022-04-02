@@ -1,4 +1,5 @@
-import { Container } from '@mui/material';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 
 const StyledContainer = styled(Container)`
@@ -8,4 +9,8 @@ const StyledContainer = styled(Container)`
   height: 100vh !important;
 `;
 
-export default StyledContainer;
+const StyledBox = styled(Box)`
+  padding: 16px;
+`;
+
+export { StyledContainer, StyledBox };

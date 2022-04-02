@@ -6,6 +6,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 import LandingPage from './components/LandpingPage';
 import Home from './pages/Home';
+import Card from './pages/Card';
 import RequiredAuth from './auth/requiredAuth';
 import { ToastProvider } from './contexts/toastContext';
 
@@ -23,6 +24,7 @@ const App = (): JSX.Element => {
               </RequiredAuth>
             }
           />
+          <Route path="card/:id" element={<Card />} />
         </Routes>
       </ToastProvider>
     </LocalizationProvider>
