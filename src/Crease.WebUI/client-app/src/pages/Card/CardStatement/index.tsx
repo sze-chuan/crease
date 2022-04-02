@@ -2,7 +2,7 @@ import React from 'react';
 
 import Typography from '@mui/material/Typography';
 import Transactions from './Transactions';
-import { CardStatementDiv } from './styles';
+import { CardStatementDiv, StatementMonthDiv } from './styles';
 
 const CardStatement = (): JSX.Element => {
   return (
@@ -10,9 +10,11 @@ const CardStatement = (): JSX.Element => {
       <Typography variant="h5" fontWeight="bold">
         Transactions
       </Typography>
-      <Typography variant="body2" fontWeight="bold">
-        FEB 22
-      </Typography>
+      <StatementMonthDiv>
+        <Typography variant="body2" fontWeight="bold">
+          FEB 22
+        </Typography>
+      </StatementMonthDiv>
       <Transactions></Transactions>
     </CardStatementDiv>
   );

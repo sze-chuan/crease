@@ -4,4 +4,8 @@ const CardStatementDiv = styled('div')`
   padding-top: 16px;
 `;
 
-export { CardStatementDiv };
+const StatementMonthDiv = styled('div')`
+  padding: 12px 0;
+`;
+
+export { CardStatementDiv, StatementMonthDiv };
