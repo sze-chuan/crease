@@ -16,10 +16,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import DatePicker from '@mui/lab/DatePicker';
 import CloseIcon from '@mui/icons-material/Close';
-import { TransitionProps } from '@mui/material/transitions';
-import Slide from '@mui/material/Slide';
 
 import CardImage from '../../../components/CardImage';
+import SlideTransition from '../../../components/SlideTransition';
 import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
 import {
@@ -36,16 +35,6 @@ interface AddCardFormData {
   cardNumber: string;
   approvalDate: Date;
 }
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children: React.ReactElement<unknown, any>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const schema = yup
   .object({
@@ -128,7 +117,7 @@ const CardDialog = (): JSX.Element => {
       fullScreen
       open={isDialogVisible}
       onClose={handleClose}
-      TransitionComponent={Transition}
+      TransitionComponent={SlideTransition}
     >
       <DialogTitle>
         {'Add New Card'}
