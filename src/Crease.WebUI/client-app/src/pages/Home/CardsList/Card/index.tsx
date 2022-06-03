@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import Typography from '@mui/material/Typography';
 
 import { IBankCardDto, ICardDto } from '../../../../api/apiClient';
-import { getBankCards } from '../../../../store/cards/cardSlice';
+import { getBankCards } from '../../../../slices/card';
 
 import CardImage from '../../../../components/CardImage';
 import * as S from './styles';

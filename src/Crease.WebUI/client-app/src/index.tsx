@@ -11,7 +11,7 @@ import { AuthProvider } from './auth/authContext';
 import App from './app';
 import theme from './styles/theme';
 import reportWebVitals from './reportWebVitals';
-import rootReducer from './store';
+import rootReducer from './slices';
 
 const store = configureStore({
   reducer: rootReducer,
