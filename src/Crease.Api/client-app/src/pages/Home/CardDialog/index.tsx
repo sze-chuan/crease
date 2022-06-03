@@ -9,7 +9,7 @@ import {
   getBankCards,
   getIsAddCardDialogVisible,
   setIsAddCardDialogVisible,
-} from '../../../store/cards/cardSlice';
+} from '../../../slices/card';
 
 import FormControl from '@mui/material/FormControl';
 import DatePicker from '@mui/lab/DatePicker';

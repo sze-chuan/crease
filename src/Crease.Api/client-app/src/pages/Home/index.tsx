@@ -7,11 +7,7 @@ import AddTransaction from '../../components/AddTransaction';
 import CardsList from './CardsList';
 import CardDialog from './CardDialog';
 import { CardsClient, BankCardsClient } from '../../api/apiClient';
-import {
-  loadBankCards,
-  loadCards,
-  getCards,
-} from '../../store/cards/cardSlice';
+import { loadBankCards, loadCards, getCards } from '../../slices/card';
 import { useAuth } from '../../auth/authContext';
 import * as S from './styles';
 import homeImage from '../../assets/home.png';

@@ -7,7 +7,7 @@ import Layout from '../../components/Layout';
 import CardDetails from './CardDetails';
 import CardStatement from './CardStatement';
 import AddTransaction from '../../components/AddTransaction';
-import { getBankCards, getCards } from '../../store/cards/cardSlice';
+import { getBankCards, getCards } from '../../slices/card';
 
 const Card = (): JSX.Element => {
   const { id } = useParams();

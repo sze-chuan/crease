@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import Typography from '@mui/material/Typography';
 import * as S from './styles';
-import { setIsAddCardDialogVisible } from '../../../../store/cards/cardSlice';
+import { setIsAddCardDialogVisible } from '../../../../slices/card';
 
 const AddCard = (): JSX.Element => {
   const dispatch = useDispatch();
