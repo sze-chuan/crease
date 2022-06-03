@@ -11,14 +11,11 @@ import {
   setIsAddCardDialogVisible,
 } from '../../../store/cards/cardSlice';
 
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import DatePicker from '@mui/lab/DatePicker';
-import CloseIcon from '@mui/icons-material/Close';
 
 import CardImage from '../../../components/CardImage';
-import SlideTransition from '../../../components/SlideTransition';
+import DialogTemplate from '../../../components/DialogTemplate';
 import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
 import {
@@ -113,93 +110,84 @@ const CardDialog = (): JSX.Element => {
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={isDialogVisible}
+    <DialogTemplate
+      dialogTitle="Add new card"
+      isDialogVisible={isDialogVisible}
       onClose={handleClose}
-      TransitionComponent={SlideTransition}
     >
-      <DialogTitle>
-        {'Add New Card'}
-        <S.StyledCloseBtn aria-label="close" onClick={handleClose}>
-          <CloseIcon />
-        </S.StyledCloseBtn>
-      </DialogTitle>
-      <S.StyledDialogContent>
-        {selectedBankCard ? (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            autoComplete="off"
-            noValidate={true}
-          >
-            <S.StyledCardImageDiv>
-              <CardImage cardName={selectedBankCard.name} />
-            </S.StyledCardImageDiv>
-            <FormControl fullWidth>
-              <S.StyledTextField
-                required
-                variant="outlined"
-                label="Card name"
-                {...register('cardName', { required: true })}
-                error={errors.cardName ? true : false}
-                helperText={errors.cardName?.message ?? ''}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <S.StyledTextField
-                required
-                label="Last 4 digits of card"
-                variant="outlined"
-                {...register('cardNumber', {
-                  required: true,
-                  maxLength: 4,
-                  minLength: 4,
-                  pattern: /[0-9]{4}/,
-                })}
-                error={errors.cardNumber ? true : false}
-                helperText={errors.cardNumber?.message ?? ''}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <Controller
-                name="approvalDate"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    label="Approval Date"
-                    inputFormat="dd/MM/yyyy"
-                    renderInput={(params) => (
-                      <S.StyledTextField
-                        {...params}
-                        required
-                        error={errors.approvalDate ? true : false}
-                        helperText={errors.approvalDate?.message ?? ''}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <S.StyledSubmitButton
-                type="submit"
-                variant="contained"
-                disabled={Object.keys(errors).length > 0}
-              >
-                Done
-              </S.StyledSubmitButton>
-            </FormControl>
-          </form>
-        ) : (
-          <BankCardSelection
-            bankCards={bankCards}
-            onBankCardSelect={onBankCardSelect}
-          />
-        )}
-      </S.StyledDialogContent>
-    </Dialog>
+      {selectedBankCard ? (
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          noValidate={true}
+        >
+          <S.StyledCardImageDiv>
+            <CardImage cardName={selectedBankCard.name} />
+          </S.StyledCardImageDiv>
+          <FormControl fullWidth>
+            <S.StyledTextField
+              required
+              variant="outlined"
+              label="Card name"
+              {...register('cardName', { required: true })}
+              error={errors.cardName ? true : false}
+              helperText={errors.cardName?.message ?? ''}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <S.StyledTextField
+              required
+              label="Last 4 digits of card"
+              variant="outlined"
+              {...register('cardNumber', {
+                required: true,
+                maxLength: 4,
+                minLength: 4,
+                pattern: /[0-9]{4}/,
+              })}
+              error={errors.cardNumber ? true : false}
+              helperText={errors.cardNumber?.message ?? ''}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <Controller
+              name="approvalDate"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  label="Approval Date"
+                  inputFormat="dd/MM/yyyy"
+                  renderInput={(params) => (
+                    <S.StyledTextField
+                      {...params}
+                      required
+                      error={errors.approvalDate ? true : false}
+                      helperText={errors.approvalDate?.message ?? ''}
+                    />
+                  )}
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <S.StyledSubmitButton
+              type="submit"
+              variant="contained"
+              disabled={Object.keys(errors).length > 0}
+            >
+              Done
+            </S.StyledSubmitButton>
+          </FormControl>
+        </form>
+      ) : (
+        <BankCardSelection
+          bankCards={bankCards}
+          onBankCardSelect={onBankCardSelect}
+        />
+      )}
+    </DialogTemplate>
   );
 };
 
