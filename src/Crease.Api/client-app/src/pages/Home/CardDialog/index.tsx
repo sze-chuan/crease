@@ -7,8 +7,8 @@ import * as yup from 'yup';
 import {
   addCard,
   getBankCards,
-  getIsAddCardDialogVisible,
-  setIsAddCardDialogVisible,
+  getShowCardDialog,
+  setShowCardDialog,
 } from '../../../slices/card';
 
 import FormControl from '@mui/material/FormControl';
@@ -52,7 +52,7 @@ const schema = yup
   .required();
 
 const CardDialog = (): JSX.Element => {
-  const isDialogVisible = useSelector(getIsAddCardDialogVisible);
+  const showCardDialog = useSelector(getShowCardDialog);
   const dispatch = useDispatch();
   const bankCards = useSelector(getBankCards);
   const [selectedBankCard, setSelectedBankCard] = useState<
@@ -101,7 +101,7 @@ const CardDialog = (): JSX.Element => {
 
   const handleClose = () => {
     setSelectedBankCard(undefined);
-    dispatch(setIsAddCardDialogVisible(false));
+    dispatch(setShowCardDialog(false));
     reset();
   };
 
@@ -112,7 +112,7 @@ const CardDialog = (): JSX.Element => {
   return (
     <DialogTemplate
       dialogTitle="Add new card"
-      isDialogVisible={isDialogVisible}
+      isDialogVisible={showCardDialog}
       onClose={handleClose}
     >
       {selectedBankCard ? (
