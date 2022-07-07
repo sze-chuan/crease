@@ -1,23 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TransactionState, RootState } from '../types';
+import { TransactionState, RootState, TransactionDialogProps } from '../types';
 
 const initialState: TransactionState = {
-  showTransactionDialog: false,
+  transactionDialog: {
+    visible: false,
+  },
 };
 
 const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
   reducers: {
-    setShowTransactionDialog: (state, { payload }: PayloadAction<boolean>) => {
-      state.showTransactionDialog = payload;
+    setTransactionDialog: (
+      state,
+      { payload }: PayloadAction<TransactionDialogProps>
+    ) => {
+      state.transactionDialog = payload;
     },
   },
 });
 
-export const getShowTransactionDialog = (state: RootState): boolean =>
-  state.transactionState.showTransactionDialog;
+export const getTransactionDialog = (
+  state: RootState
+): TransactionDialogProps => state.transactionState.transactionDialog;
 
-export const { setShowTransactionDialog } = transactionSlice.actions;
+export const { setTransactionDialog } = transactionSlice.actions;
 
 export default transactionSlice.reducer;
