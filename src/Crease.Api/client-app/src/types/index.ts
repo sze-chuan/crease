@@ -2,7 +2,7 @@ import { IBankCardDto, ICardDto, ITransactionDto } from '../api/apiClient';
 
 export interface TransactionDialogProps {
   visible: boolean;
-  cardId?: string | undefined;
+  card?: ICardDto | undefined;
   transaction?: ITransactionDto | undefined;
 }
 
