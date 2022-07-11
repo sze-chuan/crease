@@ -129,7 +129,7 @@ const CardDialog = (): JSX.Element => {
               required
               variant="outlined"
               label="Card name"
-              {...register('cardName', { required: true })}
+              {...register('cardName')}
               error={errors.cardName ? true : false}
               helperText={errors.cardName?.message ?? ''}
             />
@@ -139,12 +139,7 @@ const CardDialog = (): JSX.Element => {
               required
               label="Last 4 digits of card"
               variant="outlined"
-              {...register('cardNumber', {
-                required: true,
-                maxLength: 4,
-                minLength: 4,
-                pattern: /[0-9]{4}/,
-              })}
+              {...register('cardNumber')}
               error={errors.cardNumber ? true : false}
               helperText={errors.cardNumber?.message ?? ''}
             />
