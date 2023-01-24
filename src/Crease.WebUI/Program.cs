@@ -1,4 +1,5 @@
-using Crease.Infrastructure.Persistence;
+using Crease.WebUI.Data;
+using ApplicationDbContext = Crease.WebUI.Data.ApplicationDbContext;
 
 namespace Crease.WebUI;
 

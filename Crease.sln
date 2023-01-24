@@ -9,13 +9,7 @@ ProjectSection(SolutionItems) = preProject
 	.env = .env
 EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crease.Infrastructure", "src\Crease.Infrastructure\Crease.Infrastructure.csproj", "{E0BD5050-F386-4D7F-9135-D1C00272D3EA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crease.WebUI", "src\Crease.WebUI\Crease.WebUI.csproj", "{A892A7CC-35B6-490A-8F0A-75521A63333D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crease.Application", "src\Crease.Application\Crease.Application.csproj", "{D4E25876-4834-493D-A48D-D3D7C7BAA4AD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Crease.Domain", "src\Crease.Domain\Crease.Domain.csproj", "{6DC4C331-D0FA-4738-AA8D-9343F943D768}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BBA03E00-74DB-4629-B857-2EF08660105C}"
 EndProject
@@ -25,27 +19,12 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E0BD5050-F386-4D7F-9135-D1C00272D3EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E0BD5050-F386-4D7F-9135-D1C00272D3EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E0BD5050-F386-4D7F-9135-D1C00272D3EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0BD5050-F386-4D7F-9135-D1C00272D3EA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A892A7CC-35B6-490A-8F0A-75521A63333D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A892A7CC-35B6-490A-8F0A-75521A63333D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A892A7CC-35B6-490A-8F0A-75521A63333D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A892A7CC-35B6-490A-8F0A-75521A63333D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E25876-4834-493D-A48D-D3D7C7BAA4AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E25876-4834-493D-A48D-D3D7C7BAA4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4E25876-4834-493D-A48D-D3D7C7BAA4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4E25876-4834-493D-A48D-D3D7C7BAA4AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6DC4C331-D0FA-4738-AA8D-9343F943D768}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DC4C331-D0FA-4738-AA8D-9343F943D768}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DC4C331-D0FA-4738-AA8D-9343F943D768}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DC4C331-D0FA-4738-AA8D-9343F943D768}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D4E25876-4834-493D-A48D-D3D7C7BAA4AD} = {BBA03E00-74DB-4629-B857-2EF08660105C}
-		{6DC4C331-D0FA-4738-AA8D-9343F943D768} = {BBA03E00-74DB-4629-B857-2EF08660105C}
-		{E0BD5050-F386-4D7F-9135-D1C00272D3EA} = {BBA03E00-74DB-4629-B857-2EF08660105C}
 		{A892A7CC-35B6-490A-8F0A-75521A63333D} = {BBA03E00-74DB-4629-B857-2EF08660105C}
 	EndGlobalSection
 EndGlobal

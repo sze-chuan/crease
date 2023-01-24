@@ -17,10 +17,17 @@
   </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="12.0.0" />
+        <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
         <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.0" />
+        <PackageReference Include="MediatR" Version="11.1.0" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Cosmos" Version="6.0.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.13" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.13">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -40,7 +47,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Crease.Application\Crease.Application.csproj" />
-      <ProjectReference Include="..\Crease.Infrastructure\Crease.Infrastructure.csproj" />
+      <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\_ViewImports.cshtml" />
     </ItemGroup>
 </Project>

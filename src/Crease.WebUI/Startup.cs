@@ -1,12 +1,15 @@
-using Crease.Application;
-using Crease.Application.Common.Interfaces;
-using Crease.Infrastructure;
-using Crease.WebUI.Filters;
+using System.Reflection;
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+using Crease.WebUI.Data;
+using Crease.WebUI.Exceptions;
 using Crease.WebUI.Services;
 using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 
 namespace Crease.WebUI;
@@ -26,9 +29,28 @@ public class Startup
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-        services.AddApplication();
-        services.AddInfrastructure(Configuration, CurrentEnvironment);
-
+        const string dbName = "Crease";
+        
+        if (Configuration.GetValue<bool>("UseInMemoryDatabase"))
+        {
+            services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseInMemoryDatabase(dbName));
+        }
+        else
+        {
+            var dbConnectionString = CurrentEnvironment.IsProduction()
+                ? GetDbConnectionStringFromKeyVault(Configuration)
+                : Configuration.GetConnectionString(dbName);
+            
+            services.AddDbContext<ApplicationDbContext>(options => options.UseCosmos(
+                dbConnectionString,
+                dbName
+            ));
+        }
+        
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddMediatR(Assembly.GetExecutingAssembly());
+                
         var useDevelopmentUser = Configuration.GetValue<bool>("UseDevelopmentUser");
         services.AddSingleton<ICurrentUserService>(
             userService => new CurrentUserService(userService.GetService<IHttpContextAccessor>(), useDevelopmentUser));
@@ -37,11 +59,10 @@ public class Startup
         services.AddHttpContextAccessor();
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddControllersWithViews(options => options.Filters.Add<ApiExceptionFilterAttribute>())
+        services
+            .AddControllersWithViews()
             .AddFluentValidation(x => x.AutomaticValidationEnabled = false);
-
-        services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
-
+        
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApi(options =>
                 {
@@ -63,6 +84,27 @@ public class Startup
         }
 
         services.AddOpenApiDocument(configure => { configure.Title = "Crease API"; });
+    }
+    
+    private static string GetDbConnectionStringFromKeyVault(IConfiguration configuration)
+    {
+        var keyVaultUri = configuration.GetValue<string>("AzureKeyVault:Uri");
+        var keyVaultSecretKey = configuration.GetValue<string>("AzureKeyVault:SecretKey");
+        var options = new SecretClientOptions
+        {
+            Retry =
+            {
+                Delay= TimeSpan.FromSeconds(2),
+                MaxDelay = TimeSpan.FromSeconds(16),
+                MaxRetries = 5,
+                Mode = RetryMode.Exponential
+            }
+        };
+        var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential(),options);
+
+        KeyVaultSecret secret = client.GetSecret(keyVaultSecretKey);
+
+        return secret.Value;
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,6 +137,7 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
+        app.UseExceptionHandler(a => a.Run(async context => await ExceptionHandler.WriteResponseAsync(context)));
         
         app.UseEndpoints(endpoints =>
         {
