@@ -17,7 +17,7 @@ public class GetBankCards : ControllerBase
 
     public GetBankCards(IMediator mediator) => _mediator = mediator;
 
-    [Route("/bankcards")]
+    [Route("/bank-cards")]
     [HttpGet]
     [SwaggerResponse(200, typeof(Result))]
     public async Task<ActionResult<Result>> Get()
