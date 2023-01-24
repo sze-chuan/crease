@@ -1,45 +1,32 @@
+using Crease.WebUI;
 using Crease.WebUI.Data;
 using ApplicationDbContext = Crease.WebUI.Data.ApplicationDbContext;
 
-namespace Crease.WebUI;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+builder.Host.ConfigureAppConfiguration((context, builder) =>
 {
-    public static async Task Main(string[] args)
-    {
-        var host = CreateHostBuilder(args).Build();
-            
-        using (var scope = host.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
+    builder.AddUserSecrets<Program>(context.HostingEnvironment.IsDevelopment());
+});
 
-            try
-            {
-                var context = services.GetRequiredService<ApplicationDbContext>();
-                    
-                await ApplicationDbContextSeed.SeedSampleDataAsync(context);
-            }
-            catch (Exception ex)
-            {
-                var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+var app = builder
+    .RegisterServices()
+    .Build()
+    .SetupMiddleware();
 
-                logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
 
-                throw;
-            }
-        }
-
-        await host.RunAsync();
-    }
-
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureAppConfiguration((context, builder) =>
-            {
-                if (context.HostingEnvironment.IsDevelopment())
-                {
-                    builder.AddUserSecrets<Program>(true);
-                }
-            })
-            .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+try
+{
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
 }
+catch (Exception ex)
+{
+    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+    throw;
+}
+
+app.Run();
