@@ -12,12 +12,8 @@ using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace Crease.WebUI.Features.CardStatements;
 
-public class GetCardStatementByMonthYear : ControllerBase
+public class GetCardStatementByMonthYear : ApiControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public GetCardStatementByMonthYear(IMediator mediator) => _mediator = mediator;
-    
     [Route("/card-statements")]
     [Authorize]
     [HttpGet]
@@ -26,15 +22,15 @@ public class GetCardStatementByMonthYear : ControllerBase
     [SwaggerResponse(404, null)]
     public async Task<ActionResult<CardStatementDto>> Get([FromQuery] Query message)
     {
-        return Ok(await _mediator.Send(message));
+        return Ok(await Mediator.Send(message));
     }
     
     public class Validator : AbstractValidator<Query>
     {
         public Validator()
         {
-            RuleFor(m => m.CardId).NotNull();
-            RuleFor(m => m.MonthYear).NotNull();
+            RuleFor(m => m.CardId).NotEmpty();
+            RuleFor(m => m.MonthYear).NotEmpty();
         }
     }
 

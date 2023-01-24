@@ -12,12 +12,8 @@ using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.Transactions;
 
-public class DeleteTransaction : ControllerBase
+public class DeleteTransaction : ApiControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public DeleteTransaction(IMediator mediator) => _mediator = mediator;
-
     [Route("card-statements/{cardStatementId}/transactions/{id}")]
     [Authorize]
     [HttpDelete]
@@ -25,7 +21,7 @@ public class DeleteTransaction : ControllerBase
     [SwaggerResponse(404, null)]
     public async Task<ActionResult<Guid>> Create(Guid cardStatementId, Guid id)
     {
-        await _mediator.Send(new Command
+        await Mediator.Send(new Command
         {
             Id = id,
             CardStatementId = cardStatementId

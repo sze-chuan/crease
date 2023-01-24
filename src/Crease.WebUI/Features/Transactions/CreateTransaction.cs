@@ -12,12 +12,8 @@ using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.Transactions;
 
-public class CreateTransaction : ControllerBase
+public class CreateTransaction : ApiControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public CreateTransaction(IMediator mediator) => _mediator = mediator;
-
     [Route("card-statements/{cardStatementId}/transactions")]
     [Authorize]
     [HttpPost]
@@ -25,7 +21,7 @@ public class CreateTransaction : ControllerBase
     [SwaggerResponse(400, null)]
     public async Task<ActionResult<Guid>> Create(Guid cardStatementId, [FromBody] CreateTransactionRequest message)
     {
-        return Created((string)null, await _mediator.Send(new Command
+        return Created($"/card-statements/{cardStatementId}/transactions", await Mediator.Send(new Command
         {
             CardStatementId = cardStatementId,
             PaymentType = message.PaymentType,
@@ -40,11 +36,11 @@ public class CreateTransaction : ControllerBase
     {
         public Validator()
         {
-            RuleFor(m => m.PaymentType).NotNull();
-            RuleFor(m => m.TransactionCategory).NotNull();
-            RuleFor(m => m.Description).NotNull();
-            RuleFor(m => m.Date).NotNull();
-            RuleFor(m => m.Amount).NotNull().GreaterThanOrEqualTo(0);
+            RuleFor(m => m.PaymentType).NotEmpty();
+            RuleFor(m => m.TransactionCategory).NotEmpty();
+            RuleFor(m => m.Description).NotEmpty();
+            RuleFor(m => m.Date).NotEmpty();
+            RuleFor(m => m.Amount).NotEmpty().GreaterThanOrEqualTo(0);
         }
     }
 

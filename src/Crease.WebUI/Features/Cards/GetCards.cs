@@ -11,19 +11,15 @@ using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace Crease.WebUI.Features.Cards;
 
-public class GetCards : ControllerBase
+public class GetCards : ApiControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public GetCards(IMediator mediator) => _mediator = mediator;
-
     [Route("/cards")]
     [Authorize]
     [HttpGet]
     [SwaggerResponse(200, typeof(Result))]
     public async Task<ActionResult<Result>> List()
     {
-        return Ok(await _mediator.Send(new Query()));
+        return Ok(await Mediator.Send(new Query()));
     }
 
     public record Query : IRequest<Result>;

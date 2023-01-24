@@ -1,10 +1,10 @@
-using System.Configuration;
 using System.Reflection;
 using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Crease.WebUI.Data;
 using Crease.WebUI.Services;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -25,10 +25,10 @@ public static class ServicesConfiguration
             .AddMediatR(Assembly.GetExecutingAssembly())
             .AddHttpContextAccessor();
 
-        builder.Services
-            .AddControllers()
-            .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
-        
+        builder.Services.AddControllers();
+        builder.Services.AddFluentValidationAutoValidation();
+        builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
         builder.Services
             .AddAuthorization()   
             .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

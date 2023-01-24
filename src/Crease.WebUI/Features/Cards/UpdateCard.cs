@@ -10,12 +10,8 @@ using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.Cards;
 
-public class UpdateCard : ControllerBase
+public class UpdateCard : ApiControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public UpdateCard(IMediator mediator) => _mediator = mediator;
-
     [Route("/cards/{id}")]
     [Authorize]
     [HttpPut]
@@ -29,7 +25,7 @@ public class UpdateCard : ControllerBase
             return BadRequest();
         }
 
-        await _mediator.Send(message);
+        await Mediator.Send(message);
         return NoContent();
     }
 
@@ -37,10 +33,10 @@ public class UpdateCard : ControllerBase
     {
         public Validator()
         {
-            RuleFor(m => m.Id).NotNull();
-            RuleFor(m => m.Name).NotNull().Length(1, 50);
-            RuleFor(m => m.BankCardId).NotNull();
-            RuleFor(m => m.StartDate).NotNull();
+            RuleFor(m => m.Id).NotEmpty();
+            RuleFor(m => m.Name).NotEmpty().Length(1, 50);
+            RuleFor(m => m.BankCardId).NotEmpty();
+            RuleFor(m => m.StartDate).NotEmpty();
             RuleFor(m => m.CardNumber).Length(4);
         }
     }

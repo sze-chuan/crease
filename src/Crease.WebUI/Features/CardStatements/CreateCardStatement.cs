@@ -9,12 +9,10 @@ using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.CardStatements;
 
-public class CreateCardStatement : ControllerBase
+public class CreateCardStatement : ApiControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public CreateCardStatement(IMediator mediator) => _mediator = mediator;
-
+    [Consumes("application/json")]
+    [Produces("application/json")]
     [Route("/card-statements")]
     [Authorize]
     [HttpPost]
@@ -22,16 +20,16 @@ public class CreateCardStatement : ControllerBase
     [SwaggerResponse(400, null)]
     public async Task<ActionResult<Guid>> Create([FromBody] Command message)
     {
-        return Created((string)null, await _mediator.Send(message));
+        return Created("/card-statements", await Mediator.Send(message));
     }
 
     public class Validator : AbstractValidator<Command>
     {
         public Validator()
         {
-            RuleFor(m => m.CardId).NotNull();
-            RuleFor(m => m.BankCardId).NotNull();
-            RuleFor(m => m.MonthYear).NotNull();
+            RuleFor(m => m.CardId).NotEmpty();
+            RuleFor(m => m.BankCardId).NotEmpty();
+            RuleFor(m => m.MonthYear).NotEmpty();
         }
     }
 
@@ -61,7 +59,7 @@ public class CreateCardStatement : ControllerBase
             {
                 BankCardId = message.BankCardId,
                 CardId = message.CardId,
-                
+                MonthYear = message.MonthYear,
                 UserId = _userService.UserId
             };
 

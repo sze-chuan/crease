@@ -11,7 +11,7 @@ using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace Crease.WebUI.Features.BankCards;
 
-public class GetBankCards : ControllerBase
+public class GetBankCards : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
