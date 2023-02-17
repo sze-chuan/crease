@@ -14,6 +14,7 @@
         <LangVersion>10</LangVersion>
         <Nullable>disable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <RootNamespace>Crease.WebUI</RootNamespace>
   </PropertyGroup>
 
     <ItemGroup>
