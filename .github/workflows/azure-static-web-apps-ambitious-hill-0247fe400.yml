@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - src/Crease.WebUI/client-app/**
+      - src/Crease.Api/client-app/**
       - .github/workflows/azure-static-web-apps-ambitious-hill-0247fe400.yml
   pull_request:
     types: [opened, synchronize, reopened, closed]
