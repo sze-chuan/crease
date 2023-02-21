@@ -7,7 +7,7 @@ import AddTransaction from '../../components/AddTransaction';
 
 import CardsList from './CardsList';
 import CardDialog from './CardDialog';
-import { CardsClient, BankCardsClient } from '../../api/apiClient';
+import { GetCardsClient, GetBankCardsClient } from '../../api/apiClient';
 import { loadBankCards, loadCards, getCards } from '../../slices/card';
 import { useAuth } from '../../auth/authContext';
 import * as S from './styles';
@@ -20,23 +20,27 @@ const Home = (): JSX.Element => {
 
   useEffect(() => {
     const fetchBankCardsData = async () => {
-      const bankCardsClient = new BankCardsClient(
+      const getBankCardsClient = new GetBankCardsClient(
         process.env.REACT_APP_API_URL
       );
       const token = await acquireToken();
-      bankCardsClient.setAuthToken(token);
-      const result = await bankCardsClient.get();
+      getBankCardsClient.setAuthToken(token);
+      const result = await getBankCardsClient.get();
 
-      dispatch(loadBankCards(result));
+      if (result.bankCards) {
+        dispatch(loadBankCards(result.bankCards));
+      }
     };
 
     const fetchCardsData = async () => {
-      const cardsClient = new CardsClient(process.env.REACT_APP_API_URL);
+      const cardsClient = new GetCardsClient(process.env.REACT_APP_API_URL);
       const token = await acquireToken();
       cardsClient.setAuthToken(token);
-      const result = await cardsClient.getAll();
+      const result = await cardsClient.list();
 
-      dispatch(loadCards(result));
+      if (result.cards) {
+        dispatch(loadCards(result.cards));
+      }
     };
 
     fetchBankCardsData();

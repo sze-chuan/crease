@@ -19,8 +19,8 @@ import DialogTemplate from '../../../components/DialogTemplate';
 import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
 import {
-  CardsClient,
-  CreateCardCommand,
+  CreateCardClient,
+  CreateCardRequest,
   IBankCardDto,
   ICardDto,
 } from '../../../api/apiClient';
@@ -74,7 +74,7 @@ const CardDialog = (): JSX.Element => {
   const { setToast } = useToast();
 
   const onSubmit = async (data: AddCardFormData) => {
-    const cardsClient = new CardsClient(process.env.REACT_APP_API_URL);
+    const cardsClient = new CreateCardClient(process.env.REACT_APP_API_URL);
     const token = await acquireToken();
     cardsClient.setAuthToken(token);
 
@@ -84,7 +84,7 @@ const CardDialog = (): JSX.Element => {
         cardNumber: data.cardNumber,
         startDate: data.approvalDate,
         bankCardId: selectedBankCard?.id,
-      } as CreateCardCommand);
+      } as CreateCardRequest);
       dispatch(
         addCard({
           id: result,
