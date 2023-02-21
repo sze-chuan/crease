@@ -1,153 +1,129 @@
 {
-  "x-generator": "NSwag v13.14.3.0 (NJsonSchema v10.5.2.0 (Newtonsoft.Json v10.0.0.0))",
+  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v10.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "Crease API",
     "version": "1.0.0"
   },
   "paths": {
-    "/api/bankcards": {
-      "get": {
-        "tags": [
-          "BankCards"
-        ],
-        "operationId": "BankCards_Get",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BankCardDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/cards": {
-      "get": {
-        "tags": [
-          "Cards"
-        ],
-        "operationId": "Cards_GetAll",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CardDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
+    "/card-statements/{cardStatementId}/transactions": {
       "post": {
         "tags": [
-          "Cards"
+          "CreateTransaction"
         ],
-        "operationId": "Cards_Create",
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateCardCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/cards/{cardId}": {
-      "get": {
-        "tags": [
-          "Cards"
-        ],
-        "operationId": "Cards_Get",
+        "operationId": "CreateTransaction_Create",
         "parameters": [
           {
-            "name": "cardId",
+            "name": "cardStatementId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "format": "guid"
             },
             "x-position": 1
           }
         ],
+        "requestBody": {
+          "x-name": "message",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransactionRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CardDto"
+                  "type": "string",
+                  "format": "guid"
                 }
               }
             }
+          },
+          "400": {
+            "description": ""
           }
         }
       }
     },
-    "/api/cards/{id}": {
-      "put": {
+    "/card-statements/{cardStatementId}/transactions/{id}": {
+      "delete": {
         "tags": [
-          "Cards"
+          "DeleteTransaction"
         ],
-        "operationId": "Cards_Update",
+        "operationId": "DeleteTransaction_Create",
         "parameters": [
+          {
+            "name": "cardStatementId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
           {
             "name": "id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "format": "guid"
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/transactions/{id}": {
+      "put": {
+        "tags": [
+          "UpdateTransaction"
+        ],
+        "operationId": "UpdateTransaction_Create",
+        "parameters": [
+          {
+            "name": "transactionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 3
           }
         ],
         "requestBody": {
-          "x-name": "command",
+          "x-name": "message",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UpdateCardCommand"
+                "$ref": "#/components/schemas/UpdateTransactionRequest"
               }
             }
           },
@@ -157,23 +133,63 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
           }
         }
       }
     },
-    "/api/cardstatements/period": {
+    "/card-statements": {
+      "post": {
+        "tags": [
+          "CreateCardStatement"
+        ],
+        "operationId": "CreateCardStatement_Create",
+        "requestBody": {
+          "x-name": "message",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCardStatementRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      },
       "get": {
         "tags": [
-          "CardStatements"
+          "GetCardStatementByMonthYear"
         ],
-        "operationId": "CardStatements_GetByQuery",
+        "operationId": "GetCardStatementByMonthYear_Get",
         "parameters": [
           {
             "name": "CardId",
             "in": "query",
             "schema": {
               "type": "string",
-              "nullable": true
+              "format": "guid"
             },
             "x-position": 1
           },
@@ -197,24 +213,30 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
           }
         }
       }
     },
-    "/api/cardstatements/{cardStatementId}": {
+    "/card-statements/{id}": {
       "get": {
         "tags": [
-          "CardStatements"
+          "GetCardStatement"
         ],
-        "operationId": "CardStatements_Get",
+        "operationId": "GetCardStatement_Get",
         "parameters": [
           {
-            "name": "cardStatementId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "format": "guid"
             },
             "x-position": 1
           }
@@ -229,22 +251,28 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
           }
         }
       }
     },
-    "/api/cardstatements": {
+    "/cards": {
       "post": {
         "tags": [
-          "CardStatements"
+          "CreateCard"
         ],
-        "operationId": "CardStatements_Create",
+        "operationId": "CreateCard_Create",
         "requestBody": {
-          "x-name": "command",
+          "x-name": "message",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateCardStatementCommand"
+                "$ref": "#/components/schemas/CreateCardRequest"
               }
             }
           },
@@ -252,22 +280,34 @@
           "x-position": 1
         },
         "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": ""
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "GetCards"
+        ],
+        "operationId": "GetCards_List",
+        "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/GetCardsResponse"
                 }
               }
             }
@@ -275,30 +315,66 @@
         }
       }
     },
-    "/api/cardstatements/{cardStatementId}/transactions": {
-      "post": {
+    "/cards/{id}": {
+      "get": {
         "tags": [
-          "Transactions"
+          "GetCard"
         ],
-        "operationId": "Transactions_Create",
+        "operationId": "GetCard_Get",
         "parameters": [
           {
-            "name": "cardStatementId",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "nullable": true
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CardDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "UpdateCard"
+        ],
+        "operationId": "UpdateCard_Update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
             },
             "x-position": 1
           }
         ],
         "requestBody": {
-          "x-name": "command",
+          "x-name": "message",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTransactionCommand"
+                "$ref": "#/components/schemas/Command"
               }
             }
           },
@@ -306,122 +382,31 @@
           "x-position": 2
         },
         "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": ""
+          },
+          "404": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/bank-cards": {
+      "get": {
+        "tags": [
+          "GetBankCards"
+        ],
+        "operationId": "GetBankCards_Get",
+        "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/cardstatements/{cardStatementId}/transactions/{id}": {
-      "put": {
-        "tags": [
-          "Transactions"
-        ],
-        "operationId": "Transactions_Update",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "cardStatementId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          }
-        ],
-        "requestBody": {
-          "x-name": "command",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTransactionCommand"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 3
-        },
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Transactions"
-        ],
-        "operationId": "Transactions_Delete",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 1
-          },
-          {
-            "name": "cardStatementId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "nullable": true
-            },
-            "x-position": 2
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "default": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/GetBankCardsResponse"
                 }
               }
             }
@@ -432,6 +417,286 @@
   },
   "components": {
     "schemas": {
+      "CreateTransactionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "paymentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "UpdateTransactionRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "cardStatementId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "CreateCardStatementRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "cardId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "bankCardId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "monthYear": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CardStatementDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "monthYear": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "statementReward": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CardStatementReward"
+              }
+            ]
+          },
+          "transactions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TransactionDto"
+            }
+          }
+        }
+      },
+      "CardStatementReward": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ValueObject"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "miles": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "cashback": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              },
+              "points": {
+                "type": "number",
+                "format": "decimal",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "ValueObject": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false
+      },
+      "TransactionDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardStatementId": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentType": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionCategory": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "CreateCardRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bankCardId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CardDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "bankCardId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "GetCardsResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "cards": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/CardDto2"
+            }
+          }
+        }
+      },
+      "CardDto2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "bankCardId": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "Command": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "bankCardId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetBankCardsResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bankCards": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/BankCardDto"
+            }
+          }
+        }
+      },
       "BankCardDto": {
         "type": "object",
         "additionalProperties": false,
@@ -487,11 +752,6 @@
           }
         ]
       },
-      "ValueObject": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false
-      },
       "StatementType": {
         "allOf": [
           {
@@ -525,270 +785,6 @@
             }
           }
         ]
-      },
-      "CardDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "bankCardId": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        },
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
-      "CreateCardCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "bankCardId": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "cardNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "UpdateCardCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "cardNumber": {
-            "type": "string",
-            "nullable": true
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "CardStatementDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "monthYear": {
-            "type": "string",
-            "nullable": true
-          },
-          "statementReward": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CardStatementReward"
-              }
-            ]
-          },
-          "transactions": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/TransactionDto"
-            }
-          }
-        }
-      },
-      "CardStatementReward": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/ValueObject"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "miles": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "cashback": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "points": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "TransactionDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "cardStatementId": {
-            "type": "string",
-            "nullable": true
-          },
-          "paymentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "transactionCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "amount": {
-            "type": "number",
-            "format": "decimal"
-          }
-        }
-      },
-      "CreateCardStatementCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "cardId": {
-            "type": "string",
-            "nullable": true
-          },
-          "bankCardId": {
-            "type": "string",
-            "nullable": true
-          },
-          "monthYear": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
-      "CreateTransactionCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "cardStatementId": {
-            "type": "string",
-            "nullable": true
-          },
-          "paymentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "transactionCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "amount": {
-            "type": "number",
-            "format": "decimal"
-          }
-        }
-      },
-      "UpdateTransactionCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "nullable": true
-          },
-          "cardStatementId": {
-            "type": "string",
-            "nullable": true
-          },
-          "paymentType": {
-            "type": "string",
-            "nullable": true
-          },
-          "transactionCategory": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "date": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "amount": {
-            "type": "number",
-            "format": "decimal"
-          }
-        }
       }
     }
   }

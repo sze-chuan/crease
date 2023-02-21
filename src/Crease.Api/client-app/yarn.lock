@@ -6384,7 +6384,7 @@ __metadata:
     eslint-plugin-react: ^7.26.1
     husky: ^7.0.0
     lint-staged: ^11.2.6
-    nswag: ^13.14.2
+    nswag: ^13.18.2
     prettier: ^2.4.1
     react: ^17.0.2
     react-dom: ^17.0.2
@@ -11754,12 +11754,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"nswag@npm:^13.14.2":
-  version: 13.14.2
-  resolution: "nswag@npm:13.14.2"
+"nswag@npm:^13.18.2":
+  version: 13.18.2
+  resolution: "nswag@npm:13.18.2"
   bin:
     nswag: bin/nswag.js
-  checksum: c21be82a0f7ce16462b6436b29d5bbff9d0e97d5871cadb08ef2dbf1c7aea10dce8c503162b06aea6e6e79b3532054c4561d56be8686638626e3ff61a29290d3
+  checksum: 0d61a657b56279f3d697f72da45aeabeaa84075248a30cd169e4f7a5f490d0756d17d86a3241cd4aa1d65471858e5711279fc46637a8b908f7e00affd9602610
   languageName: node
   linkType: hard
 
