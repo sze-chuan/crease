@@ -19,15 +19,15 @@ public class GetBankCards : ApiControllerBase
 
     [Route("/bank-cards")]
     [HttpGet]
-    [SwaggerResponse(200, typeof(Result))]
-    public async Task<ActionResult<Result>> Get()
+    [SwaggerResponse(200, typeof(GetBankCardsResponse))]
+    public async Task<ActionResult<GetBankCardsResponse>> Get()
     {
         return Ok(await _mediator.Send(new Query()));
     }
 
-    public record Query : IRequest<Result>;
+    public record Query : IRequest<GetBankCardsResponse>;
 
-    public record Result
+    public record GetBankCardsResponse
     {
         public List<BankCardDto> BankCards { get; init; }
         
@@ -47,10 +47,10 @@ public class GetBankCards : ApiControllerBase
 
     public class MappingProfile : Profile
     {
-        public MappingProfile() => CreateProjection<BankCard, Result.BankCardDto>();
+        public MappingProfile() => CreateProjection<BankCard, GetBankCardsResponse.BankCardDto>();
     }
     
-    public class Handler : IRequestHandler<Query, Result>
+    public class Handler : IRequestHandler<Query, GetBankCardsResponse>
     {
         private readonly ApplicationDbContext _db;
         private readonly IConfigurationProvider _configuration;
@@ -61,14 +61,14 @@ public class GetBankCards : ApiControllerBase
             _configuration = configuration;
         }
 
-        public async Task<Result> Handle(Query message, CancellationToken token)
+        public async Task<GetBankCardsResponse> Handle(Query message, CancellationToken token)
         {
             var bankCards = await _db.BankCards
                 .OrderBy(c => c.Name)
-                .ProjectTo<Result.BankCardDto>(_configuration)
+                .ProjectTo<GetBankCardsResponse.BankCardDto>(_configuration)
                 .ToListAsync(cancellationToken: token);
 
-            return new Result
+            return new GetBankCardsResponse
             {
                 BankCards = bankCards
             };

@@ -5,6 +5,7 @@ import AdapterDayFns from '@mui/lab/AdapterDateFns';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 
 import LandingPage from './components/LandpingPage';
+import TransactionDialog from './components/AddTransactionDialog';
 import Home from './pages/Home';
 import Card from './pages/Card';
 import RequiredAuth from './auth/requiredAuth';
@@ -26,6 +27,7 @@ const App = (): JSX.Element => {
           />
           <Route path="card/:id" element={<Card />} />
         </Routes>
+        <TransactionDialog />
       </ToastProvider>
     </LocalizationProvider>
   );

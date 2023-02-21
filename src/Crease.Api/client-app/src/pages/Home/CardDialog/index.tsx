@@ -7,24 +7,20 @@ import * as yup from 'yup';
 import {
   addCard,
   getBankCards,
-  getIsAddCardDialogVisible,
-  setIsAddCardDialogVisible,
-} from '../../../store/cards/cardSlice';
+  getShowCardDialog,
+  setShowCardDialog,
+} from '../../../slices/card';
 
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
 import FormControl from '@mui/material/FormControl';
 import DatePicker from '@mui/lab/DatePicker';
-import CloseIcon from '@mui/icons-material/Close';
-import { TransitionProps } from '@mui/material/transitions';
-import Slide from '@mui/material/Slide';
 
 import CardImage from '../../../components/CardImage';
+import DialogTemplate from '../../../components/DialogTemplate';
 import BankCardSelection from './BankCardSelection';
 import * as S from './styles';
 import {
-  CardsClient,
-  CreateCardCommand,
+  CreateCardClient,
+  CreateCardRequest,
   IBankCardDto,
   ICardDto,
 } from '../../../api/apiClient';
@@ -36,16 +32,6 @@ interface AddCardFormData {
   cardNumber: string;
   approvalDate: Date;
 }
-
-const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children: React.ReactElement<unknown, any>;
-  },
-  ref: React.Ref<unknown>
-) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
 
 const schema = yup
   .object({
@@ -66,7 +52,7 @@ const schema = yup
   .required();
 
 const CardDialog = (): JSX.Element => {
-  const isDialogVisible = useSelector(getIsAddCardDialogVisible);
+  const showCardDialog = useSelector(getShowCardDialog);
   const dispatch = useDispatch();
   const bankCards = useSelector(getBankCards);
   const [selectedBankCard, setSelectedBankCard] = useState<
@@ -88,7 +74,7 @@ const CardDialog = (): JSX.Element => {
   const { setToast } = useToast();
 
   const onSubmit = async (data: AddCardFormData) => {
-    const cardsClient = new CardsClient(process.env.REACT_APP_API_URL);
+    const cardsClient = new CreateCardClient(process.env.REACT_APP_API_URL);
     const token = await acquireToken();
     cardsClient.setAuthToken(token);
 
@@ -98,7 +84,7 @@ const CardDialog = (): JSX.Element => {
         cardNumber: data.cardNumber,
         startDate: data.approvalDate,
         bankCardId: selectedBankCard?.id,
-      } as CreateCardCommand);
+      } as CreateCardRequest);
       dispatch(
         addCard({
           id: result,
@@ -115,7 +101,7 @@ const CardDialog = (): JSX.Element => {
 
   const handleClose = () => {
     setSelectedBankCard(undefined);
-    dispatch(setIsAddCardDialogVisible(false));
+    dispatch(setShowCardDialog(false));
     reset();
   };
 
@@ -124,93 +110,79 @@ const CardDialog = (): JSX.Element => {
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={isDialogVisible}
+    <DialogTemplate
+      dialogTitle="Add new card"
+      isDialogVisible={showCardDialog}
       onClose={handleClose}
-      TransitionComponent={Transition}
     >
-      <DialogTitle>
-        {'Add New Card'}
-        <S.StyledCloseBtn aria-label="close" onClick={handleClose}>
-          <CloseIcon />
-        </S.StyledCloseBtn>
-      </DialogTitle>
-      <S.StyledDialogContent>
-        {selectedBankCard ? (
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            autoComplete="off"
-            noValidate={true}
-          >
-            <S.StyledCardImageDiv>
-              <CardImage cardName={selectedBankCard.name} />
-            </S.StyledCardImageDiv>
-            <FormControl fullWidth>
-              <S.StyledTextField
-                required
-                variant="outlined"
-                label="Card name"
-                {...register('cardName', { required: true })}
-                error={errors.cardName ? true : false}
-                helperText={errors.cardName?.message ?? ''}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <S.StyledTextField
-                required
-                label="Last 4 digits of card"
-                variant="outlined"
-                {...register('cardNumber', {
-                  required: true,
-                  maxLength: 4,
-                  minLength: 4,
-                  pattern: /[0-9]{4}/,
-                })}
-                error={errors.cardNumber ? true : false}
-                helperText={errors.cardNumber?.message ?? ''}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <Controller
-                name="approvalDate"
-                control={control}
-                rules={{ required: true }}
-                render={({ field }) => (
-                  <DatePicker
-                    {...field}
-                    label="Approval Date"
-                    inputFormat="dd/MM/yyyy"
-                    renderInput={(params) => (
-                      <S.StyledTextField
-                        {...params}
-                        required
-                        error={errors.approvalDate ? true : false}
-                        helperText={errors.approvalDate?.message ?? ''}
-                      />
-                    )}
-                  />
-                )}
-              />
-            </FormControl>
-            <FormControl fullWidth>
-              <S.StyledSubmitButton
-                type="submit"
-                variant="contained"
-                disabled={Object.keys(errors).length > 0}
-              >
-                Done
-              </S.StyledSubmitButton>
-            </FormControl>
-          </form>
-        ) : (
-          <BankCardSelection
-            bankCards={bankCards}
-            onBankCardSelect={onBankCardSelect}
-          />
-        )}
-      </S.StyledDialogContent>
-    </Dialog>
+      {selectedBankCard ? (
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          autoComplete="off"
+          noValidate={true}
+        >
+          <S.StyledCardImageDiv>
+            <CardImage cardName={selectedBankCard.name} />
+          </S.StyledCardImageDiv>
+          <FormControl fullWidth>
+            <S.StyledTextField
+              required
+              variant="outlined"
+              label="Card name"
+              {...register('cardName')}
+              error={errors.cardName ? true : false}
+              helperText={errors.cardName?.message ?? ''}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <S.StyledTextField
+              required
+              label="Last 4 digits of card"
+              variant="outlined"
+              {...register('cardNumber')}
+              error={errors.cardNumber ? true : false}
+              helperText={errors.cardNumber?.message ?? ''}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <Controller
+              name="approvalDate"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  label="Approval Date"
+                  inputFormat="dd/MM/yyyy"
+                  renderInput={(params) => (
+                    <S.StyledTextField
+                      {...params}
+                      required
+                      error={errors.approvalDate ? true : false}
+                      helperText={errors.approvalDate?.message ?? ''}
+                    />
+                  )}
+                />
+              )}
+            />
+          </FormControl>
+          <FormControl fullWidth>
+            <S.StyledSubmitButton
+              type="submit"
+              variant="contained"
+              disabled={Object.keys(errors).length > 0}
+            >
+              Done
+            </S.StyledSubmitButton>
+          </FormControl>
+        </form>
+      ) : (
+        <BankCardSelection
+          bankCards={bankCards}
+          onBankCardSelect={onBankCardSelect}
+        />
+      )}
+    </DialogTemplate>
   );
 };
 

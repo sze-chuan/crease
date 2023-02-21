@@ -18,12 +18,12 @@ public class CreateCardStatement : ApiControllerBase
     [HttpPost]
     [SwaggerResponse(201, typeof(Guid))]
     [SwaggerResponse(400, null)]
-    public async Task<ActionResult<Guid>> Create([FromBody] Command message)
+    public async Task<ActionResult<Guid>> Create([FromBody] CreateCardStatementRequest message)
     {
         return Created("/card-statements", await Mediator.Send(message));
     }
 
-    public class Validator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<CreateCardStatementRequest>
     {
         public Validator()
         {
@@ -33,7 +33,7 @@ public class CreateCardStatement : ApiControllerBase
         }
     }
 
-    public record Command : IRequest<Guid>
+    public record CreateCardStatementRequest : IRequest<Guid>
     {
         public Guid CardId { get; set; }
         
@@ -42,7 +42,7 @@ public class CreateCardStatement : ApiControllerBase
         public DateTime MonthYear { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, Guid>
+    public class Handler : IRequestHandler<CreateCardStatementRequest, Guid>
     {
         private readonly ApplicationDbContext _db;
         private readonly ICurrentUserService _userService;
@@ -53,7 +53,7 @@ public class CreateCardStatement : ApiControllerBase
             _userService = userService;
         }
 
-        public async Task<Guid> Handle(Command message, CancellationToken token)
+        public async Task<Guid> Handle(CreateCardStatementRequest message, CancellationToken token)
         {
             var statement = new CardStatement
             {

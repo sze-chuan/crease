@@ -3,7 +3,7 @@
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
-      "project": "Crease.WebUI.csproj",
+      "project": "Crease.Api.csproj",
       "msBuildProjectExtensionsPath": null,
       "configuration": null,
       "runtime": null,

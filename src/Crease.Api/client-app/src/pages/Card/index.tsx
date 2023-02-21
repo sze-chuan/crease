@@ -6,7 +6,8 @@ import Stack from '@mui/material/Stack';
 import Layout from '../../components/Layout';
 import CardDetails from './CardDetails';
 import CardStatement from './CardStatement';
-import { getBankCards, getCards } from '../../store/cards/cardSlice';
+import AddTransaction from '../../components/AddTransaction';
+import { getBankCards, getCards } from '../../slices/card';
 
 const Card = (): JSX.Element => {
   const { id } = useParams();
@@ -27,6 +28,7 @@ const Card = (): JSX.Element => {
           <React.Fragment></React.Fragment>
         )}
       </Stack>
+      <AddTransaction />
     </Layout>
   );
 };
