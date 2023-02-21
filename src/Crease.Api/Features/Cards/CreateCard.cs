@@ -16,12 +16,12 @@ public class CreateCard : ApiControllerBase
     [HttpPost]
     [SwaggerResponse(201, typeof(Guid))]
     [SwaggerResponse(400, null)]
-    public async Task<ActionResult<Guid>> Create([FromBody] Command message)
+    public async Task<ActionResult<Guid>> Create([FromBody] CreateCardRequest message)
     {
         return Created("/cards", await Mediator.Send(message));
     }
 
-    public class Validator : AbstractValidator<Command>
+    public class Validator : AbstractValidator<CreateCardRequest>
     {
         public Validator()
         {
@@ -32,7 +32,7 @@ public class CreateCard : ApiControllerBase
         }
     }
 
-    public record Command : IRequest<Guid>
+    public record CreateCardRequest : IRequest<Guid>
     {
         public Guid BankCardId { get; set; }
         public string Name { get; set; }
@@ -40,7 +40,7 @@ public class CreateCard : ApiControllerBase
         public DateTime StartDate { get; set; }
     }
 
-    public class Handler : IRequestHandler<Command, Guid>
+    public class Handler : IRequestHandler<CreateCardRequest, Guid>
     {
         private readonly ApplicationDbContext _db;
         private readonly ICurrentUserService _userService;
@@ -51,7 +51,7 @@ public class CreateCard : ApiControllerBase
             _userService = userService;
         }
 
-        public async Task<Guid> Handle(Command message, CancellationToken token)
+        public async Task<Guid> Handle(CreateCardRequest message, CancellationToken token)
         {
             var card = new Card
             {
