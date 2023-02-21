@@ -1,8 +1,8 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 
-import AdapterDayFns from '@mui/lab/AdapterDateFns';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 import LandingPage from './components/LandpingPage';
 import TransactionDialog from './components/AddTransactionDialog';
@@ -13,7 +13,7 @@ import { ToastProvider } from './contexts/toastContext';
 
 const App = (): JSX.Element => {
   return (
-    <LocalizationProvider dateAdapter={AdapterDayFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <ToastProvider>
         <Routes>
           <Route path="/" element={<LandingPage />} />

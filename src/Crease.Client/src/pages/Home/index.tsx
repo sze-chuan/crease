@@ -28,7 +28,7 @@ const Home = (): JSX.Element => {
       const result = await getBankCardsClient.get();
 
       if (result.bankCards) {
-        dispatch(loadBankCards(result.bankCards));
+        dispatch(loadBankCards(result.bankCards!));
       }
     };
 
