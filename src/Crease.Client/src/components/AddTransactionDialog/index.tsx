@@ -38,8 +38,6 @@ const AddTransactionDialog = (): JSX.Element => {
     dispatch(setTransactionDialog({ visible: false }));
   };
   const {
-    reset,
-    register,
     control,
     formState: { errors },
   } = useForm<AddTransactionFormData>({
