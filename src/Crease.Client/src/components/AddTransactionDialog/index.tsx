@@ -12,7 +12,7 @@ import {
 import DialogTemplate from '../DialogTemplate';
 import CardImage from '../CardImage';
 import FormControl from '@mui/material/FormControl';
-import DatePicker from '@mui/lab/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import * as S from './styles';
 
@@ -38,8 +38,6 @@ const AddTransactionDialog = (): JSX.Element => {
     dispatch(setTransactionDialog({ visible: false }));
   };
   const {
-    reset,
-    register,
     control,
     formState: { errors },
   } = useForm<AddTransactionFormData>({

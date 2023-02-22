@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -21,7 +21,11 @@ const store = configureStore({
     }),
 });
 
-ReactDOM.render(
+const container = document.getElementById('root');
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const root = createRoot(container!);
+
+root.render(
   <Provider store={store}>
     <Router>
       <AuthProvider>
@@ -31,8 +35,7 @@ ReactDOM.render(
         </ThemeProvider>
       </AuthProvider>
     </Router>
-  </Provider>,
-  document.getElementById('root')
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function

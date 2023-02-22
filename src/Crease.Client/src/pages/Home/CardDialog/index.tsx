@@ -12,7 +12,7 @@ import {
 } from '../../../slices/card';
 
 import FormControl from '@mui/material/FormControl';
-import DatePicker from '@mui/lab/DatePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import CardImage from '../../../components/CardImage';
 import DialogTemplate from '../../../components/DialogTemplate';
