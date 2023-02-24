@@ -34,7 +34,7 @@ export const msalConfig: Configuration = {
     clientId: '7509f265-77f0-40c6-873d-cc002da7166f',
     authority: b2cPolicies.authorities.signUpSignIn.authority,
     knownAuthorities: [b2cPolicies.authorityDomain],
-    redirectUri: `${process.env.REACT_APP_PUBLIC_URL}/home`,
+    redirectUri: `${process.env.REACT_APP_PUBLIC_URL}`,
     postLogoutRedirectUri: process.env.REACT_APP_PUBLIC_URL,
   },
   cache: {
