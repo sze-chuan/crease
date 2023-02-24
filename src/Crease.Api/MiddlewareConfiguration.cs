@@ -11,6 +11,10 @@ public static class MiddlewareConfiguration
         {
             app.UseHsts();
         }
+        else
+        {
+            app.UseCors("development");
+        }
         
         app
             .UseRouting()
