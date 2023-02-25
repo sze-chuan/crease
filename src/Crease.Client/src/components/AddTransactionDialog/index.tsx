@@ -8,9 +8,9 @@ import {
   getTransactionDialog,
   setTransactionDialog,
 } from '../../slices/transaction';
+import { getCards } from '../../slices/card';
 
 import DialogTemplate from '../DialogTemplate';
-import CardImage from '../CardImage';
 import FormSelect from '../FormSelect';
 
 import MenuItem from '@mui/material/MenuItem';
@@ -54,11 +54,31 @@ const AddTransactionDialog = (): JSX.Element => {
   const dispatch = useDispatch();
   const { acquireToken } = useAuth();
   const { setToast } = useToast();
+  const {
+    reset,
+    register,
+    handleSubmit,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<AddTransactionFormData>({
+    resolver: yupResolver(schema),
+    defaultValues: {
+      transactionDate: new Date(),
+      transactionType: TransactionType.Physical,
+      category: '',
+    },
+  });
 
+  const cards = useSelector(getCards);
   const transactionDialog = useSelector(getTransactionDialog);
   const transactionTypes = Object.keys(TransactionType).filter((paymentType) =>
     isNaN(Number(paymentType))
   );
+
+  if (transactionDialog.card) {
+    setValue('cardId', transactionDialog.card.id ?? '');
+  }
 
   const handleClose = () => {
     dispatch(setTransactionDialog({ visible: false }));
@@ -86,21 +106,6 @@ const AddTransactionDialog = (): JSX.Element => {
     }
   };
 
-  const {
-    reset,
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<AddTransactionFormData>({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      transactionDate: new Date(),
-      transactionType: TransactionType.Physical,
-      category: '',
-    },
-  });
-
   return (
     <DialogTemplate
       isDialogVisible={transactionDialog.visible}
@@ -112,7 +117,18 @@ const AddTransactionDialog = (): JSX.Element => {
         noValidate={true}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <CardImage cardName={transactionDialog.card?.name} />
+        <FormSelect
+          name="cardId"
+          control={control}
+          labelText="Card"
+          isDisabled={transactionDialog.card != null}
+        >
+          {cards.map((card) => (
+            <MenuItem key={card.id} value={card.id}>
+              {card.name}
+            </MenuItem>
+          ))}
+        </FormSelect>
         <S.StyledFormControl fullWidth>
           <Controller
             name="transactionDate"

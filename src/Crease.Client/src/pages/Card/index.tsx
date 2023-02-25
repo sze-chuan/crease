@@ -28,7 +28,7 @@ const Card = (): JSX.Element => {
           <React.Fragment></React.Fragment>
         )}
       </Stack>
-      <AddTransaction />
+      <AddTransaction card={card} />
     </Layout>
   );
 };

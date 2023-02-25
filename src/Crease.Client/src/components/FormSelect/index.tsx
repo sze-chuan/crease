@@ -11,6 +11,7 @@ interface FormSelectProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any, any>;
   children: React.ReactNode;
+  isDisabled?: boolean;
 }
 
 const FormSelect = ({
@@ -18,10 +19,11 @@ const FormSelect = ({
   labelText = '',
   control,
   children,
+  isDisabled,
 }: FormSelectProps): JSX.Element => {
   const labelId = `${name}-label`;
   return (
-    <S.StyledFormControl fullWidth>
+    <S.StyledFormControl fullWidth disabled={isDisabled}>
       <InputLabel id={labelId}>{labelText}</InputLabel>
       <Controller
         name={name}
