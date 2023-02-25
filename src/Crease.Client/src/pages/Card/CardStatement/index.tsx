@@ -1,22 +1,32 @@
 import React from 'react';
+import { format } from 'date-fns';
 
 import Typography from '@mui/material/Typography';
 import Transactions from './Transactions';
 import { CardStatementDiv, StatementMonthDiv } from './styles';
+import { ICardStatementDto } from '../../../api/apiClient';
 
-const CardStatement = (): JSX.Element => {
-  return (
+interface CardStatementProps {
+  cardStatement?: ICardStatementDto;
+}
+
+const CardStatement = ({ cardStatement }: CardStatementProps): JSX.Element => {
+  return cardStatement ? (
     <CardStatementDiv>
       <Typography variant="h5" fontWeight="bold">
         Transactions
       </Typography>
       <StatementMonthDiv>
         <Typography variant="body2" fontWeight="bold">
-          FEB 22
+          {cardStatement.monthYear
+            ? format(cardStatement.monthYear, 'MMM yyyy')
+            : ''}
         </Typography>
       </StatementMonthDiv>
       <Transactions></Transactions>
     </CardStatementDiv>
+  ) : (
+    <React.Fragment></React.Fragment>
   );
 };
 
