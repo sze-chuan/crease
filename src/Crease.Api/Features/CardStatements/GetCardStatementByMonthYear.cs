@@ -58,17 +58,13 @@ public class GetCardStatementByMonthYear : ApiControllerBase
         {
             var statement = await _db.CardStatements
                 .Where(statement => statement.CardId == message.CardId
-                                    && statement.MonthYear == message.MonthYear
+                                    && statement.MonthYear.Month == message.MonthYear.Month
+                                    && statement.MonthYear.Year == message.MonthYear.Year
                                     && statement.UserId == _userService.UserId)
                 .ProjectTo<CardStatementDto>(_configuration)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(token);
             
-            if (statement == null)
-            {
-                throw new HttpResponseException(StatusCodes.Status404NotFound, "Card statement not found.");
-            }
-
             return statement;
         }
     }
