@@ -1,9 +1,15 @@
-import { IBankCardDto, ICardDto, ITransactionDto } from '../api/apiClient';
+import {
+  IBankCardDto,
+  ICardDto,
+  ICardStatementDto,
+  ITransactionDto,
+} from '../api/apiClient';
 
 export interface TransactionDialogProps {
   visible: boolean;
-  card?: ICardDto | undefined;
-  transaction?: ITransactionDto | undefined;
+  card?: ICardDto;
+  cardStatementId?: string;
+  transaction?: ITransactionDto;
 }
 
 export interface TransactionState {
@@ -14,6 +20,7 @@ export interface CardState {
   bankCards: IBankCardDto[];
   cards: ICardDto[];
   showCardDialog: boolean;
+  cardStatement?: ICardStatementDto;
 }
 
 export interface RootState {

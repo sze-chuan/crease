@@ -8,7 +8,7 @@ import {
   getTransactionDialog,
   setTransactionDialog,
 } from '../../slices/transaction';
-import { getCards } from '../../slices/card';
+import { getCards, setCardStatement } from '../../slices/card';
 
 import DialogTemplate from '../DialogTemplate';
 import FormSelect from '../FormSelect';
@@ -20,6 +20,7 @@ import * as S from './styles';
 import {
   CreateTransactionClient,
   CreateTransactionRequest,
+  GetCardStatementClient,
 } from '../../api/apiClient';
 import { useToast } from '../../contexts/toastContext';
 import { useAuth } from '../../auth/authContext';
@@ -93,11 +94,25 @@ const AddTransactionDialog = (): JSX.Element => {
     transactionClient.setAuthToken(token);
 
     try {
-      const result = await transactionClient.create('', {
-        date: data.transactionDate,
-        amount: data.amount,
-        description: data.description,
-      } as CreateTransactionRequest);
+      if (transactionDialog.cardStatementId) {
+        await transactionClient.create(transactionDialog.cardStatementId, {
+          date: data.transactionDate,
+          amount: data.amount,
+          description: data.description,
+          paymentType: data.transactionType,
+          transactionCategory: data.category,
+        } as CreateTransactionRequest);
+
+        const getCardStatementClient = new GetCardStatementClient(
+          process.env.REACT_APP_API_URL
+        );
+        getCardStatementClient.setAuthToken(token);
+        const result = await getCardStatementClient.get(
+          transactionDialog.cardStatementId
+        );
+
+        dispatch(setCardStatement(result));
+      }
 
       handleClose();
       setToast('Transaction added succesfully.', 'success');
@@ -173,7 +188,7 @@ const AddTransactionDialog = (): JSX.Element => {
         </S.StyledFormControl>
         <FormSelect name="category" control={control} labelText="Category">
           {PaymentCategories.map((category) => (
-            <MenuItem key={category} value={category.toLowerCase()}>
+            <MenuItem key={category} value={category}>
               {category}
             </MenuItem>
           ))}

@@ -23,10 +23,14 @@ const CardStatement = ({ cardStatement }: CardStatementProps): JSX.Element => {
             : ''}
         </Typography>
       </StatementMonthDiv>
-      <Transactions></Transactions>
+      {cardStatement.transactions ? (
+        <Transactions transactions={cardStatement.transactions} />
+      ) : (
+        <React.Fragment />
+      )}
     </CardStatementDiv>
   ) : (
-    <React.Fragment></React.Fragment>
+    <React.Fragment />
   );
 };
 

@@ -5,17 +5,23 @@ import { setTransactionDialog } from '../../slices/transaction';
 import { ICardDto } from '../../api/apiClient';
 
 interface AddTransactionProps {
-  card: ICardDto | undefined;
+  card?: ICardDto;
+  cardStatementId?: string;
 }
 
-const defaultProps = {
-  card: undefined,
-};
-
-const AddTransaction = ({ card }: AddTransactionProps): JSX.Element => {
+const AddTransaction = ({
+  card,
+  cardStatementId,
+}: AddTransactionProps): JSX.Element => {
   const dispatch = useDispatch();
   const onClick = () => {
-    dispatch(setTransactionDialog({ visible: true, card: card }));
+    dispatch(
+      setTransactionDialog({
+        visible: true,
+        card: card,
+        cardStatementId: cardStatementId,
+      })
+    );
   };
 
   return (
@@ -24,7 +30,5 @@ const AddTransaction = ({ card }: AddTransactionProps): JSX.Element => {
     </AddTransactionFab>
   );
 };
-
-AddTransaction.defaultProps = defaultProps;
 
 export default AddTransaction;

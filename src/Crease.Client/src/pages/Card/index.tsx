@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import Stack from '@mui/material/Stack';
@@ -7,26 +7,28 @@ import Layout from '../../components/Layout';
 import CardDetails from './CardDetails';
 import CardStatement from './CardStatement';
 import AddTransaction from '../../components/AddTransaction';
-import { getBankCards, getCards } from '../../slices/card';
+import {
+  getBankCards,
+  getCards,
+  getCardStatement,
+  setCardStatement,
+} from '../../slices/card';
 import {
   GetCardStatementByMonthYearClient,
   CreateCardStatementClient,
   CreateCardStatementRequest,
-  CardStatementDto,
   ICardStatementDto,
 } from '../../api/apiClient';
 import { useAuth } from '../../auth/authContext';
 
 const Card = (): JSX.Element => {
+  const dispatch = useDispatch();
   const { id } = useParams();
   const cards = useSelector(getCards);
   const bankCards = useSelector(getBankCards);
+  const cardStatement = useSelector(getCardStatement);
   const card = cards.find((x) => x.id === id);
   const bankCard = bankCards.find((x) => x.id === card?.bankCardId);
-
-  const [cardStatement, setCardStatement] = useState<
-    ICardStatementDto | undefined
-  >(undefined);
 
   const { acquireToken } = useAuth();
 
@@ -54,12 +56,14 @@ const Card = (): JSX.Element => {
           bankCardId: card?.bankCardId,
         } as CreateCardStatementRequest);
 
-        setCardStatement({
-          id: result,
-          monthYear: statementMonthYear,
-        } as CardStatementDto);
+        dispatch(
+          setCardStatement({
+            id: result,
+            monthYear: statementMonthYear,
+          } as ICardStatementDto)
+        );
       } else {
-        setCardStatement(cardStatement);
+        dispatch(setCardStatement(cardStatement));
       }
     };
 
@@ -78,7 +82,7 @@ const Card = (): JSX.Element => {
           <React.Fragment></React.Fragment>
         )}
       </Stack>
-      <AddTransaction card={card} />
+      <AddTransaction card={card} cardStatementId={cardStatement?.id} />
     </Layout>
   );
 };
