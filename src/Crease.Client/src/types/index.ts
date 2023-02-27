@@ -5,9 +5,16 @@ import {
   ITransactionDto,
 } from '../api/apiClient';
 
+export enum TransactionDialogAction {
+  AddFromHome,
+  AddFromCard,
+  Update,
+}
+
 export interface TransactionDialogProps {
   visible: boolean;
-  card?: ICardDto;
+  action?: TransactionDialogAction;
+  cardId?: string;
   cardStatementId?: string;
   transaction?: ITransactionDto;
 }

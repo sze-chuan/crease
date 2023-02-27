@@ -24,6 +24,7 @@ import {
 } from '../../api/apiClient';
 import { useToast } from '../../contexts/toastContext';
 import { useAuth } from '../../auth/authContext';
+import { TransactionDialogAction } from '../../types';
 
 interface AddTransactionFormData {
   cardId: string;
@@ -77,8 +78,8 @@ const AddTransactionDialog = (): JSX.Element => {
     isNaN(Number(paymentType))
   );
 
-  if (transactionDialog.card) {
-    setValue('cardId', transactionDialog.card.id ?? '');
+  if (transactionDialog.cardId) {
+    setValue('cardId', transactionDialog.cardId ?? '');
   }
 
   const handleClose = () => {
@@ -94,7 +95,10 @@ const AddTransactionDialog = (): JSX.Element => {
     transactionClient.setAuthToken(token);
 
     try {
-      if (transactionDialog.cardStatementId) {
+      if (
+        transactionDialog.action === TransactionDialogAction.AddFromCard &&
+        transactionDialog.cardStatementId
+      ) {
         await transactionClient.create(transactionDialog.cardStatementId, {
           date: data.transactionDate,
           amount: data.amount,
@@ -136,7 +140,7 @@ const AddTransactionDialog = (): JSX.Element => {
           name="cardId"
           control={control}
           labelText="Card"
-          isDisabled={transactionDialog.card != null}
+          isDisabled={transactionDialog.cardId != null}
         >
           {cards.map((card) => (
             <MenuItem key={card.id} value={card.id}>

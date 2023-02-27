@@ -20,6 +20,7 @@ import {
   ICardStatementDto,
 } from '../../api/apiClient';
 import { useAuth } from '../../auth/authContext';
+import { TransactionDialogAction } from '../../types';
 
 const Card = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -82,7 +83,11 @@ const Card = (): JSX.Element => {
           <React.Fragment></React.Fragment>
         )}
       </Stack>
-      <AddTransaction card={card} cardStatementId={cardStatement?.id} />
+      <AddTransaction
+        cardId={card?.id}
+        cardStatementId={cardStatement?.id}
+        action={TransactionDialogAction.AddFromCard}
+      />
     </Layout>
   );
 };
