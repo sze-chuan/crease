@@ -60,9 +60,11 @@ const Transactions = ({ transactions }: TransactionsProps): JSX.Element => {
             </TableRow>
           ))
         ) : (
-          <NoTransactionsCell colSpan={3} align="center">
-            You have no transactions yet.
-          </NoTransactionsCell>
+          <TableRow>
+            <NoTransactionsCell colSpan={3} align="center">
+              You have no transactions yet.
+            </NoTransactionsCell>
+          </TableRow>
         )}
       </TableBody>
     </Table>
