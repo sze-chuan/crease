@@ -33,42 +33,41 @@ const Card = (): JSX.Element => {
 
   const { acquireToken } = useAuth();
 
-  useEffect(() => {
-    const fetchCardStatementData = async () => {
-      const statementMonthYear = new Date();
-      const getCardStatementClient = new GetCardStatementByMonthYearClient(
+  const fetchCardStatementData = async (statementMonthYear: Date) => {
+    const getCardStatementClient = new GetCardStatementByMonthYearClient(
+      process.env.REACT_APP_API_URL
+    );
+    const token = await acquireToken();
+    getCardStatementClient.setAuthToken(token);
+    const cardStatement = await getCardStatementClient.get(
+      card?.id,
+      statementMonthYear
+    );
+
+    if (cardStatement === null) {
+      const createCardStatementClient = new CreateCardStatementClient(
         process.env.REACT_APP_API_URL
       );
-      const token = await acquireToken();
-      getCardStatementClient.setAuthToken(token);
-      const cardStatement = await getCardStatementClient.get(
-        card?.id,
-        statementMonthYear
-      );
+      createCardStatementClient.setAuthToken(token);
+      const result = await createCardStatementClient.create({
+        cardId: card?.id,
+        monthYear: statementMonthYear,
+        bankCardId: card?.bankCardId,
+      } as CreateCardStatementRequest);
 
-      if (cardStatement === null) {
-        const createCardStatementClient = new CreateCardStatementClient(
-          process.env.REACT_APP_API_URL
-        );
-        createCardStatementClient.setAuthToken(token);
-        const result = await createCardStatementClient.create({
-          cardId: card?.id,
+      dispatch(
+        setCardStatement({
+          id: result,
           monthYear: statementMonthYear,
-          bankCardId: card?.bankCardId,
-        } as CreateCardStatementRequest);
+        } as ICardStatementDto)
+      );
+    } else {
+      dispatch(setCardStatement(cardStatement));
+    }
+  };
 
-        dispatch(
-          setCardStatement({
-            id: result,
-            monthYear: statementMonthYear,
-          } as ICardStatementDto)
-        );
-      } else {
-        dispatch(setCardStatement(cardStatement));
-      }
-    };
-
-    fetchCardStatementData();
+  useEffect(() => {
+    fetchCardStatementData(new Date());
   }, []);
 
   return (
@@ -77,7 +76,10 @@ const Card = (): JSX.Element => {
         {card && bankCard ? (
           <React.Fragment>
             <CardDetails card={card} bankCard={bankCard}></CardDetails>
-            <CardStatement cardStatement={cardStatement} />
+            <CardStatement
+              cardStatement={cardStatement}
+              fetchCardStatement={fetchCardStatementData}
+            />
           </React.Fragment>
         ) : (
           <React.Fragment></React.Fragment>
