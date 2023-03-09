@@ -22,7 +22,7 @@ const DialogTemplate = ({
   onClose,
 }: DialogTemplateProps): JSX.Element => {
   return (
-    <Dialog
+    <S.StyledDialog
       fullScreen
       open={isDialogVisible}
       onClose={onClose}
@@ -35,7 +35,7 @@ const DialogTemplate = ({
         </S.StyledCloseBtn>
       </DialogTitle>
       <S.StyledDialogContent>{children}</S.StyledDialogContent>
-    </Dialog>
+    </S.StyledDialog>
   );
 };
 
