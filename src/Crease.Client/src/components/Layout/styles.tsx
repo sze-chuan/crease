@@ -7,6 +7,7 @@ const StyledContainer = styled(Container)`
   display: flex !important;
   flex-direction: column;
   height: 100vh !important;
+  max-width: 480px;
 `;
 
 const StyledBox = styled(Box)`

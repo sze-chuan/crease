@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import CloseIcon from '@mui/icons-material/Close';
 
@@ -22,7 +21,7 @@ const DialogTemplate = ({
   onClose,
 }: DialogTemplateProps): JSX.Element => {
   return (
-    <Dialog
+    <S.StyledDialog
       fullScreen
       open={isDialogVisible}
       onClose={onClose}
@@ -35,7 +34,7 @@ const DialogTemplate = ({
         </S.StyledCloseBtn>
       </DialogTitle>
       <S.StyledDialogContent>{children}</S.StyledDialogContent>
-    </Dialog>
+    </S.StyledDialog>
   );
 };
 

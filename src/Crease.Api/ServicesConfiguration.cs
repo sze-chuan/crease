@@ -39,6 +39,18 @@ public static class ServicesConfiguration
         builder.Services.AddSingleton<ICurrentUserService>(
             userService => new CurrentUserService(userService.GetService<IHttpContextAccessor>(), useDevelopmentUser));
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: "development",
+                builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                });
+        });
+
         builder.Services.AddOpenApiDocument(configure => { configure.Title = "Crease API"; });
 
         return builder;

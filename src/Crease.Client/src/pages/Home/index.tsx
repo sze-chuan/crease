@@ -12,6 +12,7 @@ import { loadBankCards, loadCards, getCards } from '../../slices/card';
 import { useAuth } from '../../auth/authContext';
 import * as S from './styles';
 import homeImage from '../../assets/home.png';
+import { TransactionDialogAction } from '../../types';
 
 const Home = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const Home = (): JSX.Element => {
           Your credit cards
         </Typography>
         <CardsList cards={cards} />
-        <AddTransaction />
+        <AddTransaction action={TransactionDialogAction.AddFromHome} />
       </S.StyledContainerDiv>
       <CardDialog />
     </Layout>

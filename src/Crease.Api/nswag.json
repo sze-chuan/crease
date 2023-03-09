@@ -91,7 +91,7 @@
       "typeStyle": "Class",
       "classTypes": [],
       "extendedClasses": [],
-      "extensionCode": "client-app/src/api/apiClientBase.ts",
+      "extensionCode": "../Crease.Client/src/api/apiClientBase.ts",
       "generateDefaultValues": true,
       "excludedTypeNames": [],
       "excludedParameterNames": [],
@@ -110,7 +110,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "client-app/src/api/apiClient.ts"
+      "output": "../Crease.Client/src/api/apiClient.ts"
     }
   }
 }
