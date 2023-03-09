@@ -7,6 +7,7 @@ import { CardStatementDiv, StatementMonthDiv } from './styles';
 import { ICardStatementDto } from '../../../api/apiClient';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface CardStatementProps {
@@ -59,6 +60,11 @@ const CardStatement = ({
             : ''}
         </Typography>
       </StatementMonthDiv>
+      <div style={{ margin: '10px 0' }}>
+        <Typography variant="body2" fontWeight={'bold'}>
+          Cashback: {cardStatement.statementReward?.cashback?.toFixed(2)}
+        </Typography>
+      </div>
       {cardStatement.transactions ? (
         <Transactions transactions={cardStatement.transactions} />
       ) : (
