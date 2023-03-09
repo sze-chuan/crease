@@ -7,7 +7,6 @@ import { CardStatementDiv, StatementMonthDiv } from './styles';
 import { ICardStatementDto } from '../../../api/apiClient';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface CardStatementProps {
