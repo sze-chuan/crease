@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PublicClientApplication, AccountInfo } from '@azure/msal-browser';
 import { loginRequest, msalConfig, tokenRequest } from './authConfig';
 
@@ -33,6 +34,7 @@ export const useAuth = (): AuthContextInterface => useContext(AuthContext);
 export const AuthProvider = ({
   children,
 }: AuthProviderInterface): JSX.Element => {
+  const navigate = useNavigate();
   const [user, setUser] = useState<AccountInfo | null>(null);
   const [token, setToken] = useState<string>('');
   const [publicClient, setPublicClient] = useState<PublicClientApplication>();
@@ -71,6 +73,7 @@ export const AuthProvider = ({
         publicClient?.setActiveAccount(result.account);
         setUser(result.account);
         setToken(result.accessToken);
+        navigate('/home');
       }
     } catch (error) {
       console.log(error);
