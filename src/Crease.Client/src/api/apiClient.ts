@@ -11,15 +11,16 @@
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelToken } from 'axios';
 
 export class ApiClientBase {
-  private authToken = '';
+  private readonly config: ITokenUtils;
 
-  setAuthToken(token: string) {
-    this.authToken = token;
+  protected constructor(config: ITokenUtils) {
+    this.config = config;
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected transformOptions(options: any): Promise<any> {
-    options.headers['Authorization'] = `Bearer ${this.authToken}`;
+  protected async transformOptions(options: any): Promise<any> {
+    const token = await this.config.getToken();
+    options.headers['Authorization'] = `Bearer ${token}`;
     return Promise.resolve(options);
   }
 }
@@ -33,9 +34,9 @@ export class CreateTransactionClient extends ApiClientBase implements ICreateTra
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -115,9 +116,9 @@ export class DeleteTransactionClient extends ApiClientBase implements IDeleteTra
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -191,9 +192,9 @@ export class UpdateTransactionClient extends ApiClientBase implements IUpdateTra
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -276,9 +277,9 @@ export class CreateCardStatementClient extends ApiClientBase implements ICreateC
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -355,9 +356,9 @@ export class GetCardStatementByMonthYearClient extends ApiClientBase implements 
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -441,9 +442,9 @@ export class GetCardStatementClient extends ApiClientBase implements IGetCardSta
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -522,9 +523,9 @@ export class CreateCardClient extends ApiClientBase implements ICreateCardClient
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -601,9 +602,9 @@ export class GetCardsClient extends ApiClientBase implements IGetCardsClient {
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -671,9 +672,9 @@ export class GetCardClient extends ApiClientBase implements IGetCardClient {
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -752,9 +753,9 @@ export class UpdateCardClient extends ApiClientBase implements IUpdateCardClient
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -833,9 +834,9 @@ export class GetBankCardsClient extends ApiClientBase implements IGetBankCardsCl
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, instance?: AxiosInstance) {
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
 
-        super();
+        super(configuration);
 
         this.instance = instance ? instance : axios.create();
 
@@ -1691,4 +1692,8 @@ function throwException(message: string, status: number, response: string, heade
 
 function isAxiosError(obj: any | undefined): obj is AxiosError {
     return obj && obj.isAxiosError === true;
+}
+
+export interface ITokenUtils {
+  getToken(): Promise<string>;
 }

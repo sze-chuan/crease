@@ -2,8 +2,8 @@ import {
   Configuration,
   LogLevel,
   BrowserCacheLocation,
-  PopupRequest,
   SilentRequest,
+  RedirectRequest,
 } from '@azure/msal-browser';
 
 const isIE =
@@ -74,8 +74,9 @@ export const protectedResources = {
 };
 
 // Add here scopes for id token to be used at MS Identity Platform endpoints.
-export const loginRequest: PopupRequest = {
+export const loginRequest: RedirectRequest = {
   scopes: [],
+  redirectStartPage: `${process.env.REACT_APP_PUBLIC_URL}/home`,
 };
 
 export const tokenRequest: SilentRequest = {
