@@ -1,12 +1,11 @@
 ﻿using AutoMapper.QueryableExtensions;
 using Crease.WebUI.Data;
-using Crease.WebUI.Exceptions;
 using Crease.WebUI.Services;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web.Resource;
 using NSwag.Annotations;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
@@ -15,7 +14,7 @@ namespace Crease.WebUI.Features.CardStatements;
 public class GetCardStatementByMonthYear : ApiControllerBase
 {
     [Route("/card-statements")]
-    [Authorize]
+    [RequiredScope(Constants.Scopes.CardStatementRead)]
     [HttpGet]
     [SwaggerResponse(200, typeof(CardStatementDto))]
     [SwaggerResponse(400, null)]

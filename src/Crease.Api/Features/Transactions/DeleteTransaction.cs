@@ -1,13 +1,10 @@
 ﻿using Crease.WebUI.Data;
 using Crease.WebUI.Exceptions;
-using Crease.WebUI.Models;
-using Crease.WebUI.Models.ValueObjects;
 using Crease.WebUI.Services;
-using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web.Resource;
 using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.Transactions;
@@ -15,7 +12,7 @@ namespace Crease.WebUI.Features.Transactions;
 public class DeleteTransaction : ApiControllerBase
 {
     [Route("card-statements/{cardStatementId}/transactions/{id}")]
-    [Authorize]
+    [RequiredScope(Constants.Scopes.TransactionDelete)]
     [HttpDelete]
     [SwaggerResponse(204, null)]
     [SwaggerResponse(404, null)]

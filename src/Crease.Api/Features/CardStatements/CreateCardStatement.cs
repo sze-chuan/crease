@@ -3,8 +3,8 @@ using Crease.WebUI.Models;
 using Crease.WebUI.Services;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.CardStatements;
@@ -14,7 +14,7 @@ public class CreateCardStatement : ApiControllerBase
     [Consumes("application/json")]
     [Produces("application/json")]
     [Route("/card-statements")]
-    [Authorize]
+    [RequiredScope(Constants.Scopes.CardStatementWrite)]
     [HttpPost]
     [SwaggerResponse(201, typeof(Guid))]
     [SwaggerResponse(400, null)]
