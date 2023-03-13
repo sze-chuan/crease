@@ -5,9 +5,9 @@ using Crease.WebUI.Models.ValueObjects;
 using Crease.WebUI.Services;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web.Resource;
 using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.Transactions;
@@ -15,7 +15,7 @@ namespace Crease.WebUI.Features.Transactions;
 public class UpdateTransaction : ApiControllerBase
 {
     [Route("transactions/{id}")]
-    [Authorize]
+    [RequiredScope(Constants.Scopes.TransactionWrite)]
     [HttpPut]
     [SwaggerResponse(204, null)]
     [SwaggerResponse(400, null)]

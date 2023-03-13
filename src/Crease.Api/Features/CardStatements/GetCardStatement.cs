@@ -3,9 +3,9 @@ using Crease.WebUI.Data;
 using Crease.WebUI.Exceptions;
 using Crease.WebUI.Services;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web.Resource;
 using NSwag.Annotations;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
@@ -14,7 +14,7 @@ namespace Crease.WebUI.Features.CardStatements;
 public class GetCardStatement : ApiControllerBase
 {
     [Route("/card-statements/{id}")]
-    [Authorize]
+    [RequiredScope(Constants.Scopes.CardStatementRead)]
     [HttpGet]
     [SwaggerResponse(200, typeof(CardStatementDto))]
     [SwaggerResponse(400, null)]

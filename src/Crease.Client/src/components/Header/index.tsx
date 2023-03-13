@@ -1,5 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useMsal } from '@azure/msal-react';
+import { loginRequest } from '../../auth/authConfig';
+
 import AppBar from '@mui/material/AppBar';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Box from '@mui/material/Box';
@@ -7,10 +10,10 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 
 import * as S from './styles';
-import { useAuth } from '../../auth/authContext';
 
 const Header = (): JSX.Element => {
-  const { login, logout, user } = useAuth();
+  const { instance, accounts } = useMsal();
+  const user = accounts[0];
   const homePageLink = user ? '/home' : '/';
 
   const [anchorEl, setAnchorEl] = React.useState<Element | null>(null);
@@ -18,9 +21,13 @@ const Header = (): JSX.Element => {
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget as Element);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const login = () => instance.loginRedirect(loginRequest);
+  const logout = () => instance.logoutRedirect();
 
   return (
     <header>

@@ -1,19 +1,21 @@
 import React from 'react';
-import { useAuth } from './authContext';
+import { MsalAuthenticationTemplate } from '@azure/msal-react';
+import { InteractionType } from '@azure/msal-browser';
+import { loginRequest } from './authConfig';
 
 interface RequiredAuthInterface {
   children: JSX.Element;
 }
 
 const RequiredAuth = ({ children }: RequiredAuthInterface): JSX.Element => {
-  const { user, login } = useAuth();
-
-  if (!user) {
-    login();
-    return <React.Fragment></React.Fragment>;
-  }
-
-  return children;
+  return (
+    <MsalAuthenticationTemplate
+      interactionType={InteractionType.Redirect}
+      authenticationRequest={loginRequest}
+    >
+      {children}
+    </MsalAuthenticationTemplate>
+  );
 };
 
 export default RequiredAuth;

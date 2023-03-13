@@ -19,8 +19,8 @@ import {
   CreateCardStatementRequest,
   ICardStatementDto,
 } from '../../api/apiClient';
-import { useAuth } from '../../auth/authContext';
 import { TransactionDialogAction } from '../../types';
+import { tokenUtils } from '../..';
 
 const Card = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -31,14 +31,11 @@ const Card = (): JSX.Element => {
   const card = cards.find((x) => x.id === id);
   const bankCard = bankCards.find((x) => x.id === card?.bankCardId);
 
-  const { acquireToken } = useAuth();
-
   const fetchCardStatementData = async (statementMonthYear: Date) => {
     const getCardStatementClient = new GetCardStatementByMonthYearClient(
+      tokenUtils,
       process.env.REACT_APP_API_URL
     );
-    const token = await acquireToken();
-    getCardStatementClient.setAuthToken(token);
     const cardStatement = await getCardStatementClient.get(
       card?.id,
       statementMonthYear
@@ -46,9 +43,9 @@ const Card = (): JSX.Element => {
 
     if (cardStatement === null) {
       const createCardStatementClient = new CreateCardStatementClient(
+        tokenUtils,
         process.env.REACT_APP_API_URL
       );
-      createCardStatementClient.setAuthToken(token);
       const result = await createCardStatementClient.create({
         cardId: card?.id,
         monthYear: statementMonthYear,

@@ -7,6 +7,7 @@ using NSwag.Annotations;
 using AutoMapper.QueryableExtensions;
 using Crease.WebUI.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Web.Resource;
 using IConfigurationProvider = AutoMapper.IConfigurationProvider;
 
 namespace Crease.WebUI.Features.BankCards;
@@ -18,6 +19,7 @@ public class GetBankCards : ApiControllerBase
     public GetBankCards(IMediator mediator) => _mediator = mediator;
 
     [Route("/bank-cards")]
+    [RequiredScope(Constants.Scopes.BankCardRead)]
     [HttpGet]
     [SwaggerResponse(200, typeof(GetBankCardsResponse))]
     public async Task<ActionResult<GetBankCardsResponse>> Get()

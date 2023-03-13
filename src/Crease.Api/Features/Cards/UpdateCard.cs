@@ -1,11 +1,10 @@
 ﻿using Crease.WebUI.Data;
 using Crease.WebUI.Exceptions;
-using Crease.WebUI.Models;
 using Crease.WebUI.Services;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Web.Resource;
 using NSwag.Annotations;
 
 namespace Crease.WebUI.Features.Cards;
@@ -13,7 +12,7 @@ namespace Crease.WebUI.Features.Cards;
 public class UpdateCard : ApiControllerBase
 {
     [Route("/cards/{id}")]
-    [Authorize]
+    [RequiredScope(Constants.Scopes.CardWrite)]
     [HttpPut]
     [SwaggerResponse(204, null)]
     [SwaggerResponse(400, null)]

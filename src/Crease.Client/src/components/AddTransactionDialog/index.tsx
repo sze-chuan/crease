@@ -23,8 +23,8 @@ import {
   GetCardStatementClient,
 } from '../../api/apiClient';
 import { useToast } from '../../contexts/toastContext';
-import { useAuth } from '../../auth/authContext';
 import { TransactionDialogAction } from '../../types';
+import { tokenUtils } from '../..';
 
 interface AddTransactionFormData {
   cardId: string;
@@ -54,7 +54,6 @@ const schema = yup
 
 const AddTransactionDialog = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { acquireToken } = useAuth();
   const { setToast } = useToast();
   const {
     reset,
@@ -89,10 +88,9 @@ const AddTransactionDialog = (): JSX.Element => {
 
   const onSubmit = async (data: AddTransactionFormData) => {
     const transactionClient = new CreateTransactionClient(
+      tokenUtils,
       process.env.REACT_APP_API_URL
     );
-    const token = await acquireToken();
-    transactionClient.setAuthToken(token);
 
     try {
       if (
@@ -108,9 +106,9 @@ const AddTransactionDialog = (): JSX.Element => {
         } as CreateTransactionRequest);
 
         const getCardStatementClient = new GetCardStatementClient(
+          tokenUtils,
           process.env.REACT_APP_API_URL
         );
-        getCardStatementClient.setAuthToken(token);
         const result = await getCardStatementClient.get(
           transactionDialog.cardStatementId
         );

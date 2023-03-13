@@ -25,7 +25,7 @@ import {
   ICardDto,
 } from '../../../api/apiClient';
 import { useToast } from '../../../contexts/toastContext';
-import { useAuth } from '../../../auth/authContext';
+import { tokenUtils } from '../../..';
 
 interface AddCardFormData {
   cardName: string;
@@ -70,13 +70,13 @@ const CardDialog = (): JSX.Element => {
       approvalDate: new Date(),
     },
   });
-  const { acquireToken } = useAuth();
   const { setToast } = useToast();
 
   const onSubmit = async (data: AddCardFormData) => {
-    const cardsClient = new CreateCardClient(process.env.REACT_APP_API_URL);
-    const token = await acquireToken();
-    cardsClient.setAuthToken(token);
+    const cardsClient = new CreateCardClient(
+      tokenUtils,
+      process.env.REACT_APP_API_URL
+    );
 
     try {
       const result = await cardsClient.create({
