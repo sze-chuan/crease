@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Host.ConfigureAppConfiguration((context, builder) =>
 {
-    builder.AddUserSecrets<Program>(context.HostingEnvironment.IsDevelopment());
+    builder.AddUserSecrets<Program>(!context.HostingEnvironment.IsDevelopment());
 });
 
 var app = builder
