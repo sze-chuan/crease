@@ -15,8 +15,6 @@ import {
 } from '../../slices/card';
 import {
   GetCardStatementByMonthYearClient,
-  CreateCardStatementClient,
-  CreateCardStatementRequest,
   ICardStatementDto,
 } from '../../api/apiClient';
 import { TransactionDialogAction } from '../../types';
@@ -42,20 +40,12 @@ const Card = (): JSX.Element => {
     );
 
     if (cardStatement === null) {
-      const createCardStatementClient = new CreateCardStatementClient(
-        tokenUtils,
-        process.env.REACT_APP_API_URL
-      );
-      const result = await createCardStatementClient.create({
-        cardId: card?.id,
-        monthYear: statementMonthYear,
-        bankCardId: card?.bankCardId,
-      } as CreateCardStatementRequest);
-
       dispatch(
         setCardStatement({
-          id: result,
+          cardId: card?.id,
           monthYear: statementMonthYear,
+          bankCardId: card?.bankCardId,
+          transactions: [],
         } as ICardStatementDto)
       );
     } else {
@@ -83,8 +73,8 @@ const Card = (): JSX.Element => {
         )}
       </Stack>
       <AddTransaction
-        cardId={card?.id}
-        cardStatementId={cardStatement?.id}
+        card={card}
+        cardStatement={cardStatement}
         action={TransactionDialogAction.AddFromCard}
       />
     </Layout>

@@ -3,16 +3,17 @@ import { useDispatch } from 'react-redux';
 import { AddTransactionFab } from './styles';
 import { setTransactionDialog } from '../../slices/transaction';
 import { TransactionDialogAction } from '../../types';
+import { ICardDto, ICardStatementDto } from '../../api/apiClient';
 
 interface AddTransactionProps {
-  cardId?: string;
-  cardStatementId?: string;
+  cardStatement?: ICardStatementDto;
+  card?: ICardDto;
   action: TransactionDialogAction;
 }
 
 const AddTransaction = ({
-  cardId,
-  cardStatementId,
+  cardStatement,
+  card,
   action,
 }: AddTransactionProps): JSX.Element => {
   const dispatch = useDispatch();
@@ -20,8 +21,8 @@ const AddTransaction = ({
     dispatch(
       setTransactionDialog({
         visible: true,
-        cardId: cardId,
-        cardStatementId: cardStatementId,
+        card: card,
+        cardStatement: cardStatement,
         action: action,
       })
     );
