@@ -183,6 +183,80 @@ export class DeleteTransactionClient extends ApiClientBase implements IDeleteTra
     }
 }
 
+export interface IQuickAddTransactionClient {
+    create(message: QuickAddTransactionRequest): Promise<void>;
+}
+
+export class QuickAddTransactionClient extends ApiClientBase implements IQuickAddTransactionClient {
+    private instance: AxiosInstance;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(configuration: ITokenUtils, baseUrl?: string, instance?: AxiosInstance) {
+
+        super(configuration);
+
+        this.instance = instance ? instance : axios.create();
+
+        this.baseUrl = baseUrl !== undefined && baseUrl !== null ? baseUrl : "";
+
+    }
+
+    create(message: QuickAddTransactionRequest , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/transactions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(message);
+
+        let options_: AxiosRequestConfig = {
+            data: content_,
+            method: "POST",
+            url: url_,
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cancelToken
+        };
+
+        return this.transformOptions(options_).then(transformedOptions_ => {
+            return this.instance.request(transformedOptions_);
+        }).catch((_error: any) => {
+            if (isAxiosError(_error) && _error.response) {
+                return _error.response;
+            } else {
+                throw _error;
+            }
+        }).then((_response: AxiosResponse) => {
+            return this.processCreate(_response);
+        });
+    }
+
+    protected processCreate(response: AxiosResponse): Promise<void> {
+        const status = response.status;
+        let _headers: any = {};
+        if (response.headers && typeof response.headers === "object") {
+            for (let k in response.headers) {
+                if (response.headers.hasOwnProperty(k)) {
+                    _headers[k] = response.headers[k];
+                }
+            }
+        }
+        if (status === 204) {
+            const _responseText = response.data;
+            return Promise.resolve<void>(null as any);
+
+        } else if (status === 400) {
+            const _responseText = response.data;
+            return throwException("A server side error occurred.", status, _responseText, _headers);
+
+        } else if (status !== 200 && status !== 204) {
+            const _responseText = response.data;
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+        }
+        return Promise.resolve<void>(null as any);
+    }
+}
+
 export interface IUpdateTransactionClient {
     create(transactionId: string | undefined, id: string, message: UpdateTransactionRequest): Promise<void>;
 }
@@ -940,6 +1014,62 @@ export class CreateTransactionRequest implements ICreateTransactionRequest {
 }
 
 export interface ICreateTransactionRequest {
+    paymentType?: string | undefined;
+    transactionCategory?: string | undefined;
+    description?: string | undefined;
+    date?: Date;
+    amount?: number;
+}
+
+export class QuickAddTransactionRequest implements IQuickAddTransactionRequest {
+    cardId?: string;
+    paymentType?: string | undefined;
+    transactionCategory?: string | undefined;
+    description?: string | undefined;
+    date?: Date;
+    amount?: number;
+
+    constructor(data?: IQuickAddTransactionRequest) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.cardId = _data["cardId"];
+            this.paymentType = _data["paymentType"];
+            this.transactionCategory = _data["transactionCategory"];
+            this.description = _data["description"];
+            this.date = _data["date"] ? new Date(_data["date"].toString()) : <any>undefined;
+            this.amount = _data["amount"];
+        }
+    }
+
+    static fromJS(data: any): QuickAddTransactionRequest {
+        data = typeof data === 'object' ? data : {};
+        let result = new QuickAddTransactionRequest();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["cardId"] = this.cardId;
+        data["paymentType"] = this.paymentType;
+        data["transactionCategory"] = this.transactionCategory;
+        data["description"] = this.description;
+        data["date"] = this.date ? this.date.toISOString() : <any>undefined;
+        data["amount"] = this.amount;
+        return data;
+    }
+}
+
+export interface IQuickAddTransactionRequest {
+    cardId?: string;
     paymentType?: string | undefined;
     transactionCategory?: string | undefined;
     description?: string | undefined;

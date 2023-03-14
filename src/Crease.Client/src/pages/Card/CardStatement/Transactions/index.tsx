@@ -29,11 +29,6 @@ const columns: readonly Column[] = [
   { id: 'amount', label: 'Amount', align: 'right' },
 ];
 
-// const transactions: ITransactionDto[] = [
-//   { id: '1', description: 'test', date: new Date(), amount: 20 },
-//   { id: '2', description: 'test2', date: new Date(), amount: 30 },
-// ];
-
 const Transactions = ({ transactions }: TransactionsProps): JSX.Element => {
   return (
     <Table>

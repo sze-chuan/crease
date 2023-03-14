@@ -18,9 +18,13 @@ import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import * as S from './styles';
 import {
+  CreateCardStatementClient,
+  CreateCardStatementRequest,
   CreateTransactionClient,
   CreateTransactionRequest,
   GetCardStatementClient,
+  QuickAddTransactionClient,
+  QuickAddTransactionRequest,
 } from '../../api/apiClient';
 import { useToast } from '../../contexts/toastContext';
 import { TransactionDialogAction } from '../../types';
@@ -68,6 +72,7 @@ const AddTransactionDialog = (): JSX.Element => {
       transactionDate: new Date(),
       transactionType: TransactionType.Physical,
       category: '',
+      cardId: '',
     },
   });
 
@@ -77,8 +82,8 @@ const AddTransactionDialog = (): JSX.Element => {
     isNaN(Number(paymentType))
   );
 
-  if (transactionDialog.cardId) {
-    setValue('cardId', transactionDialog.cardId ?? '');
+  if (transactionDialog.card) {
+    setValue('cardId', transactionDialog.card.id ?? '');
   }
 
   const handleClose = () => {
@@ -93,11 +98,25 @@ const AddTransactionDialog = (): JSX.Element => {
     );
 
     try {
-      if (
-        transactionDialog.action === TransactionDialogAction.AddFromCard &&
-        transactionDialog.cardStatementId
-      ) {
-        await transactionClient.create(transactionDialog.cardStatementId, {
+      if (transactionDialog.action === TransactionDialogAction.AddFromCard) {
+        let cardStatementId;
+
+        if (!transactionDialog.cardStatement?.id) {
+          const createCardStatementClient = new CreateCardStatementClient(
+            tokenUtils,
+            process.env.REACT_APP_API_URL
+          );
+
+          cardStatementId = await createCardStatementClient.create({
+            monthYear: transactionDialog.cardStatement?.monthYear,
+            cardId: transactionDialog.card?.id,
+            bankCardId: transactionDialog.card?.bankCardId,
+          } as CreateCardStatementRequest);
+        } else {
+          cardStatementId = transactionDialog.cardStatement.id;
+        }
+
+        await transactionClient.create(cardStatementId, {
           date: data.transactionDate,
           amount: data.amount,
           description: data.description,
@@ -109,11 +128,25 @@ const AddTransactionDialog = (): JSX.Element => {
           tokenUtils,
           process.env.REACT_APP_API_URL
         );
-        const result = await getCardStatementClient.get(
-          transactionDialog.cardStatementId
-        );
+        const result = await getCardStatementClient.get(cardStatementId);
 
         dispatch(setCardStatement(result));
+      } else if (
+        transactionDialog.action === TransactionDialogAction.AddFromHome
+      ) {
+        const createTransactionClient = new QuickAddTransactionClient(
+          tokenUtils,
+          process.env.REACT_APP_API_URL
+        );
+
+        await createTransactionClient.create({
+          cardId: data.cardId,
+          date: data.transactionDate,
+          amount: data.amount,
+          description: data.description,
+          paymentType: data.transactionType,
+          transactionCategory: data.category,
+        } as QuickAddTransactionRequest);
       }
 
       handleClose();
@@ -138,7 +171,7 @@ const AddTransactionDialog = (): JSX.Element => {
           name="cardId"
           control={control}
           labelText="Card"
-          isDisabled={transactionDialog.cardId != null}
+          isDisabled={transactionDialog.card != null}
         >
           {cards.map((card) => (
             <MenuItem key={card.id} value={card.id}>

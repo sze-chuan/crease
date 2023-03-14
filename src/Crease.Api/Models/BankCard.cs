@@ -21,4 +21,16 @@ public class BankCard
         return RewardVersions.Find(version =>
             version.EffectiveStartDate <= statementMonthYear && version.EffectiveEndDate >= statementMonthYear);
     }
+
+    public DateTime GetStatementMonthYearOnTransactionDate(DateTime transactionDate)
+    {
+        if (StatementType.Equals(StatementType.Calendar))
+        {
+            return new DateTime(transactionDate.Year, transactionDate.Month, transactionDate.Day);
+        }
+        
+        //TODO: Handle statement type of statement
+   
+        return DateTime.Now;
+    }
 }

@@ -14,8 +14,8 @@ export enum TransactionDialogAction {
 export interface TransactionDialogProps {
   visible: boolean;
   action?: TransactionDialogAction;
-  cardId?: string;
-  cardStatementId?: string;
+  cardStatement?: ICardStatementDto;
+  card?: ICardDto;
   transaction?: ITransactionDto;
 }
 
