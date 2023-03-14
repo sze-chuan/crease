@@ -23,6 +23,8 @@ import {
   CreateTransactionClient,
   CreateTransactionRequest,
   GetCardStatementClient,
+  QuickAddTransactionClient,
+  QuickAddTransactionRequest,
 } from '../../api/apiClient';
 import { useToast } from '../../contexts/toastContext';
 import { TransactionDialogAction } from '../../types';
@@ -70,6 +72,7 @@ const AddTransactionDialog = (): JSX.Element => {
       transactionDate: new Date(),
       transactionType: TransactionType.Physical,
       category: '',
+      cardId: '',
     },
   });
 
@@ -128,6 +131,22 @@ const AddTransactionDialog = (): JSX.Element => {
         const result = await getCardStatementClient.get(cardStatementId);
 
         dispatch(setCardStatement(result));
+      } else if (
+        transactionDialog.action === TransactionDialogAction.AddFromHome
+      ) {
+        const createTransactionClient = new QuickAddTransactionClient(
+          tokenUtils,
+          process.env.REACT_APP_API_URL
+        );
+
+        await createTransactionClient.create({
+          cardId: data.cardId,
+          date: data.transactionDate,
+          amount: data.amount,
+          description: data.description,
+          paymentType: data.transactionType,
+          transactionCategory: data.category,
+        } as QuickAddTransactionRequest);
       }
 
       handleClose();
