@@ -19,7 +19,7 @@ public class QuickAddTransaction : ApiControllerBase
     [HttpPost]
     [SwaggerResponse(204, null)]
     [SwaggerResponse(400, null)]
-    public async Task<ActionResult> Create(Guid cardStatementId, [FromBody] QuickAddTransactionRequest message)
+    public async Task<ActionResult> Create([FromBody] QuickAddTransactionRequest message)
     {
         await Mediator.Send(message);
         return NoContent();
@@ -79,7 +79,6 @@ public class QuickAddTransaction : ApiControllerBase
                                     && statement.MonthYear.Month == statementMonthYear.Month
                                     && statement.MonthYear.Year == statementMonthYear.Year
                                     && statement.UserId == _userService.UserId)
-                .AsNoTracking()
                 .SingleOrDefaultAsync(token);
 
             if (statement == null)
@@ -98,6 +97,7 @@ public class QuickAddTransaction : ApiControllerBase
 
             var transaction = new Transaction
             {
+                Id = Guid.NewGuid(),
                 PaymentType = PaymentType.From(message.PaymentType),
                 Amount = message.Amount,
                 TransactionCategory = TransactionCategory.From(message.TransactionCategory),
