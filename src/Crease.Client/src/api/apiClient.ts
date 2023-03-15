@@ -258,7 +258,7 @@ export class QuickAddTransactionClient extends ApiClientBase implements IQuickAd
 }
 
 export interface IUpdateTransactionClient {
-    create(transactionId: string | undefined, id: string, message: UpdateTransactionRequest): Promise<void>;
+    create(id: string, message: UpdateTransactionRequest): Promise<void>;
 }
 
 export class UpdateTransactionClient extends ApiClientBase implements IUpdateTransactionClient {
@@ -276,15 +276,11 @@ export class UpdateTransactionClient extends ApiClientBase implements IUpdateTra
 
     }
 
-    create(transactionId: string | undefined, id: string, message: UpdateTransactionRequest , cancelToken?: CancelToken | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/transactions/{id}?";
+    create(id: string, message: UpdateTransactionRequest , cancelToken?: CancelToken | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/transactions/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
-        if (transactionId === null)
-            throw new Error("The parameter 'transactionId' cannot be null.");
-        else if (transactionId !== undefined)
-            url_ += "transactionId=" + encodeURIComponent("" + transactionId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(message);

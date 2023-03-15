@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import format from 'date-fns/format';
 
 import Table from '@mui/material/Table';
@@ -9,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 
 import { ITransactionDto } from '../../../../api/apiClient';
 import { StyledTableCell, NoTransactionsCell } from './styles';
+import { setTransactionDialog } from '../../../../slices/transaction';
+import { TransactionDialogAction } from '../../../../types';
 
 interface Column {
   id: string;
@@ -30,6 +33,17 @@ const columns: readonly Column[] = [
 ];
 
 const Transactions = ({ transactions }: TransactionsProps): JSX.Element => {
+  const dispatch = useDispatch();
+  const onClick = (transaction: ITransactionDto) => {
+    dispatch(
+      setTransactionDialog({
+        visible: true,
+        transaction: transaction,
+        action: TransactionDialogAction.Update,
+      })
+    );
+  };
+
   return (
     <Table>
       <TableHead>
@@ -44,7 +58,11 @@ const Transactions = ({ transactions }: TransactionsProps): JSX.Element => {
       <TableBody>
         {transactions.length > 0 ? (
           transactions.map((transaction) => (
-            <TableRow key={transaction.id}>
+            <TableRow
+              key={transaction.id}
+              onClick={() => onClick(transaction)}
+              sx={{ cursor: 'pointer' }}
+            >
               <StyledTableCell>
                 {format(transaction.date!, 'dd/MM/yy')}
               </StyledTableCell>
