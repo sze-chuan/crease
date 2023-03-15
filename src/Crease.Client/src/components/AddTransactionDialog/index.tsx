@@ -8,7 +8,11 @@ import {
   getTransactionDialog,
   setTransactionDialog,
 } from '../../slices/transaction';
-import { getCards, setCardStatement } from '../../slices/card';
+import {
+  getCards,
+  getCardStatement,
+  setCardStatement,
+} from '../../slices/card';
 
 import DialogTemplate from '../DialogTemplate';
 import FormSelect from '../FormSelect';
@@ -25,6 +29,8 @@ import {
   GetCardStatementClient,
   QuickAddTransactionClient,
   QuickAddTransactionRequest,
+  UpdateTransactionClient,
+  UpdateTransactionRequest,
 } from '../../api/apiClient';
 import { useToast } from '../../contexts/toastContext';
 import { TransactionDialogAction } from '../../types';
@@ -33,14 +39,14 @@ import { tokenUtils } from '../..';
 interface AddTransactionFormData {
   cardId: string;
   description: string;
-  transactionDate: Date;
+  date: Date;
   amount: number;
-  category: string;
-  transactionType: TransactionType;
+  transactionCategory: string;
+  paymentType: PaymentType;
 }
 
-const PaymentCategories = ['Shopping', 'Dining'];
-enum TransactionType {
+const TransactionCategories = ['Shopping', 'Dining'];
+enum PaymentType {
   Physical = 'Physical',
   Contactless = 'Contactless',
   Online = 'Online',
@@ -48,7 +54,7 @@ enum TransactionType {
 
 const schema = yup
   .object({
-    transactionDate: yup
+    date: yup
       .date()
       .label('Transaction Date')
       .required()
@@ -69,22 +75,47 @@ const AddTransactionDialog = (): JSX.Element => {
   } = useForm<AddTransactionFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      transactionDate: new Date(),
-      transactionType: TransactionType.Physical,
-      category: '',
+      date: new Date(),
+      paymentType: PaymentType.Physical,
+      transactionCategory: '',
       cardId: '',
     },
   });
 
   const cards = useSelector(getCards);
   const transactionDialog = useSelector(getTransactionDialog);
-  const transactionTypes = Object.keys(TransactionType).filter((paymentType) =>
+  const cardStatement = useSelector(getCardStatement);
+
+  const paymentTypes = Object.keys(PaymentType).filter((paymentType) =>
     isNaN(Number(paymentType))
   );
 
+  const dialogTitle =
+    transactionDialog.action === TransactionDialogAction.Update
+      ? 'Update Transaction'
+      : 'Add Transaction';
+  const submitButtonText =
+    transactionDialog.action === TransactionDialogAction.Update
+      ? 'Update'
+      : 'Add';
+
   if (transactionDialog.card) {
     setValue('cardId', transactionDialog.card.id ?? '');
+  } else if (transactionDialog.transaction) {
+    for (const [name, value] of Object.entries(transactionDialog.transaction)) {
+      setValue(name as keyof AddTransactionFormData, value);
+    }
   }
+
+  const updateCardStatement = async (cardStatementId: string) => {
+    const getCardStatementClient = new GetCardStatementClient(
+      tokenUtils,
+      process.env.REACT_APP_API_URL
+    );
+    const result = await getCardStatementClient.get(cardStatementId);
+
+    dispatch(setCardStatement(result));
+  };
 
   const handleClose = () => {
     dispatch(setTransactionDialog({ visible: false }));
@@ -117,20 +148,14 @@ const AddTransactionDialog = (): JSX.Element => {
         }
 
         await transactionClient.create(cardStatementId, {
-          date: data.transactionDate,
+          date: data.date,
           amount: data.amount,
           description: data.description,
-          paymentType: data.transactionType,
-          transactionCategory: data.category,
+          paymentType: data.paymentType,
+          transactionCategory: data.transactionCategory,
         } as CreateTransactionRequest);
 
-        const getCardStatementClient = new GetCardStatementClient(
-          tokenUtils,
-          process.env.REACT_APP_API_URL
-        );
-        const result = await getCardStatementClient.get(cardStatementId);
-
-        dispatch(setCardStatement(result));
+        await updateCardStatement(cardStatementId);
       } else if (
         transactionDialog.action === TransactionDialogAction.AddFromHome
       ) {
@@ -141,12 +166,33 @@ const AddTransactionDialog = (): JSX.Element => {
 
         await createTransactionClient.create({
           cardId: data.cardId,
-          date: data.transactionDate,
+          date: data.date,
           amount: data.amount,
           description: data.description,
-          paymentType: data.transactionType,
-          transactionCategory: data.category,
+          paymentType: data.paymentType,
+          transactionCategory: data.transactionCategory,
         } as QuickAddTransactionRequest);
+      } else {
+        if (transactionDialog.transaction?.id && cardStatement?.id) {
+          const updateTransactionClient = new UpdateTransactionClient(
+            tokenUtils,
+            process.env.REACT_APP_API_URL
+          );
+
+          await updateTransactionClient.create(
+            transactionDialog.transaction?.id,
+            {
+              cardStatementId: cardStatement?.id,
+              date: data.date,
+              amount: data.amount,
+              description: data.description,
+              paymentType: data.paymentType,
+              transactionCategory: data.transactionCategory,
+            } as UpdateTransactionRequest
+          );
+
+          await updateCardStatement(cardStatement?.id);
+        }
       }
 
       handleClose();
@@ -160,28 +206,30 @@ const AddTransactionDialog = (): JSX.Element => {
     <DialogTemplate
       isDialogVisible={transactionDialog.visible}
       onClose={handleClose}
-      dialogTitle="Add transaction"
+      dialogTitle={dialogTitle}
     >
       <form
         autoComplete="off"
         noValidate={true}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <FormSelect
-          name="cardId"
-          control={control}
-          labelText="Card"
-          isDisabled={transactionDialog.card != null}
-        >
-          {cards.map((card) => (
-            <MenuItem key={card.id} value={card.id}>
-              {card.name}
-            </MenuItem>
-          ))}
-        </FormSelect>
+        {transactionDialog.action !== TransactionDialogAction.Update && (
+          <FormSelect
+            name="cardId"
+            control={control}
+            labelText="Card"
+            isDisabled={transactionDialog.card != null}
+          >
+            {cards.map((card) => (
+              <MenuItem key={card.id} value={card.id}>
+                {card.name}
+              </MenuItem>
+            ))}
+          </FormSelect>
+        )}
         <S.StyledFormControl fullWidth>
           <Controller
-            name="transactionDate"
+            name="date"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
@@ -193,8 +241,8 @@ const AddTransactionDialog = (): JSX.Element => {
                   <TextField
                     {...params}
                     required
-                    error={errors.transactionDate ? true : false}
-                    helperText={errors.transactionDate?.message ?? ''}
+                    error={errors.date ? true : false}
+                    helperText={errors.date?.message ?? ''}
                   />
                 )}
               />
@@ -221,19 +269,23 @@ const AddTransactionDialog = (): JSX.Element => {
             helperText={errors.description?.message ?? ''}
           />
         </S.StyledFormControl>
-        <FormSelect name="category" control={control} labelText="Category">
-          {PaymentCategories.map((category) => (
+        <FormSelect
+          name="transactionCategory"
+          control={control}
+          labelText="Category"
+        >
+          {TransactionCategories.map((category) => (
             <MenuItem key={category} value={category}>
               {category}
             </MenuItem>
           ))}
         </FormSelect>
         <FormSelect
-          name="transactionType"
+          name="paymentType"
           control={control}
-          labelText="Transaction type"
+          labelText="Payment Mode"
         >
-          {transactionTypes.map((transactionType) => (
+          {paymentTypes.map((transactionType) => (
             <MenuItem key={transactionType} value={transactionType}>
               {transactionType}
             </MenuItem>
@@ -245,7 +297,7 @@ const AddTransactionDialog = (): JSX.Element => {
             variant="contained"
             disabled={Object.keys(errors).length > 0}
           >
-            Add
+            {submitButtonText}
           </S.StyledSubmitButton>
         </S.StyledFormControl>
       </form>
