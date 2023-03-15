@@ -128,22 +128,14 @@
         "operationId": "UpdateTransaction_Create",
         "parameters": [
           {
-            "name": "transactionId",
-            "in": "query",
+            "name": "id",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 3
           }
         ],
         "requestBody": {
