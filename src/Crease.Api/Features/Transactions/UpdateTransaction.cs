@@ -14,17 +14,18 @@ namespace Crease.WebUI.Features.Transactions;
 
 public class UpdateTransaction : ApiControllerBase
 {
-    [Route("transactions/{id}")]
+    [Route("transactions/{id:guid}")]
     [RequiredScope(Constants.Scopes.TransactionWrite)]
     [HttpPut]
     [SwaggerResponse(204, null)]
     [SwaggerResponse(400, null)]
     [SwaggerResponse(404, null)]
-    public async Task<ActionResult<Guid>> Create(Guid transactionId, [FromBody] UpdateTransactionRequest message)
+    public async Task<ActionResult<Guid>> Create(Guid id, [FromBody] UpdateTransactionRequest message)
     {
         await Mediator.Send(new Command
         {
-            Id = transactionId,
+            Id = id,
+            CardStatementId = message.CardStatementId,
             PaymentType = message.PaymentType,
             TransactionCategory = message.TransactionCategory,
             Description = message.Description,
