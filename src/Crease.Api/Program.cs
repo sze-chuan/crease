@@ -20,7 +20,7 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<ApplicationDbContext>();
-    await ApplicationDbContextSeed.SeedSampleDataAsync(context);
+    await ApplicationDbContextSeed.SeedSampleDataAsync(context, app.Environment.IsDevelopment());
 }
 catch (Exception ex)
 {

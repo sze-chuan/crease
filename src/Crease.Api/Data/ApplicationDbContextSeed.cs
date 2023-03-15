@@ -5,11 +5,15 @@ namespace Crease.WebUI.Data;
 
 public static class ApplicationDbContextSeed
 {
-    public static async Task SeedSampleDataAsync(ApplicationDbContext context)
+    public static async Task SeedSampleDataAsync(ApplicationDbContext context, bool isDevelopmentEnv)
     {
         await context.Database.EnsureCreatedAsync();
         await SeedBankCardsData(context);
-        await SeedCardData(context);
+
+        if (isDevelopmentEnv)
+        {
+            await SeedCardData(context);
+        }
     }
 
     private static async Task SeedBankCardsData(ApplicationDbContext context)
@@ -32,7 +36,7 @@ public static class ApplicationDbContextSeed
             return;
         }
             
-        var frankCard = await context.BankCards.Where(x => x.Name == "Frank").FirstAsync();
+        var frankCard = await context.BankCards.Where(x => x.Name == "Live Fresh").FirstAsync();
             
         if (frankCard != null)
         {

@@ -37,6 +37,8 @@ public class TransactionCategory : ValueObject
     public static TransactionCategory Groceries => new(nameof(Groceries));
 
     public static TransactionCategory Transport => new(nameof(Transport));
+    
+    public static TransactionCategory Petrol => new(nameof(Petrol));
 
     public static TransactionCategory Telco => new(nameof(Telco));
 

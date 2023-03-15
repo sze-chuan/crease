@@ -9,7 +9,7 @@ const CardImage = ({ cardName }: CardImageProps): JSX.Element => {
   const [cardImage, setCardImage] = useState<string>('');
 
   const replaceCardName = (name: string) =>
-    name.toLowerCase().replace(' ', '-');
+    name.toLowerCase().replaceAll(' ', '-');
 
   if (cardName) {
     import(`../../assets/cards/${replaceCardName(cardName)}.png`).then(

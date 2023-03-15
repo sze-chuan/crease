@@ -25,7 +25,7 @@ public static class BankCardsData
                         RewardType = RewardType.Cashback,
                         PaymentTypes = new List<PaymentType> { PaymentType.Contactless },
                         Multiplier = 0.05M,
-                        RewardsCap = 20,
+                        RewardsCap = 21.2765M,
                         MinSpendAmount = 600
                     },
                     new()
@@ -34,7 +34,7 @@ public static class BankCardsData
                         RewardType = RewardType.Cashback,
                         PaymentTypes = new List<PaymentType> { PaymentType.Online },
                         Multiplier = 0.05M,
-                        RewardsCap = 20,
+                        RewardsCap = 21.2765M,
                         MinSpendAmount = 600
                     },
                     new()
@@ -43,51 +43,6 @@ public static class BankCardsData
                         RewardType = RewardType.Cashback,
                         Multiplier = 0.003M,
                         RewardsCap = 0,
-                        MinSpendAmount = 0
-                    }
-                }
-            }
-        }
-    };
-
-    private static readonly BankCard Frank = new()
-    {
-        Bank = Bank.Ocbc,
-        Name = "Frank",
-        StatementType = StatementType.Calendar,
-        TransactionDateType = TransactionDateType.Posted,
-        RewardVersions = new List<RewardVersion>
-        {
-            new()
-            {
-                EffectiveStartDate = DateTime.MinValue,
-                EffectiveEndDate = DateTime.MaxValue,
-                RewardComputations = new List<RewardComputation>
-                {
-                    new()
-                    {
-                        Priority = 1,
-                        RewardType = RewardType.Cashback,
-                        PaymentTypes = new List<PaymentType> { PaymentType.Contactless },
-                        Multiplier = 0.06M,
-                        RewardsCap = 25,
-                        MinSpendAmount = 600
-                    },
-                    new()
-                    {
-                        Priority = 2,
-                        RewardType = RewardType.Cashback,
-                        PaymentTypes = new List<PaymentType> { PaymentType.Online },
-                        Multiplier = 0.06M,
-                        RewardsCap = 25,
-                        MinSpendAmount = 600
-                    },
-                    new()
-                    {
-                        Priority = 3,
-                        RewardType = RewardType.Cashback,
-                        Multiplier = 0.003M,
-                        RewardsCap = 25,
                         MinSpendAmount = 0
                     }
                 }
@@ -122,7 +77,7 @@ public static class BankCardsData
                     {
                         Priority = 2,
                         RewardType = RewardType.Cashback,
-                        TransactionCategories = new List<TransactionCategory> { TransactionCategory.Transport },
+                        TransactionCategories = new List<TransactionCategory> { TransactionCategory.Transport, TransactionCategory.Petrol },
                         Multiplier = 0.08M,
                         RewardsCap = 25,
                         MinSpendAmount = 800
@@ -146,6 +101,14 @@ public static class BankCardsData
                         Multiplier = 0.08M,
                         RewardsCap = 25,
                         MinSpendAmount = 800
+                    },
+                    new()
+                    {
+                        Priority = 5,
+                        RewardType = RewardType.Cashback,
+                        Multiplier = 0.003M,
+                        RewardsCap = 0,
+                        MinSpendAmount = 0
                     }
                 }
             }
@@ -155,7 +118,6 @@ public static class BankCardsData
     public static readonly List<BankCard> BankCards = new()
     {
         LiveFresh,
-        Frank,
         FriendsAndFamily
     };
 }

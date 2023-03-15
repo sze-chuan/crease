@@ -45,7 +45,15 @@ interface AddTransactionFormData {
   paymentType: PaymentType;
 }
 
-const TransactionCategories = ['Shopping', 'Dining'];
+const TransactionCategories = {
+  Shopping: 'Shopping',
+  Groceries: 'Groceries',
+  FoodDelivery: 'Food Delivery',
+  Telco: 'Telco',
+  OnlineTvStreaming: 'Online TV Streaming',
+  Transport: 'Transport',
+  Petrol: 'Petrol',
+};
 enum PaymentType {
   Physical = 'Physical',
   Contactless = 'Contactless',
@@ -274,9 +282,9 @@ const AddTransactionDialog = (): JSX.Element => {
           control={control}
           labelText="Category"
         >
-          {TransactionCategories.map((category) => (
-            <MenuItem key={category} value={category}>
-              {category}
+          {Object.entries(TransactionCategories).map(([key, value]) => (
+            <MenuItem key={key} value={key}>
+              {value}
             </MenuItem>
           ))}
         </FormSelect>
