@@ -1,4 +1,5 @@
 ﻿using AutoMapper.QueryableExtensions;
+using Crease.Domain.Extensions;
 using Crease.WebUI.Data;
 using Crease.WebUI.Services;
 using FluentValidation;
@@ -55,10 +56,11 @@ public class GetCardStatementByMonthYear : ApiControllerBase
 
         public async Task<CardStatementDto> Handle(Query message, CancellationToken token)
         {
+            var queryMonthYear = new DateTime(message.MonthYear.Year, message.MonthYear.Month, 1).ToUtcTimeFormat();
+
             var statement = await _db.CardStatements
                 .Where(statement => statement.CardId == message.CardId
-                                    && statement.MonthYear.Month == message.MonthYear.Month
-                                    && statement.MonthYear.Year == message.MonthYear.Year
+                                    && statement.MonthYear == queryMonthYear
                                     && statement.UserId == _userService.UserId)
                 .ProjectTo<CardStatementDto>(_configuration)
                 .AsNoTracking()

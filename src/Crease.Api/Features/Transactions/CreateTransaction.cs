@@ -1,4 +1,5 @@
-﻿using Crease.WebUI.Data;
+﻿using Crease.Domain.Extensions;
+using Crease.WebUI.Data;
 using Crease.WebUI.Exceptions;
 using Crease.WebUI.Models;
 using Crease.WebUI.Models.ValueObjects;
@@ -90,7 +91,7 @@ public class CreateTransaction : ApiControllerBase
                 Amount = message.Amount,
                 TransactionCategory = TransactionCategory.From(message.TransactionCategory),
                 Description = message.Description,
-                Date = message.Date
+                Date = message.Date.ToUtcTimeFormat()
             };
             
             statement.Transactions.Add(transaction);

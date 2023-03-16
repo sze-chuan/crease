@@ -1,3 +1,4 @@
+using Crease.Domain.Extensions;
 using Crease.WebUI.Models.ValueObjects;
 
 namespace Crease.WebUI.Models;
@@ -26,7 +27,7 @@ public class BankCard
     {
         if (StatementType.Equals(StatementType.Calendar))
         {
-            return new DateTime(transactionDate.Year, transactionDate.Month, transactionDate.Day);
+            return new DateTime(transactionDate.Year, transactionDate.Month, 1).ToUtcTimeFormat();
         }
         
         //TODO: Handle statement type of statement

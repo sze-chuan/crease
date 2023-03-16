@@ -1,3 +1,4 @@
+using Crease.Domain.Extensions;
 using Crease.WebUI.Data;
 using Crease.WebUI.Exceptions;
 using Crease.WebUI.Models;
@@ -73,11 +74,10 @@ public class QuickAddTransaction : ApiControllerBase
             var bankCard =
                 await _db.BankCards.FindAsync(new object[] { card.BankCardId }, token);
 
-            var statementMonthYear = bankCard.GetStatementMonthYearOnTransactionDate(message.Date);
+            var statementMonthYear = bankCard.GetStatementMonthYearOnTransactionDate(message.Date.ToUtcTimeFormat());
             var statement = await _db.CardStatements
                 .Where(statement => statement.CardId == message.CardId
-                                    && statement.MonthYear.Month == statementMonthYear.Month
-                                    && statement.MonthYear.Year == statementMonthYear.Year
+                                    && statement.MonthYear == statementMonthYear
                                     && statement.UserId == _userService.UserId)
                 .SingleOrDefaultAsync(token);
 
@@ -102,7 +102,7 @@ public class QuickAddTransaction : ApiControllerBase
                 Amount = message.Amount,
                 TransactionCategory = TransactionCategory.From(message.TransactionCategory),
                 Description = message.Description,
-                Date = message.Date
+                Date = message.Date.ToUtcTimeFormat()
             };
             
             statement.Transactions.Add(transaction);

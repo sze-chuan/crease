@@ -1,4 +1,5 @@
-﻿using Crease.WebUI.Data;
+﻿using Crease.Domain.Extensions;
+using Crease.WebUI.Data;
 using Crease.WebUI.Models;
 using Crease.WebUI.Services;
 using FluentValidation;
@@ -55,11 +56,13 @@ public class CreateCardStatement : ApiControllerBase
 
         public async Task<Guid> Handle(CreateCardStatementRequest message, CancellationToken token)
         {
+            var monthYear = new DateTime(message.MonthYear.Year, message.MonthYear.Month, 1).ToUtcTimeFormat();
+
             var statement = new CardStatement
             {
                 BankCardId = message.BankCardId,
                 CardId = message.CardId,
-                MonthYear = message.MonthYear,
+                MonthYear = monthYear,
                 UserId = _userService.UserId
             };
 

@@ -20,4 +20,9 @@ public static class Extensions
         }
         return collection.Count < 1;
     }
+
+    public static DateTime ToUtcTimeFormat(this DateTime date)
+    {
+        return DateTime.SpecifyKind(date, DateTimeKind.Utc);
+    }
 }
