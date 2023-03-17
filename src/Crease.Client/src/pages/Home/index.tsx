@@ -14,12 +14,23 @@ import * as S from './styles';
 import homeImage from '../../assets/home.png';
 import { TransactionDialogAction } from '../../types';
 import { tokenUtils } from '../..';
+import { useLoading } from '../../contexts/loadingContext';
 
 const Home = (): JSX.Element => {
   const dispatch = useDispatch();
   const cards = useSelector(getCards);
+  const { setLoading } = useLoading();
 
   useEffect(() => {
+    let bankCardsFetched = false;
+    let cardsFetched = false;
+
+    const isLoadingComplete = () => {
+      if (bankCardsFetched && cardsFetched) {
+        setLoading(false);
+      }
+    };
+
     const fetchBankCardsData = async () => {
       const getBankCardsClient = new GetBankCardsClient(
         tokenUtils,
@@ -30,6 +41,9 @@ const Home = (): JSX.Element => {
       if (result.bankCards) {
         dispatch(loadBankCards(result.bankCards));
       }
+
+      bankCardsFetched = true;
+      isLoadingComplete();
     };
 
     const fetchCardsData = async () => {
@@ -42,8 +56,12 @@ const Home = (): JSX.Element => {
       if (result.cards) {
         dispatch(loadCards(result.cards));
       }
+
+      cardsFetched = true;
+      isLoadingComplete();
     };
 
+    setLoading(true);
     fetchBankCardsData();
     fetchCardsData();
   }, []);

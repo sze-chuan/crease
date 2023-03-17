@@ -12,6 +12,8 @@ import Home from './pages/Home';
 import Card from './pages/Card';
 import RequiredAuth from './auth/requiredAuth';
 import { ToastProvider } from './contexts/toastContext';
+import { LoadingProvider } from './contexts/loadingContext';
+import { LoadingSpinner } from './components/LoadingSpinner';
 
 interface AppProps {
   pca: IPublicClientApplication;
@@ -22,19 +24,22 @@ const App = ({ pca }: AppProps): JSX.Element => {
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <MsalProvider instance={pca}>
         <ToastProvider>
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route
-              path="home"
-              element={
-                <RequiredAuth>
-                  <Home />
-                </RequiredAuth>
-              }
-            />
-            <Route path="card/:id" element={<Card />} />
-          </Routes>
-          <TransactionDialog />
+          <LoadingProvider>
+            <LoadingSpinner />
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route
+                path="home"
+                element={
+                  <RequiredAuth>
+                    <Home />
+                  </RequiredAuth>
+                }
+              />
+              <Route path="card/:id" element={<Card />} />
+            </Routes>
+            <TransactionDialog />
+          </LoadingProvider>
         </ToastProvider>
       </MsalProvider>
     </LocalizationProvider>
